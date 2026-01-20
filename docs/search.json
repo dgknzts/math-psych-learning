@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "exams/index.html",
+    "href": "exams/index.html",
+    "title": "Exams",
+    "section": "",
+    "text": "Self-assessment questions. Answer keys are in the keys folder.\nExams will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "lectures/index.html",
+    "href": "lectures/index.html",
+    "title": "Lectures",
+    "section": "",
+    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Mathematical Psychology Learning Hub",
+    "section": "",
+    "text": "A learning resource for mathematical psychology, covering textbook chapters, research articles, and topic explorations."
+  },
+  {
+    "objectID": "index.html#about",
+    "href": "index.html#about",
+    "title": "Mathematical Psychology Learning Hub",
+    "section": "",
+    "text": "A learning resource for mathematical psychology, covering textbook chapters, research articles, and topic explorations."
+  },
+  {
+    "objectID": "index.html#content",
+    "href": "index.html#content",
+    "title": "Mathematical Psychology Learning Hub",
+    "section": "Content",
+    "text": "Content\n\n\n\nSection\nDescription\n\n\n\n\nLectures\nSlide presentations with key concepts and derivations\n\n\nDemos\nR code demonstrations showing models in action\n\n\nExercises\nPractice problems with solutions\n\n\nExams\nSelf-assessment questions with answer keys"
+  },
+  {
+    "objectID": "index.html#current-sources",
+    "href": "index.html#current-sources",
+    "title": "Mathematical Psychology Learning Hub",
+    "section": "Current Sources",
+    "text": "Current Sources\n\nNew Handbook of Mathematical Psychology (Ashby et al., 2023)\n\n\n\nCh\nTopic\nStatus\n\n\n\n\nPreface\nIntroduction\nNot started\n\n\n1\nVisual Encoding\nNot started\n\n\n2\nMultisensory Integration\nNot started\n\n\n3\nFechnerian Scaling\nNot started\n\n\n4\nLearning Models\nNot started\n\n\n5\nMemory Models\nNot started\n\n\n6\nStatistical Decision Theory\nNot started\n\n\n7\nStop-Signal Task\nNot started\n\n\n8\nApproximate Bayesian Computation\nNot started\n\n\n9\nCognitive Diagnosis Models\nNot started\n\n\n10\nEncoding Models in Neuroimaging\nNot started"
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "Mathematical Psychology Learning Hub",
+    "section": "How to Use",
+    "text": "How to Use\n\nRead the original source material (PDFs not included due to copyright)\nUse lectures for concept review\nRun demos to see models in action\nPractice with exercises\nTest yourself with exams"
+  },
+  {
+    "objectID": "demos/index.html",
+    "href": "demos/index.html",
+    "title": "Demos",
+    "section": "",
+    "text": "R code demonstrations showing mathematical models in action.\nDemos will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "exercises/index.html",
+    "href": "exercises/index.html",
+    "title": "Exercises",
+    "section": "",
+    "text": "Practice problems to test your understanding. Solutions are in the solutions folder.\nExercises will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+  }
+]
