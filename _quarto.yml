@@ -1,0 +1,31 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Mathematical Psychology Learning Hub"
+  subtitle: "Self-study resources for mathematical psychology and cognitive modeling"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Lectures"
+        href: lectures/index.qmd
+      - text: "Demos"
+        href: demos/index.qmd
+      - text: "Exercises"
+        href: exercises/index.qmd
+      - text: "Exams"
+        href: exams/index.qmd
+  page-footer:
+    center: "Built with Quarto"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    code-tools: true
+
+execute:
+  freeze: auto

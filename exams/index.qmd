@@ -1,0 +1,12 @@
+---
+title: "Exams"
+listing:
+  contents: "*.qmd"
+  type: table
+  fields: [title, categories]
+  sort: "title"
+---
+
+Self-assessment questions. Answer keys are in the [keys](keys/) folder.
+
+*Exams will be added as sources are studied.*

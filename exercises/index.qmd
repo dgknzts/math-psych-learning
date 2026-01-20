@@ -1,0 +1,12 @@
+---
+title: "Exercises"
+listing:
+  contents: "*.qmd"
+  type: table
+  fields: [title, categories]
+  sort: "title"
+---
+
+Practice problems to test your understanding. Solutions are in the [solutions](solutions/) folder.
+
+*Exercises will be added as sources are studied.*

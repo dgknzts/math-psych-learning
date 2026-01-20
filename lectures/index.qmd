@@ -1,0 +1,12 @@
+---
+title: "Lectures"
+listing:
+  contents: "*.qmd"
+  type: table
+  fields: [title, categories]
+  sort: "title"
+---
+
+Slide presentations covering key concepts and mathematical derivations.
+
+*Lectures will be added as sources are studied.*

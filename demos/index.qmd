@@ -1,0 +1,12 @@
+---
+title: "Demos"
+listing:
+  contents: "*.R"
+  type: table
+  fields: [title, categories]
+  sort: "title"
+---
+
+R code demonstrations showing mathematical models in action.
+
+*Demos will be added as sources are studied.*
