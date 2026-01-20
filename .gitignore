@@ -1,6 +1,7 @@
 # Private - do not publish
 pdf/
 notes/
+MEMORY.md
 
 # Quarto
 /.quarto/
@@ -19,3 +20,5 @@ Thumbs.db
 # Python
 __pycache__/
 *.pyc
+
+**/*.quarto_ipynb

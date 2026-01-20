@@ -1,17 +1,87 @@
 [
   {
-    "objectID": "exams/index.html",
-    "href": "exams/index.html",
-    "title": "Exams",
+    "objectID": "MEMORY.html",
+    "href": "MEMORY.html",
+    "title": "",
     "section": "",
-    "text": "Self-assessment questions. Answer keys are in the keys folder.\nExams will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+    "text": "Code"
   },
   {
-    "objectID": "lectures/index.html",
-    "href": "lectures/index.html",
-    "title": "Lectures",
+    "objectID": "MEMORY.html#project-overview",
+    "href": "MEMORY.html#project-overview",
+    "title": "",
+    "section": "Project Overview",
+    "text": "Project Overview\nA personal learning hub for mathematical psychology. User is studying textbooks and articles, creating lectures, demos, exercises, and exams as they learn. Published as GitHub Pages site."
+  },
+  {
+    "objectID": "MEMORY.html#user-preferences",
+    "href": "MEMORY.html#user-preferences",
+    "title": "",
+    "section": "User Preferences",
+    "text": "User Preferences\n\nCoding language: R\nSlides format: Quarto (.qmd)\nNotes: Handwritten, shared via photo/scan\nOrganization: Flat files with prefix naming (e.g., handbook_ch01_visual.R)"
+  },
+  {
+    "objectID": "MEMORY.html#directory-structure",
+    "href": "MEMORY.html#directory-structure",
+    "title": "",
+    "section": "Directory Structure",
+    "text": "Directory Structure\nhandbook_of_math_psych/\n├── pdf/                    # Private - original PDFs\n│   └── handbook/           # Split chapter PDFs\n├── notes/                  # Private - handwritten notes\n├── demos/                  # R code demos\n├── lectures/               # Quarto slides\n├── exercises/              # Practice problems\n│   └── solutions/\n├── exams/                  # Self-assessment\n│   └── keys/\n└── docs/                   # Rendered website"
+  },
+  {
+    "objectID": "MEMORY.html#naming-convention",
+    "href": "MEMORY.html#naming-convention",
+    "title": "",
+    "section": "Naming Convention",
+    "text": "Naming Convention\n\nhandbook_preface - Handbook preface\nhandbook_ch01_visual - Handbook Chapter 1\nratcliff_2016 - Article by Ratcliff 2016\nUse categories in YAML for cross-linking (e.g., categories: [learning-models, bayesian])"
+  },
+  {
+    "objectID": "MEMORY.html#workflow-per-chapterarticle",
+    "href": "MEMORY.html#workflow-per-chapterarticle",
+    "title": "",
+    "section": "Workflow Per Chapter/Article",
+    "text": "Workflow Per Chapter/Article\n\nUser tells Claude which section they’re reading\nClaude reads PDF for context\nWhen user hits a formula → code it in R together\nUser takes handwritten notes\nUser shares notes photo → Claude drafts Quarto slides\nCreate exercises together\nCreate exam questions\nClaude quizzes user"
+  },
+  {
+    "objectID": "MEMORY.html#current-sources",
+    "href": "MEMORY.html#current-sources",
+    "title": "",
+    "section": "Current Sources",
+    "text": "Current Sources\n\nhandbook - New Handbook of Mathematical Psychology (Ashby et al., 2023)\n\n10 chapters + preface\nPDFs split and stored in pdf/handbook/"
+  },
+  {
+    "objectID": "MEMORY.html#github",
+    "href": "MEMORY.html#github",
+    "title": "",
+    "section": "GitHub",
+    "text": "GitHub\n\nRepo: https://github.com/dgknzts/math-psych-learning\nSite: https://dgknzts.github.io/math-psych-learning/\nDeploy: quarto render then push docs/"
+  },
+  {
+    "objectID": "MEMORY.html#key-decisions-made",
+    "href": "MEMORY.html#key-decisions-made",
+    "title": "",
+    "section": "Key Decisions Made",
+    "text": "Key Decisions Made\n\nFlat file structure (not nested by source)\nEach chapter = standalone unit\nCross-link via Quarto categories\nPDFs and notes gitignored (private)\nSolutions and exam keys are public"
+  },
+  {
+    "objectID": "MEMORY.html#next-steps",
+    "href": "MEMORY.html#next-steps",
+    "title": "",
+    "section": "Next Steps",
+    "text": "Next Steps\n\nStart with handbook preface\nUser will read, we code together, then create content"
+  },
+  {
+    "objectID": "exercises/index.html",
+    "href": "exercises/index.html",
+    "title": "Exercises",
     "section": "",
-    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+    "text": "Practice problems to test your understanding. Solutions are in the solutions folder.\nExercises will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "demos/index.html",
+    "href": "demos/index.html",
+    "title": "Demos",
+    "section": "",
+    "text": "R code demonstrations showing mathematical models in action.\nDemos will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -49,17 +119,17 @@
     "text": "How to Use\n\nRead the original source material (PDFs not included due to copyright)\nUse lectures for concept review\nRun demos to see models in action\nPractice with exercises\nTest yourself with exams"
   },
   {
-    "objectID": "demos/index.html",
-    "href": "demos/index.html",
-    "title": "Demos",
+    "objectID": "lectures/index.html",
+    "href": "lectures/index.html",
+    "title": "Lectures",
     "section": "",
-    "text": "R code demonstrations showing mathematical models in action.\nDemos will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "exercises/index.html",
-    "href": "exercises/index.html",
-    "title": "Exercises",
+    "objectID": "exams/index.html",
+    "href": "exams/index.html",
+    "title": "Exams",
     "section": "",
-    "text": "Practice problems to test your understanding. Solutions are in the solutions folder.\nExercises will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+    "text": "Self-assessment questions. Answer keys are in the keys folder.\nExams will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
   }
 ]

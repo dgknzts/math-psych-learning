@@ -4,7 +4,6 @@ project:
 
 website:
   title: "Mathematical Psychology Learning Hub"
-  subtitle: "Self-study resources for mathematical psychology and cognitive modeling"
   navbar:
     left:
       - text: "Home"

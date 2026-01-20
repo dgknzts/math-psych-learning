@@ -1,10 +1,6 @@
 [
   {
-    "listing": "/exams/index.html",
-    "items": []
-  },
-  {
-    "listing": "/lectures/index.html",
+    "listing": "/exercises/index.html",
     "items": []
   },
   {
@@ -12,7 +8,11 @@
     "items": []
   },
   {
-    "listing": "/exercises/index.html",
+    "listing": "/lectures/index.html",
+    "items": []
+  },
+  {
+    "listing": "/exams/index.html",
     "items": []
   }
 ]
