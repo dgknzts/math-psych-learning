@@ -6,6 +6,7 @@ MEMORY.md
 # Quarto
 /.quarto/
 /_site/
+_freeze/
 
 # R
 .Rproj.user
@@ -16,6 +17,7 @@ MEMORY.md
 # OS
 .DS_Store
 Thumbs.db
+.claude
 
 # Python
 __pycache__/

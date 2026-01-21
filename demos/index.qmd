@@ -1,10 +1,12 @@
 ---
 title: "Demos"
 listing:
-  contents: "*.R"
+  contents:
+    - "*.qmd"
+    - "!index.qmd"
   type: table
-  fields: [title, categories]
-  sort: "title"
+  fields: [title, date]
+  sort: "date desc"
 ---
 
 R code demonstrations showing mathematical models in action.

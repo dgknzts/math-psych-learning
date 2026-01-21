@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-01-21">
+
+<title>Mathematical Psychology Foundations – Mathematical Psychology Learning Hub</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Mathematical Psychology Learning Hub</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../lectures/index.html"> 
+<span class="menu-text">Lectures</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../demos/index.html"> 
+<span class="menu-text">Demos</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../exercises/index.html"> 
+<span class="menu-text">Exercises</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#measurement-scales" id="toc-measurement-scales" class="nav-link active" data-scroll-target="#measurement-scales">Measurement Scales</a></li>
+  <li><a href="#luces-principle-of-theory-construction" id="toc-luces-principle-of-theory-construction" class="nav-link" data-scroll-target="#luces-principle-of-theory-construction">Luce’s Principle of Theory Construction</a></li>
+  <li><a href="#the-hidden-assumption-fechners-counterexample" id="toc-the-hidden-assumption-fechners-counterexample" class="nav-link" data-scroll-target="#the-hidden-assumption-fechners-counterexample">The Hidden Assumption: Fechner’s Counterexample</a></li>
+  <li><a href="#hidden-assumptions" id="toc-hidden-assumptions" class="nav-link" data-scroll-target="#hidden-assumptions">Hidden Assumptions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Mathematical Psychology Foundations</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">New Handbook of Mathematical Psychology Vol.3 - Preface</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 21, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.4.3</code></pre>
+</div>
+</div>
+<p>Mathematics in psychology is <strong>not</strong> about computing (adding, multiplying, etc.). It’s about <strong>conceptual clarity</strong> and avoiding conceptual confusions.</p>
+<p>Before we can compute, we need to explicate our hidden assumptions. Often when we do this, we find they are not that compelling.</p>
+<section id="measurement-scales" class="level2">
+<h2 class="anchored" data-anchor-id="measurement-scales">Measurement Scales</h2>
+<p>Entities are measured on specific scales: ordinal, interval, ratio.</p>
+<p>For <strong>ratio scales</strong>, any two valid measurement functions f and g are related by:</p>
+<p><span class="math display">\[f(x) = k \cdot g(x)\]</span></p>
+<p>for some positive constant k (like meters vs centimeters).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: measuring the same stimulus in different units</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>stimulus <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>g_meters <span class="ot">&lt;-</span> stimulus</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>f_centimeters <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> stimulus</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Key property: RATIOS are preserved</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">stimulus =</span> stimulus,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">k_constant =</span> <span class="dv">100</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">meters =</span> g_meters,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">centimeters =</span> f_centimeters,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ratio_m =</span> g_meters <span class="sc">/</span> g_meters[<span class="dv">1</span>],</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">ratio_cm =</span> f_centimeters <span class="sc">/</span> f_centimeters[<span class="dv">1</span>]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  stimulus k_constant meters centimeters ratio_m ratio_cm
+1        1        100      1         100       1        1
+2        2        100      2         200       2        2
+3        3        100      3         300       3        3
+4        4        100      4         400       4        4
+5        5        100      5         500       5        5</code></pre>
+</div>
+</div>
+</section>
+<section id="luces-principle-of-theory-construction" class="level2">
+<h2 class="anchored" data-anchor-id="luces-principle-of-theory-construction">Luce’s Principle of Theory Construction</h2>
+<p>Luce (1959) used measurement scales to constrain psychophysical functions.</p>
+<p><strong>Setup:</strong></p>
+<ul>
+<li>x = stimulus magnitude (ratio scale)</li>
+<li>s = sensation magnitude (ratio scale)</li>
+<li>ψ = psychophysical function: s = ψ(x)</li>
+</ul>
+<p><strong>Key idea:</strong> If we rescale the stimulus by factor k (x → kx), the function should still work with some corresponding rescaling of sensation (s → cs).</p>
+<p><strong>Concrete example with ψ(x) = x²</strong></p>
+<p>Let’s use a known psychophysical function and trace through the derivation.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define an example psychophysical function: psi(x) = x^2</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Original measurements</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">psi</span>(x)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">s =</span> s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x  s
+1 1  1
+2 2  4
+3 3  9
+4 4 16
+5 5 25</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">s =</span> s), <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> s)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"ψ(x) = x²"</span>, <span class="at">x =</span> <span class="st">"x (stimulus)"</span>, <span class="at">y =</span> <span class="st">"s (sensation)"</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="handbook_ch00_preface_files/figure-html/plot-psi-1.png" class="img-fluid figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now suppose we change our measurement unit for x by factor k = 3 (like switching units):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x_new <span class="ot">&lt;-</span> k <span class="sc">*</span> x  <span class="co"># rescaled stimulus measurements</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># What is s when we plug in the new x?</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>s_from_new_x <span class="ot">&lt;-</span> <span class="fu">psi</span>(x_new)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_original =</span> x,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_rescaled =</span> x_new,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">s_original =</span> s,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">s_from_rescaled =</span> s_from_new_x</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x_original x_rescaled s_original s_from_rescaled
+1          1          3          1               9
+2          2          6          4              36
+3          3          9          9              81
+4          4         12         16             144
+5          5         15         25             225</code></pre>
+</div>
+</div>
+<p>Luce’s principle requires: ψ(kx) = K(k) · ψ(x)</p>
+<p>We need to find K(k). We know ψ(kx) and ψ(x), so we can solve for K(k):</p>
+<p><span class="math display">\[K(k) = \frac{\psi(kx)}{\psi(x)} = c\]</span>which c is the constant for the s</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 1:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>s_from_new_x[<span class="dv">1</span>] <span class="sc">/</span> s[<span class="dv">1</span>]  <span class="co"># psi(3*1) / psi(1) = 9 / 1 = 9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 2:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>s_from_new_x[<span class="dv">2</span>] <span class="sc">/</span> s[<span class="dv">2</span>]  <span class="co"># psi(3*2) / psi(2) = 36 / 4 = 9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 3:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>s_from_new_x[<span class="dv">3</span>] <span class="sc">/</span> s[<span class="dv">3</span>]  <span class="co"># psi(3*3) / psi(3) = 81 / 9 = 9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+</div>
+<p>K(k) = 9 for all x values! This is crucial - K(k) must depend only on k, not on x.</p>
+<p>And notice: K(k) = 9 = 3² = k². So for ψ(x) = x², we get K(k) = k².</p>
+<p><strong>The general pattern:</strong> For ψ(x) = x^β, we get K(k) = k^β</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with k = 3, x = 4, different beta values</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 0.5</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="fl">0.5</span>  <span class="co"># psi(kx)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.464102</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="fl">0.5</span> <span class="sc">*</span> x<span class="sc">^</span><span class="fl">0.5</span>  <span class="co"># K(k) * psi(x)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.464102</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 1</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="dv">1</span> <span class="sc">*</span> x<span class="sc">^</span><span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 2</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 144</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> x<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 144</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 3</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1728</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="dv">3</span> <span class="sc">*</span> x<span class="sc">^</span><span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1728</code></pre>
+</div>
+</div>
+<p>All pairs match. The pattern holds for any β.</p>
+<p><strong>Why logarithm fails:</strong></p>
+<p>Let’s try the same approach with ψ(x) = log(x):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># psi(x) = log(x)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to find K(k) = psi(kx) / psi(x) for different x values:</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 2:</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(k <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">/</span> <span class="fu">log</span>(<span class="dv">2</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.584963</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 4:</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(k <span class="sc">*</span> <span class="dv">4</span>) <span class="sc">/</span> <span class="fu">log</span>(<span class="dv">4</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.792481</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 8:</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(k <span class="sc">*</span> <span class="dv">8</span>) <span class="sc">/</span> <span class="fu">log</span>(<span class="dv">8</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.528321</code></pre>
+</div>
+</div>
+<p>The ratio ψ(kx)/ψ(x) gives <strong>different values</strong> for different x!</p>
+<p>For power function: K(k) = 9 for all x (constant) For log function: K(k) = 2.58, 1.79, 1.53… (depends on x)</p>
+<p>Luce’s principle requires K(k) to depend <strong>only on k</strong>, not on x. Log fails this requirement.</p>
+</section>
+<section id="the-hidden-assumption-fechners-counterexample" class="level2">
+<h2 class="anchored" data-anchor-id="the-hidden-assumption-fechners-counterexample">The Hidden Assumption: Fechner’s Counterexample</h2>
+<p>But Fechner’s logarithmic law exists:</p>
+<p><span class="math display">\[s = s_0 \cdot \log\left(\frac{x}{x_0}\right)\]</span></p>
+<p>How can this be? Rozeboom (1962) found Luce’s <strong>hidden assumption</strong>: no dimensional constants.</p>
+<p><strong>What is a dimensional constant?</strong></p>
+<p>A dimensional constant is a fixed value measured in the same units as your variable. For example:</p>
+<ul>
+<li>x₀ = threshold stimulus (measured in same units as x)</li>
+<li>s₀ = baseline sensation (measured in same units as s)</li>
+</ul>
+<p>The key: when you rescale x by factor k, you must also rescale x₀ by k (same units!). So the ratio x/x₀ is unchanged:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Original ratio</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>original <span class="ot">&lt;-</span> x <span class="sc">/</span> x0</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co"># After rescaling BOTH x and x0 by k</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>scaled <span class="ot">&lt;-</span> (k <span class="sc">*</span> x) <span class="sc">/</span> (k <span class="sc">*</span> x0)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">original_ratio =</span> original,</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">scaled_ratio =</span> scaled,</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">unchanged =</span> original <span class="sc">==</span> scaled</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  original_ratio scaled_ratio unchanged
+1              4            4      TRUE</code></pre>
+</div>
+</div>
+<p>The k cancels out! The ratio x/x₀ doesn’t change when you rescale.</p>
+<p><strong>So what does this mean?</strong></p>
+<p>Any function that uses the ratio x/x₀ is automatically scale-invariant:</p>
+<p><span class="math display">\[s = s_0 \cdot \psi\left(\frac{x}{x_0}\right)\]</span></p>
+<p>Here ψ can be ANY increasing function - log, power, square root, anything!</p>
+<p><strong>Summary:</strong></p>
+<ul>
+<li>Luce (without dimensional constants): only power functions satisfy scale invariance</li>
+<li>Rozeboom (with dimensional constants): ANY function of x/x₀ satisfies scale invariance</li>
+</ul>
+<p>Luce’s hidden assumption was “no dimensional constants.” Once you allow them, his restriction to power functions disappears.</p>
+<p>Luce accepted this criticism and withdrew his “principle of theory construction” (Luce, 1962).</p>
+</section>
+<section id="hidden-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="hidden-assumptions">Hidden Assumptions</h2>
+<p>This story illustrates the core message of the preface:</p>
+<p><strong>Mathematics is not about computing</strong> - it’s about conceptual clarity and avoiding confusion.</p>
+<p>Luce’s derivation was mathematically correct. The algebra was flawless. But it contained a hidden assumption (no dimensional constants) that wasn’t explicitly stated. When Rozeboom made this assumption explicit, the apparent restriction to power functions disappeared.</p>
+<p>This pattern repeats throughout science:</p>
+<ol type="1">
+<li>Someone makes a mathematical argument</li>
+<li>The conclusion seems surprising or restrictive</li>
+<li>Upon closer inspection, there’s a hidden assumption</li>
+<li>Making it explicit resolves the puzzle</li>
+</ol>
+<p>The value of mathematical thinking is not in the calculations themselves, but in forcing us to <strong>state our assumptions clearly</strong>. Often, once we do this, we find they are not that compelling - or we discover alternative assumptions that lead to different conclusions.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Mathematical Psychology Foundations"</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "New Handbook of Mathematical Psychology Vol.3 - Preface"</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2026-01-21</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> html</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup}</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>Mathematics in psychology is **not** about computing (adding, multiplying, etc.). It's about **conceptual clarity** and avoiding conceptual confusions.</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>Before we can compute, we need to explicate our hidden assumptions. Often when we do this, we find they are not that compelling.</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Measurement Scales</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>Entities are measured on specific scales: ordinal, interval, ratio.</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>For **ratio scales**, any two valid measurement functions f and g are related by:</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>$$f(x) = k \cdot g(x)$$</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>for some positive constant k (like meters vs centimeters).</span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{r ratio-scale}</span></span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: measuring the same stimulus in different units</span></span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>stimulus <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>g_meters <span class="ot">&lt;-</span> stimulus</span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>f_centimeters <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> stimulus</span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Key property: RATIOS are preserved</span></span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">stimulus =</span> stimulus,</span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">k_constant =</span> <span class="dv">100</span>,</span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">meters =</span> g_meters,</span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">centimeters =</span> f_centimeters,</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">ratio_m =</span> g_meters <span class="sc">/</span> g_meters[<span class="dv">1</span>],</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">ratio_cm =</span> f_centimeters <span class="sc">/</span> f_centimeters[<span class="dv">1</span>]</span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Luce's Principle of Theory Construction</span></span>
+<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>Luce (1959) used measurement scales to constrain psychophysical functions.</span>
+<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a>**Setup:**</span>
+<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>x = stimulus magnitude (ratio scale)</span>
+<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>s = sensation magnitude (ratio scale)</span>
+<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>ψ = psychophysical function: s = ψ(x)</span>
+<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a>**Key idea:** If we rescale the stimulus by factor k (x → kx), the function should still work with some corresponding rescaling of sensation (s → cs).</span>
+<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a>**Concrete example with ψ(x) = x²**</span>
+<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a>Let's use a known psychophysical function and trace through the derivation.</span>
+<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r luce-simulation}</span></span>
+<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Define an example psychophysical function: psi(x) = x^2</span></span>
+<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb39-67"><a href="#cb39-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-68"><a href="#cb39-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Original measurements</span></span>
+<span id="cb39-69"><a href="#cb39-69" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb39-70"><a href="#cb39-70" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">psi</span>(x)</span>
+<span id="cb39-71"><a href="#cb39-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-72"><a href="#cb39-72" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">s =</span> s)</span>
+<span id="cb39-73"><a href="#cb39-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-74"><a href="#cb39-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-75"><a href="#cb39-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot-psi}</span></span>
+<span id="cb39-76"><a href="#cb39-76" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 4</span></span>
+<span id="cb39-77"><a href="#cb39-77" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 2.5</span></span>
+<span id="cb39-78"><a href="#cb39-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-79"><a href="#cb39-79" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">s =</span> s), <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> s)) <span class="sc">+</span></span>
+<span id="cb39-80"><a href="#cb39-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb39-81"><a href="#cb39-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb39-82"><a href="#cb39-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"ψ(x) = x²"</span>, <span class="at">x =</span> <span class="st">"x (stimulus)"</span>, <span class="at">y =</span> <span class="st">"s (sensation)"</span>) <span class="sc">+</span></span>
+<span id="cb39-83"><a href="#cb39-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb39-84"><a href="#cb39-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-85"><a href="#cb39-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-86"><a href="#cb39-86" aria-hidden="true" tabindex="-1"></a>Now suppose we change our measurement unit for x by factor k = 3 (like switching units):</span>
+<span id="cb39-87"><a href="#cb39-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-88"><a href="#cb39-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r rescale-stimulus}</span></span>
+<span id="cb39-89"><a href="#cb39-89" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb39-90"><a href="#cb39-90" aria-hidden="true" tabindex="-1"></a>x_new <span class="ot">&lt;-</span> k <span class="sc">*</span> x  <span class="co"># rescaled stimulus measurements</span></span>
+<span id="cb39-91"><a href="#cb39-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-92"><a href="#cb39-92" aria-hidden="true" tabindex="-1"></a><span class="co"># What is s when we plug in the new x?</span></span>
+<span id="cb39-93"><a href="#cb39-93" aria-hidden="true" tabindex="-1"></a>s_from_new_x <span class="ot">&lt;-</span> <span class="fu">psi</span>(x_new)</span>
+<span id="cb39-94"><a href="#cb39-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-95"><a href="#cb39-95" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb39-96"><a href="#cb39-96" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_original =</span> x,</span>
+<span id="cb39-97"><a href="#cb39-97" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_rescaled =</span> x_new,</span>
+<span id="cb39-98"><a href="#cb39-98" aria-hidden="true" tabindex="-1"></a>  <span class="at">s_original =</span> s,</span>
+<span id="cb39-99"><a href="#cb39-99" aria-hidden="true" tabindex="-1"></a>  <span class="at">s_from_rescaled =</span> s_from_new_x</span>
+<span id="cb39-100"><a href="#cb39-100" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-101"><a href="#cb39-101" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-102"><a href="#cb39-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-103"><a href="#cb39-103" aria-hidden="true" tabindex="-1"></a>Luce's principle requires: ψ(kx) = K(k) · ψ(x)</span>
+<span id="cb39-104"><a href="#cb39-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-105"><a href="#cb39-105" aria-hidden="true" tabindex="-1"></a>We need to find K(k). We know ψ(kx) and ψ(x), so we can solve for K(k):</span>
+<span id="cb39-106"><a href="#cb39-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-107"><a href="#cb39-107" aria-hidden="true" tabindex="-1"></a>$$K(k) = \frac{\psi(kx)}{\psi(x)} = c$$which c is the constant for the s</span>
+<span id="cb39-108"><a href="#cb39-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-109"><a href="#cb39-109" aria-hidden="true" tabindex="-1"></a><span class="in">```{r find-K}</span></span>
+<span id="cb39-110"><a href="#cb39-110" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 1:</span></span>
+<span id="cb39-111"><a href="#cb39-111" aria-hidden="true" tabindex="-1"></a>s_from_new_x[<span class="dv">1</span>] <span class="sc">/</span> s[<span class="dv">1</span>]  <span class="co"># psi(3*1) / psi(1) = 9 / 1 = 9</span></span>
+<span id="cb39-112"><a href="#cb39-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-113"><a href="#cb39-113" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 2:</span></span>
+<span id="cb39-114"><a href="#cb39-114" aria-hidden="true" tabindex="-1"></a>s_from_new_x[<span class="dv">2</span>] <span class="sc">/</span> s[<span class="dv">2</span>]  <span class="co"># psi(3*2) / psi(2) = 36 / 4 = 9</span></span>
+<span id="cb39-115"><a href="#cb39-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-116"><a href="#cb39-116" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 3:</span></span>
+<span id="cb39-117"><a href="#cb39-117" aria-hidden="true" tabindex="-1"></a>s_from_new_x[<span class="dv">3</span>] <span class="sc">/</span> s[<span class="dv">3</span>]  <span class="co"># psi(3*3) / psi(3) = 81 / 9 = 9</span></span>
+<span id="cb39-118"><a href="#cb39-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-119"><a href="#cb39-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-120"><a href="#cb39-120" aria-hidden="true" tabindex="-1"></a>K(k) = 9 for all x values! This is crucial - K(k) must depend only on k, not on x.</span>
+<span id="cb39-121"><a href="#cb39-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-122"><a href="#cb39-122" aria-hidden="true" tabindex="-1"></a>And notice: K(k) = 9 = 3² = k². So for ψ(x) = x², we get K(k) = k².</span>
+<span id="cb39-123"><a href="#cb39-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-124"><a href="#cb39-124" aria-hidden="true" tabindex="-1"></a>**The general pattern:** For ψ(x) = x\^β, we get K(k) = k\^β</span>
+<span id="cb39-125"><a href="#cb39-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-126"><a href="#cb39-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{r verify-pattern}</span></span>
+<span id="cb39-127"><a href="#cb39-127" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with k = 3, x = 4, different beta values</span></span>
+<span id="cb39-128"><a href="#cb39-128" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb39-129"><a href="#cb39-129" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb39-130"><a href="#cb39-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-131"><a href="#cb39-131" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 0.5</span></span>
+<span id="cb39-132"><a href="#cb39-132" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="fl">0.5</span>  <span class="co"># psi(kx)</span></span>
+<span id="cb39-133"><a href="#cb39-133" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="fl">0.5</span> <span class="sc">*</span> x<span class="sc">^</span><span class="fl">0.5</span>  <span class="co"># K(k) * psi(x)</span></span>
+<span id="cb39-134"><a href="#cb39-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-135"><a href="#cb39-135" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 1</span></span>
+<span id="cb39-136"><a href="#cb39-136" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="dv">1</span></span>
+<span id="cb39-137"><a href="#cb39-137" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="dv">1</span> <span class="sc">*</span> x<span class="sc">^</span><span class="dv">1</span></span>
+<span id="cb39-138"><a href="#cb39-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-139"><a href="#cb39-139" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 2</span></span>
+<span id="cb39-140"><a href="#cb39-140" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb39-141"><a href="#cb39-141" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> x<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb39-142"><a href="#cb39-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-143"><a href="#cb39-143" aria-hidden="true" tabindex="-1"></a><span class="co"># beta = 3</span></span>
+<span id="cb39-144"><a href="#cb39-144" aria-hidden="true" tabindex="-1"></a>(k <span class="sc">*</span> x)<span class="sc">^</span><span class="dv">3</span></span>
+<span id="cb39-145"><a href="#cb39-145" aria-hidden="true" tabindex="-1"></a>k<span class="sc">^</span><span class="dv">3</span> <span class="sc">*</span> x<span class="sc">^</span><span class="dv">3</span></span>
+<span id="cb39-146"><a href="#cb39-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-147"><a href="#cb39-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-148"><a href="#cb39-148" aria-hidden="true" tabindex="-1"></a>All pairs match. The pattern holds for any β.</span>
+<span id="cb39-149"><a href="#cb39-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-150"><a href="#cb39-150" aria-hidden="true" tabindex="-1"></a>**Why logarithm fails:**</span>
+<span id="cb39-151"><a href="#cb39-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-152"><a href="#cb39-152" aria-hidden="true" tabindex="-1"></a>Let's try the same approach with ψ(x) = log(x):</span>
+<span id="cb39-153"><a href="#cb39-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-154"><a href="#cb39-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r log-fails}</span></span>
+<span id="cb39-155"><a href="#cb39-155" aria-hidden="true" tabindex="-1"></a><span class="co"># psi(x) = log(x)</span></span>
+<span id="cb39-156"><a href="#cb39-156" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb39-157"><a href="#cb39-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-158"><a href="#cb39-158" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to find K(k) = psi(kx) / psi(x) for different x values:</span></span>
+<span id="cb39-159"><a href="#cb39-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-160"><a href="#cb39-160" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 2:</span></span>
+<span id="cb39-161"><a href="#cb39-161" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(k <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">/</span> <span class="fu">log</span>(<span class="dv">2</span>)  </span>
+<span id="cb39-162"><a href="#cb39-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-163"><a href="#cb39-163" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 4:</span></span>
+<span id="cb39-164"><a href="#cb39-164" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(k <span class="sc">*</span> <span class="dv">4</span>) <span class="sc">/</span> <span class="fu">log</span>(<span class="dv">4</span>)  </span>
+<span id="cb39-165"><a href="#cb39-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-166"><a href="#cb39-166" aria-hidden="true" tabindex="-1"></a><span class="co"># For x = 8:</span></span>
+<span id="cb39-167"><a href="#cb39-167" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(k <span class="sc">*</span> <span class="dv">8</span>) <span class="sc">/</span> <span class="fu">log</span>(<span class="dv">8</span>)  </span>
+<span id="cb39-168"><a href="#cb39-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-169"><a href="#cb39-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-170"><a href="#cb39-170" aria-hidden="true" tabindex="-1"></a>The ratio ψ(kx)/ψ(x) gives **different values** for different x!</span>
+<span id="cb39-171"><a href="#cb39-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-172"><a href="#cb39-172" aria-hidden="true" tabindex="-1"></a>For power function: K(k) = 9 for all x (constant) For log function: K(k) = 2.58, 1.79, 1.53... (depends on x)</span>
+<span id="cb39-173"><a href="#cb39-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-174"><a href="#cb39-174" aria-hidden="true" tabindex="-1"></a>Luce's principle requires K(k) to depend **only on k**, not on x. Log fails this requirement.</span>
+<span id="cb39-175"><a href="#cb39-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-176"><a href="#cb39-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Hidden Assumption: Fechner's Counterexample</span></span>
+<span id="cb39-177"><a href="#cb39-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-178"><a href="#cb39-178" aria-hidden="true" tabindex="-1"></a>But Fechner's logarithmic law exists:</span>
+<span id="cb39-179"><a href="#cb39-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-180"><a href="#cb39-180" aria-hidden="true" tabindex="-1"></a>$$s = s_0 \cdot \log\left(\frac{x}{x_0}\right)$$</span>
+<span id="cb39-181"><a href="#cb39-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-182"><a href="#cb39-182" aria-hidden="true" tabindex="-1"></a>How can this be? Rozeboom (1962) found Luce's **hidden assumption**: no dimensional constants.</span>
+<span id="cb39-183"><a href="#cb39-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-184"><a href="#cb39-184" aria-hidden="true" tabindex="-1"></a>**What is a dimensional constant?**</span>
+<span id="cb39-185"><a href="#cb39-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-186"><a href="#cb39-186" aria-hidden="true" tabindex="-1"></a>A dimensional constant is a fixed value measured in the same units as your variable. For example:</span>
+<span id="cb39-187"><a href="#cb39-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-188"><a href="#cb39-188" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>x₀ = threshold stimulus (measured in same units as x)</span>
+<span id="cb39-189"><a href="#cb39-189" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>s₀ = baseline sensation (measured in same units as s)</span>
+<span id="cb39-190"><a href="#cb39-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-191"><a href="#cb39-191" aria-hidden="true" tabindex="-1"></a>The key: when you rescale x by factor k, you must also rescale x₀ by k (same units!). So the ratio x/x₀ is unchanged:</span>
+<span id="cb39-192"><a href="#cb39-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-193"><a href="#cb39-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r dimensional-constants}</span></span>
+<span id="cb39-194"><a href="#cb39-194" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb39-195"><a href="#cb39-195" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb39-196"><a href="#cb39-196" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb39-197"><a href="#cb39-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-198"><a href="#cb39-198" aria-hidden="true" tabindex="-1"></a><span class="co"># Original ratio</span></span>
+<span id="cb39-199"><a href="#cb39-199" aria-hidden="true" tabindex="-1"></a>original <span class="ot">&lt;-</span> x <span class="sc">/</span> x0</span>
+<span id="cb39-200"><a href="#cb39-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-201"><a href="#cb39-201" aria-hidden="true" tabindex="-1"></a><span class="co"># After rescaling BOTH x and x0 by k</span></span>
+<span id="cb39-202"><a href="#cb39-202" aria-hidden="true" tabindex="-1"></a>scaled <span class="ot">&lt;-</span> (k <span class="sc">*</span> x) <span class="sc">/</span> (k <span class="sc">*</span> x0)</span>
+<span id="cb39-203"><a href="#cb39-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-204"><a href="#cb39-204" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb39-205"><a href="#cb39-205" aria-hidden="true" tabindex="-1"></a>  <span class="at">original_ratio =</span> original,</span>
+<span id="cb39-206"><a href="#cb39-206" aria-hidden="true" tabindex="-1"></a>  <span class="at">scaled_ratio =</span> scaled,</span>
+<span id="cb39-207"><a href="#cb39-207" aria-hidden="true" tabindex="-1"></a>  <span class="at">unchanged =</span> original <span class="sc">==</span> scaled</span>
+<span id="cb39-208"><a href="#cb39-208" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-209"><a href="#cb39-209" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-210"><a href="#cb39-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-211"><a href="#cb39-211" aria-hidden="true" tabindex="-1"></a>The k cancels out! The ratio x/x₀ doesn't change when you rescale.</span>
+<span id="cb39-212"><a href="#cb39-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-213"><a href="#cb39-213" aria-hidden="true" tabindex="-1"></a>**So what does this mean?**</span>
+<span id="cb39-214"><a href="#cb39-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-215"><a href="#cb39-215" aria-hidden="true" tabindex="-1"></a>Any function that uses the ratio x/x₀ is automatically scale-invariant:</span>
+<span id="cb39-216"><a href="#cb39-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-217"><a href="#cb39-217" aria-hidden="true" tabindex="-1"></a>$$s = s_0 \cdot \psi\left(\frac{x}{x_0}\right)$$</span>
+<span id="cb39-218"><a href="#cb39-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-219"><a href="#cb39-219" aria-hidden="true" tabindex="-1"></a>Here ψ can be ANY increasing function - log, power, square root, anything!</span>
+<span id="cb39-220"><a href="#cb39-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-221"><a href="#cb39-221" aria-hidden="true" tabindex="-1"></a>**Summary:**</span>
+<span id="cb39-222"><a href="#cb39-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-223"><a href="#cb39-223" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Luce (without dimensional constants): only power functions satisfy scale invariance</span>
+<span id="cb39-224"><a href="#cb39-224" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Rozeboom (with dimensional constants): ANY function of x/x₀ satisfies scale invariance</span>
+<span id="cb39-225"><a href="#cb39-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-226"><a href="#cb39-226" aria-hidden="true" tabindex="-1"></a>Luce's hidden assumption was "no dimensional constants." Once you allow them, his restriction to power functions disappears.</span>
+<span id="cb39-227"><a href="#cb39-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-228"><a href="#cb39-228" aria-hidden="true" tabindex="-1"></a>Luce accepted this criticism and withdrew his "principle of theory construction" (Luce, 1962).</span>
+<span id="cb39-229"><a href="#cb39-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-230"><a href="#cb39-230" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hidden Assumptions</span></span>
+<span id="cb39-231"><a href="#cb39-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-232"><a href="#cb39-232" aria-hidden="true" tabindex="-1"></a>This story illustrates the core message of the preface:</span>
+<span id="cb39-233"><a href="#cb39-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-234"><a href="#cb39-234" aria-hidden="true" tabindex="-1"></a>**Mathematics is not about computing** - it's about conceptual clarity and avoiding confusion.</span>
+<span id="cb39-235"><a href="#cb39-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-236"><a href="#cb39-236" aria-hidden="true" tabindex="-1"></a>Luce's derivation was mathematically correct. The algebra was flawless. But it contained a hidden assumption (no dimensional constants) that wasn't explicitly stated. When Rozeboom made this assumption explicit, the apparent restriction to power functions disappeared.</span>
+<span id="cb39-237"><a href="#cb39-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-238"><a href="#cb39-238" aria-hidden="true" tabindex="-1"></a>This pattern repeats throughout science:</span>
+<span id="cb39-239"><a href="#cb39-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-240"><a href="#cb39-240" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Someone makes a mathematical argument</span>
+<span id="cb39-241"><a href="#cb39-241" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>The conclusion seems surprising or restrictive</span>
+<span id="cb39-242"><a href="#cb39-242" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Upon closer inspection, there's a hidden assumption</span>
+<span id="cb39-243"><a href="#cb39-243" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Making it explicit resolves the puzzle</span>
+<span id="cb39-244"><a href="#cb39-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-245"><a href="#cb39-245" aria-hidden="true" tabindex="-1"></a>The value of mathematical thinking is not in the calculations themselves, but in forcing us to **state our assumptions clearly**. Often, once we do this, we find they are not that compelling - or we discover alternative assumptions that lead to different conclusions.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Built with Quarto</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

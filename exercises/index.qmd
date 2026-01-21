@@ -7,6 +7,13 @@ listing:
   sort: "title"
 ---
 
-Practice problems to test your understanding. Solutions are in the [solutions](solutions/) folder.
+Practice problems to test your understanding. Includes:
+
+- **Conceptual** - Open-ended and multiple choice questions
+- **Mathematical** - Derivations, proofs, calculations
+- **Coding** - R implementation exercises
+- **Applied** - Scenario-based problems
+
+Solutions are in the [solutions](solutions/) folder.
 
 *Exercises will be added as sources are studied.*

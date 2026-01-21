@@ -1,0 +1,245 @@
+---
+title: "Mathematical Psychology Foundations"
+subtitle: "New Handbook of Mathematical Psychology Vol.3 - Preface"
+date: 2026-01-21
+format: html
+execute:
+  echo: true
+---
+
+```{r setup}
+#| echo: false
+#| message: false
+library(ggplot2)
+```
+
+Mathematics in psychology is **not** about computing (adding, multiplying, etc.). It's about **conceptual clarity** and avoiding conceptual confusions.
+
+Before we can compute, we need to explicate our hidden assumptions. Often when we do this, we find they are not that compelling.
+
+## Measurement Scales
+
+Entities are measured on specific scales: ordinal, interval, ratio.
+
+For **ratio scales**, any two valid measurement functions f and g are related by:
+
+$$f(x) = k \cdot g(x)$$
+
+for some positive constant k (like meters vs centimeters).
+
+```{r ratio-scale}
+# Example: measuring the same stimulus in different units
+stimulus <- c(1, 2, 3, 4, 5)
+
+g_meters <- stimulus
+f_centimeters <- 100 * stimulus
+
+# Key property: RATIOS are preserved
+data.frame(
+  stimulus = stimulus,
+  k_constant = 100,
+  meters = g_meters,
+  centimeters = f_centimeters,
+  ratio_m = g_meters / g_meters[1],
+  ratio_cm = f_centimeters / f_centimeters[1]
+)
+```
+
+## Luce's Principle of Theory Construction
+
+Luce (1959) used measurement scales to constrain psychophysical functions.
+
+**Setup:**
+
+-   x = stimulus magnitude (ratio scale)
+-   s = sensation magnitude (ratio scale)
+-   ψ = psychophysical function: s = ψ(x)
+
+**Key idea:** If we rescale the stimulus by factor k (x → kx), the function should still work with some corresponding rescaling of sensation (s → cs).
+
+**Concrete example with ψ(x) = x²**
+
+Let's use a known psychophysical function and trace through the derivation.
+
+```{r luce-simulation}
+# Define an example psychophysical function: psi(x) = x^2
+psi <- function(x) x^2
+
+# Original measurements
+x <- c(1, 2, 3, 4, 5)
+s <- psi(x)
+
+data.frame(x = x, s = s)
+```
+
+```{r plot-psi}
+#| fig-width: 4
+#| fig-height: 2.5
+
+ggplot(data.frame(x = x, s = s), aes(x = x, y = s)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "ψ(x) = x²", x = "x (stimulus)", y = "s (sensation)") +
+  theme_minimal()
+```
+
+Now suppose we change our measurement unit for x by factor k = 3 (like switching units):
+
+```{r rescale-stimulus}
+k <- 3
+x_new <- k * x  # rescaled stimulus measurements
+
+# What is s when we plug in the new x?
+s_from_new_x <- psi(x_new)
+
+data.frame(
+  x_original = x,
+  x_rescaled = x_new,
+  s_original = s,
+  s_from_rescaled = s_from_new_x
+)
+```
+
+Luce's principle requires: ψ(kx) = K(k) · ψ(x)
+
+We need to find K(k). We know ψ(kx) and ψ(x), so we can solve for K(k):
+
+$$K(k) = \frac{\psi(kx)}{\psi(x)} = c$$which c is the constant for the s
+
+```{r find-K}
+# For x = 1:
+s_from_new_x[1] / s[1]  # psi(3*1) / psi(1) = 9 / 1 = 9
+
+# For x = 2:
+s_from_new_x[2] / s[2]  # psi(3*2) / psi(2) = 36 / 4 = 9
+
+# For x = 3:
+s_from_new_x[3] / s[3]  # psi(3*3) / psi(3) = 81 / 9 = 9
+```
+
+K(k) = 9 for all x values! This is crucial - K(k) must depend only on k, not on x.
+
+And notice: K(k) = 9 = 3² = k². So for ψ(x) = x², we get K(k) = k².
+
+**The general pattern:** For ψ(x) = x\^β, we get K(k) = k\^β
+
+```{r verify-pattern}
+# Test with k = 3, x = 4, different beta values
+k <- 3
+x <- 4
+
+# beta = 0.5
+(k * x)^0.5  # psi(kx)
+k^0.5 * x^0.5  # K(k) * psi(x)
+
+# beta = 1
+(k * x)^1
+k^1 * x^1
+
+# beta = 2
+(k * x)^2
+k^2 * x^2
+
+# beta = 3
+(k * x)^3
+k^3 * x^3
+```
+
+All pairs match. The pattern holds for any β.
+
+**Why logarithm fails:**
+
+Let's try the same approach with ψ(x) = log(x):
+
+```{r log-fails}
+# psi(x) = log(x)
+k <- 3
+
+# Try to find K(k) = psi(kx) / psi(x) for different x values:
+
+# For x = 2:
+log(k * 2) / log(2)  
+
+# For x = 4:
+log(k * 4) / log(4)  
+
+# For x = 8:
+log(k * 8) / log(8)  
+```
+
+The ratio ψ(kx)/ψ(x) gives **different values** for different x!
+
+For power function: K(k) = 9 for all x (constant) For log function: K(k) = 2.58, 1.79, 1.53... (depends on x)
+
+Luce's principle requires K(k) to depend **only on k**, not on x. Log fails this requirement.
+
+## The Hidden Assumption: Fechner's Counterexample
+
+But Fechner's logarithmic law exists:
+
+$$s = s_0 \cdot \log\left(\frac{x}{x_0}\right)$$
+
+How can this be? Rozeboom (1962) found Luce's **hidden assumption**: no dimensional constants.
+
+**What is a dimensional constant?**
+
+A dimensional constant is a fixed value measured in the same units as your variable. For example:
+
+-   x₀ = threshold stimulus (measured in same units as x)
+-   s₀ = baseline sensation (measured in same units as s)
+
+The key: when you rescale x by factor k, you must also rescale x₀ by k (same units!). So the ratio x/x₀ is unchanged:
+
+```{r dimensional-constants}
+x <- 4
+x0 <- 1
+k <- 3
+
+# Original ratio
+original <- x / x0
+
+# After rescaling BOTH x and x0 by k
+scaled <- (k * x) / (k * x0)
+
+data.frame(
+  original_ratio = original,
+  scaled_ratio = scaled,
+  unchanged = original == scaled
+)
+```
+
+The k cancels out! The ratio x/x₀ doesn't change when you rescale.
+
+**So what does this mean?**
+
+Any function that uses the ratio x/x₀ is automatically scale-invariant:
+
+$$s = s_0 \cdot \psi\left(\frac{x}{x_0}\right)$$
+
+Here ψ can be ANY increasing function - log, power, square root, anything!
+
+**Summary:**
+
+-   Luce (without dimensional constants): only power functions satisfy scale invariance
+-   Rozeboom (with dimensional constants): ANY function of x/x₀ satisfies scale invariance
+
+Luce's hidden assumption was "no dimensional constants." Once you allow them, his restriction to power functions disappears.
+
+Luce accepted this criticism and withdrew his "principle of theory construction" (Luce, 1962).
+
+## Hidden Assumptions
+
+This story illustrates the core message of the preface:
+
+**Mathematics is not about computing** - it's about conceptual clarity and avoiding confusion.
+
+Luce's derivation was mathematically correct. The algebra was flawless. But it contained a hidden assumption (no dimensional constants) that wasn't explicitly stated. When Rozeboom made this assumption explicit, the apparent restriction to power functions disappeared.
+
+This pattern repeats throughout science:
+
+1.  Someone makes a mathematical argument
+2.  The conclusion seems surprising or restrictive
+3.  Upon closer inspection, there's a hidden assumption
+4.  Making it explicit resolves the puzzle
+
+The value of mathematical thinking is not in the calculations themselves, but in forcing us to **state our assumptions clearly**. Often, once we do this, we find they are not that compelling - or we discover alternative assumptions that lead to different conclusions.

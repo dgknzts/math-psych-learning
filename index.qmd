@@ -13,8 +13,7 @@ A learning resource for mathematical psychology, covering textbook chapters, res
 |---------|-------------|
 | [Lectures](lectures/) | Slide presentations with key concepts and derivations |
 | [Demos](demos/) | R code demonstrations showing models in action |
-| [Exercises](exercises/) | Practice problems with solutions |
-| [Exams](exams/) | Self-assessment questions with answer keys |
+| [Exercises](exercises/) | Practice problems (conceptual, math, coding, applied) with solutions |
 
 ## Current Sources
 
@@ -39,5 +38,4 @@ A learning resource for mathematical psychology, covering textbook chapters, res
 1. Read the original source material (PDFs not included due to copyright)
 2. Use lectures for concept review
 3. Run demos to see models in action
-4. Practice with exercises
-5. Test yourself with exams
+4. Practice and test yourself with exercises

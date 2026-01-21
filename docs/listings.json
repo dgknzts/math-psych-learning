@@ -1,18 +1,16 @@
 [
   {
+    "listing": "/lectures/index.html",
+    "items": []
+  },
+  {
     "listing": "/exercises/index.html",
     "items": []
   },
   {
     "listing": "/demos/index.html",
-    "items": []
-  },
-  {
-    "listing": "/lectures/index.html",
-    "items": []
-  },
-  {
-    "listing": "/exams/index.html",
-    "items": []
+    "items": [
+      "/demos/handbook_ch00_preface.html"
+    ]
   }
 ]

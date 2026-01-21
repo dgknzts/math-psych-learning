@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - "*.qmd"
+    - "!MEMORY.md"
 
 website:
   title: "Mathematical Psychology Learning Hub"
@@ -14,8 +17,6 @@ website:
         href: demos/index.qmd
       - text: "Exercises"
         href: exercises/index.qmd
-      - text: "Exams"
-        href: exams/index.qmd
   page-footer:
     center: "Built with Quarto"
 
