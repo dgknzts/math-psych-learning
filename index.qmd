@@ -15,27 +15,3 @@ A learning resource for mathematical psychology, covering textbook chapters, res
 | [Demos](demos/) | R code demonstrations showing models in action |
 | [Exercises](exercises/) | Practice problems (conceptual, math, coding, applied) with solutions |
 
-## Current Sources
-
-### New Handbook of Mathematical Psychology (Ashby et al., 2023)
-
-| Ch | Topic | Status |
-|----|-------|--------|
-| Preface | Introduction | Not started |
-| 1 | Visual Encoding | Not started |
-| 2 | Multisensory Integration | Not started |
-| 3 | Fechnerian Scaling | Not started |
-| 4 | Learning Models | Not started |
-| 5 | Memory Models | Not started |
-| 6 | Statistical Decision Theory | Not started |
-| 7 | Stop-Signal Task | Not started |
-| 8 | Approximate Bayesian Computation | Not started |
-| 9 | Cognitive Diagnosis Models | Not started |
-| 10 | Encoding Models in Neuroimaging | Not started |
-
-## How to Use
-
-1. Read the original source material (PDFs not included due to copyright)
-2. Use lectures for concept review
-3. Run demos to see models in action
-4. Practice and test yourself with exercises

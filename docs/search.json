@@ -16,44 +16,51 @@
   {
     "objectID": "demos/handbook_ch00_preface.html",
     "href": "demos/handbook_ch00_preface.html",
-    "title": "Mathematical Psychology Foundations",
+    "title": "Mathematical Psychology Handbook Preface",
     "section": "",
     "text": "Warning: package 'ggplot2' was built under R version 4.4.3\nMathematics in psychology is not about computing (adding, multiplying, etc.). It’s about conceptual clarity and avoiding conceptual confusions.\nBefore we can compute, we need to explicate our hidden assumptions. Often when we do this, we find they are not that compelling."
   },
   {
     "objectID": "demos/handbook_ch00_preface.html#measurement-scales",
     "href": "demos/handbook_ch00_preface.html#measurement-scales",
-    "title": "Mathematical Psychology Foundations",
+    "title": "Mathematical Psychology Handbook Preface",
     "section": "Measurement Scales",
     "text": "Measurement Scales\nEntities are measured on specific scales: ordinal, interval, ratio.\nFor ratio scales, any two valid measurement functions f and g are related by:\n\\[f(x) = k \\cdot g(x)\\]\nfor some positive constant k (like meters vs centimeters).\n\n\nCode\n# Example: measuring the same stimulus in different units\nstimulus &lt;- c(1, 2, 3, 4, 5)\n\ng_meters &lt;- stimulus\nf_centimeters &lt;- 100 * stimulus\n\n# Key property: RATIOS are preserved\ndata.frame(\n  stimulus = stimulus,\n  k_constant = 100,\n  meters = g_meters,\n  centimeters = f_centimeters,\n  ratio_m = g_meters / g_meters[1],\n  ratio_cm = f_centimeters / f_centimeters[1]\n)\n\n\n  stimulus k_constant meters centimeters ratio_m ratio_cm\n1        1        100      1         100       1        1\n2        2        100      2         200       2        2\n3        3        100      3         300       3        3\n4        4        100      4         400       4        4\n5        5        100      5         500       5        5"
   },
   {
     "objectID": "demos/handbook_ch00_preface.html#luces-principle-of-theory-construction",
     "href": "demos/handbook_ch00_preface.html#luces-principle-of-theory-construction",
-    "title": "Mathematical Psychology Foundations",
+    "title": "Mathematical Psychology Handbook Preface",
     "section": "Luce’s Principle of Theory Construction",
     "text": "Luce’s Principle of Theory Construction\nLuce (1959) used measurement scales to constrain psychophysical functions.\nSetup:\n\nx = stimulus magnitude (ratio scale)\ns = sensation magnitude (ratio scale)\nψ = psychophysical function: s = ψ(x)\n\nKey idea: If we rescale the stimulus by factor k (x → kx), the function should still work with some corresponding rescaling of sensation (s → cs).\nConcrete example with ψ(x) = x²\nLet’s use a known psychophysical function and trace through the derivation.\n\n\nCode\n# Define an example psychophysical function: psi(x) = x^2\npsi &lt;- function(x) x^2\n\n# Original measurements\nx &lt;- c(1, 2, 3, 4, 5)\ns &lt;- psi(x)\n\ndata.frame(x = x, s = s)\n\n\n  x  s\n1 1  1\n2 2  4\n3 3  9\n4 4 16\n5 5 25\n\n\n\n\nCode\nggplot(data.frame(x = x, s = s), aes(x = x, y = s)) +\n  geom_line() +\n  geom_point() +\n  labs(title = \"ψ(x) = x²\", x = \"x (stimulus)\", y = \"s (sensation)\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nNow suppose we change our measurement unit for x by factor k = 3 (like switching units):\n\n\nCode\nk &lt;- 3\nx_new &lt;- k * x  # rescaled stimulus measurements\n\n# What is s when we plug in the new x?\ns_from_new_x &lt;- psi(x_new)\n\ndata.frame(\n  x_original = x,\n  x_rescaled = x_new,\n  s_original = s,\n  s_from_rescaled = s_from_new_x\n)\n\n\n  x_original x_rescaled s_original s_from_rescaled\n1          1          3          1               9\n2          2          6          4              36\n3          3          9          9              81\n4          4         12         16             144\n5          5         15         25             225\n\n\nLuce’s principle requires: ψ(kx) = K(k) · ψ(x)\nWe need to find K(k). We know ψ(kx) and ψ(x), so we can solve for K(k):\n\\[K(k) = \\frac{\\psi(kx)}{\\psi(x)} = c\\]which c is the constant for the s\n\n\nCode\n# For x = 1:\ns_from_new_x[1] / s[1]  # psi(3*1) / psi(1) = 9 / 1 = 9\n\n\n[1] 9\n\n\nCode\n# For x = 2:\ns_from_new_x[2] / s[2]  # psi(3*2) / psi(2) = 36 / 4 = 9\n\n\n[1] 9\n\n\nCode\n# For x = 3:\ns_from_new_x[3] / s[3]  # psi(3*3) / psi(3) = 81 / 9 = 9\n\n\n[1] 9\n\n\nK(k) = 9 for all x values! This is crucial - K(k) must depend only on k, not on x.\nAnd notice: K(k) = 9 = 3² = k². So for ψ(x) = x², we get K(k) = k².\nThe general pattern: For ψ(x) = x^β, we get K(k) = k^β\n\n\nCode\n# Test with k = 3, x = 4, different beta values\nk &lt;- 3\nx &lt;- 4\n\n# beta = 0.5\n(k * x)^0.5  # psi(kx)\n\n\n[1] 3.464102\n\n\nCode\nk^0.5 * x^0.5  # K(k) * psi(x)\n\n\n[1] 3.464102\n\n\nCode\n# beta = 1\n(k * x)^1\n\n\n[1] 12\n\n\nCode\nk^1 * x^1\n\n\n[1] 12\n\n\nCode\n# beta = 2\n(k * x)^2\n\n\n[1] 144\n\n\nCode\nk^2 * x^2\n\n\n[1] 144\n\n\nCode\n# beta = 3\n(k * x)^3\n\n\n[1] 1728\n\n\nCode\nk^3 * x^3\n\n\n[1] 1728\n\n\nAll pairs match. The pattern holds for any β.\nWhy logarithm fails:\nLet’s try the same approach with ψ(x) = log(x):\n\n\nCode\n# psi(x) = log(x)\nk &lt;- 3\n\n# Try to find K(k) = psi(kx) / psi(x) for different x values:\n\n# For x = 2:\nlog(k * 2) / log(2)  \n\n\n[1] 2.584963\n\n\nCode\n# For x = 4:\nlog(k * 4) / log(4)  \n\n\n[1] 1.792481\n\n\nCode\n# For x = 8:\nlog(k * 8) / log(8)  \n\n\n[1] 1.528321\n\n\nThe ratio ψ(kx)/ψ(x) gives different values for different x!\nFor power function: K(k) = 9 for all x (constant) For log function: K(k) = 2.58, 1.79, 1.53… (depends on x)\nLuce’s principle requires K(k) to depend only on k, not on x. Log fails this requirement."
   },
   {
     "objectID": "demos/handbook_ch00_preface.html#the-hidden-assumption-fechners-counterexample",
     "href": "demos/handbook_ch00_preface.html#the-hidden-assumption-fechners-counterexample",
-    "title": "Mathematical Psychology Foundations",
+    "title": "Mathematical Psychology Handbook Preface",
     "section": "The Hidden Assumption: Fechner’s Counterexample",
     "text": "The Hidden Assumption: Fechner’s Counterexample\nBut Fechner’s logarithmic law exists:\n\\[s = s_0 \\cdot \\log\\left(\\frac{x}{x_0}\\right)\\]\nHow can this be? Rozeboom (1962) found Luce’s hidden assumption: no dimensional constants.\nWhat is a dimensional constant?\nA dimensional constant is a fixed value measured in the same units as your variable. For example:\n\nx₀ = threshold stimulus (measured in same units as x)\ns₀ = baseline sensation (measured in same units as s)\n\nThe key: when you rescale x by factor k, you must also rescale x₀ by k (same units!). So the ratio x/x₀ is unchanged:\n\n\nCode\nx &lt;- 4\nx0 &lt;- 1\nk &lt;- 3\n\n# Original ratio\noriginal &lt;- x / x0\n\n# After rescaling BOTH x and x0 by k\nscaled &lt;- (k * x) / (k * x0)\n\ndata.frame(\n  original_ratio = original,\n  scaled_ratio = scaled,\n  unchanged = original == scaled\n)\n\n\n  original_ratio scaled_ratio unchanged\n1              4            4      TRUE\n\n\nThe k cancels out! The ratio x/x₀ doesn’t change when you rescale.\nSo what does this mean?\nAny function that uses the ratio x/x₀ is automatically scale-invariant:\n\\[s = s_0 \\cdot \\psi\\left(\\frac{x}{x_0}\\right)\\]\nHere ψ can be ANY increasing function - log, power, square root, anything!\nSummary:\n\nLuce (without dimensional constants): only power functions satisfy scale invariance\nRozeboom (with dimensional constants): ANY function of x/x₀ satisfies scale invariance\n\nLuce’s hidden assumption was “no dimensional constants.” Once you allow them, his restriction to power functions disappears.\nLuce accepted this criticism and withdrew his “principle of theory construction” (Luce, 1962)."
   },
   {
     "objectID": "demos/handbook_ch00_preface.html#hidden-assumptions",
     "href": "demos/handbook_ch00_preface.html#hidden-assumptions",
-    "title": "Mathematical Psychology Foundations",
+    "title": "Mathematical Psychology Handbook Preface",
     "section": "Hidden Assumptions",
     "text": "Hidden Assumptions\nThis story illustrates the core message of the preface:\nMathematics is not about computing - it’s about conceptual clarity and avoiding confusion.\nLuce’s derivation was mathematically correct. The algebra was flawless. But it contained a hidden assumption (no dimensional constants) that wasn’t explicitly stated. When Rozeboom made this assumption explicit, the apparent restriction to power functions disappeared.\nThis pattern repeats throughout science:\n\nSomeone makes a mathematical argument\nThe conclusion seems surprising or restrictive\nUpon closer inspection, there’s a hidden assumption\nMaking it explicit resolves the puzzle\n\nThe value of mathematical thinking is not in the calculations themselves, but in forcing us to state our assumptions clearly. Often, once we do this, we find they are not that compelling - or we discover alternative assumptions that lead to different conclusions."
+  },
+  {
+    "objectID": "demos/handbook_ch00_preface.html#references",
+    "href": "demos/handbook_ch00_preface.html#references",
+    "title": "Mathematical Psychology Handbook Preface",
+    "section": "References",
+    "text": "References\nAshby, F. G., Colonius, H., & Dzhafarov, E. N. (2023). Preface. In F. G. Ashby, H. Colonius, & E. N. Dzhafarov (Eds.), New handbook of mathematical psychology: Volume 3. Perceptual and cognitive processes (pp. vii-xvi). Cambridge University Press.\nLuce, R. D. (1959). On the possible psychophysical laws. Psychological Review, 66(2), 81-95.\nLuce, R. D. (1962). Comments on Rozeboom’s criticism of “On the possible psychophysical laws.” Psychological Review, 69(6), 548-551.\nRozeboom, W. W. (1962). The untenability of Luce’s principle. Psychological Review, 69(6), 542-547."
   },
   {
     "objectID": "demos/index.html",
     "href": "demos/index.html",
     "title": "Demos",
     "section": "",
-    "text": "R code demonstrations showing mathematical models in action.\nDemos will be added as sources are studied.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDate\n\n\n\n\n\n\n\n\nMathematical Psychology Foundations\n\n\nJan 21, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "R code demonstrations showing mathematical models in action.\nDemos will be added as sources are studied.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDate\n\n\n\n\n\n\n\n\nMathematical Psychology Handbook Preface\n\n\nJan 21, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -75,19 +82,5 @@
     "title": "Mathematical Psychology Learning Hub",
     "section": "Content",
     "text": "Content\n\n\n\nSection\nDescription\n\n\n\n\nLectures\nSlide presentations with key concepts and derivations\n\n\nDemos\nR code demonstrations showing models in action\n\n\nExercises\nPractice problems (conceptual, math, coding, applied) with solutions"
-  },
-  {
-    "objectID": "index.html#current-sources",
-    "href": "index.html#current-sources",
-    "title": "Mathematical Psychology Learning Hub",
-    "section": "Current Sources",
-    "text": "Current Sources\n\nNew Handbook of Mathematical Psychology (Ashby et al., 2023)\n\n\n\nCh\nTopic\nStatus\n\n\n\n\nPreface\nIntroduction\nNot started\n\n\n1\nVisual Encoding\nNot started\n\n\n2\nMultisensory Integration\nNot started\n\n\n3\nFechnerian Scaling\nNot started\n\n\n4\nLearning Models\nNot started\n\n\n5\nMemory Models\nNot started\n\n\n6\nStatistical Decision Theory\nNot started\n\n\n7\nStop-Signal Task\nNot started\n\n\n8\nApproximate Bayesian Computation\nNot started\n\n\n9\nCognitive Diagnosis Models\nNot started\n\n\n10\nEncoding Models in Neuroimaging\nNot started"
-  },
-  {
-    "objectID": "index.html#how-to-use",
-    "href": "index.html#how-to-use",
-    "title": "Mathematical Psychology Learning Hub",
-    "section": "How to Use",
-    "text": "How to Use\n\nRead the original source material (PDFs not included due to copyright)\nUse lectures for concept review\nRun demos to see models in action\nPractice and test yourself with exercises"
   }
 ]
