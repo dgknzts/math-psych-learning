@@ -4,7 +4,7 @@
     "href": "lectures/index.html",
     "title": "Lectures",
     "section": "",
-    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n    \n      \n      \n    \n\n\n\n\nTitle\nCategories\n\n\n\n\n\nNo matching items"
+    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nCategories\n\n\n\n\n\n\n\n\nHandbook Preface: Why Math in Psychology?\n\n\n \n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "exercises/index.html",
@@ -82,5 +82,166 @@
     "title": "Mathematical Psychology Learning Hub",
     "section": "Content",
     "text": "Content\n\n\n\nSection\nDescription\n\n\n\n\nLectures\nSlide presentations with key concepts and derivations\n\n\nDemos\nR code demonstrations showing models in action\n\n\nExercises\nPractice problems (conceptual, math, coding, applied) with solutions"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#the-core-message",
+    "href": "lectures/handbook_ch00_preface.html#the-core-message",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "The Core Message",
+    "text": "The Core Message\nMathematics in psychology is NOT about computing.\nIt is about:\n\nConceptual clarity\nAvoiding conceptual confusions\nExplicating hidden assumptions\n\n\n\n“Before we can compute, we need to explicate the hidden assumptions we make, and often when we do this we find out these assumptions are not all that compelling.”"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#the-dupin-example",
+    "href": "lectures/handbook_ch00_preface.html#the-dupin-example",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "The Dupin Example",
+    "text": "The Dupin Example\nEdgar Allan Poe’s character Mr. Dupin (1845):\n\n“Two motives, each of a given value, have not, necessarily, a value when united, equal to the sum of their values apart.”\n\n\nHidden assumptions:\n\nD1: Motives A and B can be combined\nD2-D3: Each can be assigned a real number value\nD4: Combination = sum of values (a + b)\nD5: Empirically, c ≠ a + b\n\n\n\nConclusion: Math doesn’t apply? No! The hidden assumption D4 is wrong."
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#order-effects-in-logic",
+    "href": "lectures/handbook_ch00_preface.html#order-effects-in-logic",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Order Effects in Logic",
+    "text": "Order Effects in Logic\nClassical logic: A ∧ B ≡ B ∧ A (commutative)\nBut: Order of presentation matters empirically!\n\nHidden assumption: “A presented first, B second” = A ∧ B\nSolution: Use positional labels:\n\nA₁ ∧ B₂ (A first, B second)\nA₂ ∧ B₁ (A second, B first)\n\nThese are different propositions. Commutativity preserved: A₁ ∧ B₂ ≡ B₂ ∧ A₁"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#representational-theory-of-measurement",
+    "href": "lectures/handbook_ch00_preface.html#representational-theory-of-measurement",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Representational Theory of Measurement",
+    "text": "Representational Theory of Measurement\nEntities are measured on specific scales:\n\n\n\nScale\nTransformation\nExample\n\n\n\n\nOrdinal\nMonotonic\nRankings\n\n\nInterval\nf(x) = ax + b\nTemperature (°C, °F)\n\n\nRatio\nf(x) = kx\nLength, mass\n\n\n\n\nRatio scale: Any two valid measurement functions f and g satisfy:\n\\[f(x) = k \\cdot g(x)\\]\nfor some positive constant k."
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#luces-principle-of-theory-construction",
+    "href": "lectures/handbook_ch00_preface.html#luces-principle-of-theory-construction",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Luce’s Principle of Theory Construction",
+    "text": "Luce’s Principle of Theory Construction\nSetup:\n\nx = stimulus magnitude (ratio scale)\ns = sensation magnitude (ratio scale)\nψ = psychophysical function: s = ψ(x)\n\n\nKey idea: If we rescale stimulus by factor k:\n\\[x' = kx\\]\nThen sensation should also rescale by some factor c = K(k):\n\\[s' = K(k) \\cdot s\\]"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#the-functional-equation",
+    "href": "lectures/handbook_ch00_preface.html#the-functional-equation",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "The Functional Equation",
+    "text": "The Functional Equation\nFrom Luce’s principle:\n\\[\\psi(kx) = K(k) \\cdot \\psi(x)\\]\n\nThe only solution (for all positive k and x):\n\\[\\psi(x) = b \\cdot x^\\beta\\] \\[K(k) = k^\\beta\\]\n\n\nSurprising conclusion: Only power functions satisfy scale invariance!"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#but-wait-fechners-law",
+    "href": "lectures/handbook_ch00_preface.html#but-wait-fechners-law",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "But Wait… Fechner’s Law",
+    "text": "But Wait… Fechner’s Law\nFechner (1861) proposed:\n\\[s = s_0 \\cdot \\log\\left(\\frac{x}{x_0}\\right)\\]\n\nThis is NOT a power function. How can it exist?\n\n\nRozeboom (1962) found the hidden assumption:\nLuce assumed no dimensional constants."
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#what-are-dimensional-constants",
+    "href": "lectures/handbook_ch00_preface.html#what-are-dimensional-constants",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "What Are Dimensional Constants?",
+    "text": "What Are Dimensional Constants?\nA dimensional constant is measured in the same units as your variable:\n\nx₀ = threshold stimulus (same units as x)\ns₀ = baseline sensation (same units as s)\n\n\nWhen you rescale x → kx, you must also rescale x₀ → kx₀:\n\\[\\frac{kx}{kx_0} = \\frac{x}{x_0}\\]\nThe ratio is unchanged - automatically scale-invariant!"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#the-resolution",
+    "href": "lectures/handbook_ch00_preface.html#the-resolution",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "The Resolution",
+    "text": "The Resolution\nWith dimensional constants, any function works:\n\\[s = s_0 \\cdot \\psi\\left(\\frac{x}{x_0}\\right)\\]\n\n\n\n\nApproach\nResult\n\n\n\n\nLuce (no dim. constants)\nOnly power functions\n\n\nRozeboom (with dim. constants)\nAny function of x/x₀\n\n\n\n\n\nLuce accepted this criticism and withdrew his “principle” (Luce, 1962)."
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#the-lesson",
+    "href": "lectures/handbook_ch00_preface.html#the-lesson",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "The Lesson",
+    "text": "The Lesson\nHidden assumptions can exist even in rigorous treatments.\n\n\nSomeone makes a mathematical argument\nThe conclusion seems surprising or restrictive\nUpon closer inspection: hidden assumption\nMaking it explicit resolves the puzzle\n\n\n\nMath forces us to state assumptions clearly."
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#about-this-volume",
+    "href": "lectures/handbook_ch00_preface.html#about-this-volume",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "About This Volume",
+    "text": "About This Volume\nNew Handbook of Mathematical Psychology, Volume 3\nPerceptual and Cognitive Processes\nEditors: F. Gregory Ashby, Hans Colonius, Ehtibar N. Dzhafarov\nCambridge University Press, 2023"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-1-visual-encoding",
+    "href": "lectures/handbook_ch00_preface.html#chapter-1-visual-encoding",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 1: Visual Encoding",
+    "text": "Chapter 1: Visual Encoding\nPrinciples and Consequences of the Initial Visual Encoding\nBrian Wandell & David Brainard\n\nHow light signals are transformed by the lens to retinal image\nConversion to cone photoreceptor excitations\nLinear systems theory and signal-dependent noise\nIdeal observer and Bayesian methods"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-2-multisensory-integration",
+    "href": "lectures/handbook_ch00_preface.html#chapter-2-multisensory-integration",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 2: Multisensory Integration",
+    "text": "Chapter 2: Multisensory Integration\nMeasuring Multisensory Integration in Selected Paradigms\nAdele Diederich & Hans Colonius\n\nMerging information from different sensory modalities\nMeasures based on spike numbers, reaction time, accuracy\nOptimality in combining information\nInverse effectiveness"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-3-fechnerian-scaling",
+    "href": "lectures/handbook_ch00_preface.html#chapter-3-fechnerian-scaling",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 3: Fechnerian Scaling",
+    "text": "Chapter 3: Fechnerian Scaling\nFechnerian Scaling: Dissimilarity Cumulation Theory\nEhtibar N. Dzhafarov & Hans Colonius\n\nSubjective distances via cumulating discriminability\nFrom stimulus pairs to metric geometry\nGeneralized Finsler geometry\nFloyd-Warshall algorithm for computing distances"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-4-learning-models",
+    "href": "lectures/handbook_ch00_preface.html#chapter-4-learning-models",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 4: Learning Models",
+    "text": "Chapter 4: Learning Models\nMathematical Models of Human Learning\nF. Gregory Ashby, Matthew J. Crossley, & Jeffrey B. Inglis\n\nMultiple learning and memory systems\nBayesian approaches vs. machine learning algorithms\nNeural networks mimicking neuroanatomy\nBiologically plausible synaptic plasticity"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-5-memory-models",
+    "href": "lectures/handbook_ch00_preface.html#chapter-5-memory-models",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 5: Memory Models",
+    "text": "Chapter 5: Memory Models\nFormal Models of Memory Based on Temporally-Varying Representations\nMarc W. Howard\n\nGradually changing internal states\nFrom statistical learning theory to distributed memory\nScale-invariant temporal history\nNeural phenomena and cognitive models"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-6-statistical-decision-theory",
+    "href": "lectures/handbook_ch00_preface.html#chapter-6-statistical-decision-theory",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 6: Statistical Decision Theory",
+    "text": "Chapter 6: Statistical Decision Theory\nStatistical Decision Theory\nF. Gregory Ashby & Michael J. Wenger\n\nSignal Detection Theory (SDT) - 1D stimuli\nGeneral Recognition Theory (GRT) - multidimensional\nNoisy sensory representations + decision rules\nDrift-diffusion models for response time"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-7-response-inhibition",
+    "href": "lectures/handbook_ch00_preface.html#chapter-7-response-inhibition",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 7: Response Inhibition",
+    "text": "Chapter 7: Response Inhibition\nModeling Response Inhibition in the Stop-Signal Task\nHans Colonius & Adele Diederich\n\nStop-signal task: withhold responses\nEstimating latency of stopping process\nRace models (parametric and nonparametric)\nCopula-based model classes"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-8-approximate-bayesian-computation",
+    "href": "lectures/handbook_ch00_preface.html#chapter-8-approximate-bayesian-computation",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 8: Approximate Bayesian Computation",
+    "text": "Chapter 8: Approximate Bayesian Computation\nApproximate Bayesian Computation\nNoah Thomas, Brandon M. Turner, & Trisha Van Zandt\n\nSolution for complex models without explicit likelihood\nWhen maximum likelihood estimation is impossible\nActivation-suppression race model example\nParameter estimation accuracy"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-9-cognitive-diagnosis-models",
+    "href": "lectures/handbook_ch00_preface.html#chapter-9-cognitive-diagnosis-models",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 9: Cognitive Diagnosis Models",
+    "text": "Chapter 9: Cognitive Diagnosis Models\nCognitive Diagnosis Models\nJimmy de la Torre & Miguel A. Sorrel\n\nOrigins in educational measurement\nClassify examinees on binary attributes (master/nonmaster)\nQ-matrix specification\nModel fit, validity, reliability"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#chapter-10-encoding-models-in-neuroimaging",
+    "href": "lectures/handbook_ch00_preface.html#chapter-10-encoding-models-in-neuroimaging",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Chapter 10: Encoding Models in Neuroimaging",
+    "text": "Chapter 10: Encoding Models in Neuroimaging\nEncoding Models in Neuroimaging\nFabián A. Soto & F. Gregory Ashby\n\nPredict neural responses from stimuli\nVoxel-based encoding models\nDecoding: predict stimulus from neural data\nRepresentational similarity analysis\nModel-based fMRI"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#summary",
+    "href": "lectures/handbook_ch00_preface.html#summary",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "Summary",
+    "text": "Summary\nWhy math in psychology?\n\nConceptual clarity - not computation\nExplicate hidden assumptions - before we can calculate\nAvoid false constraints - like Luce’s “only power functions”\nEnable new questions - dimensional constants, scale types\n\n\n\n“The value of mathematical thinking is not in the calculations themselves, but in forcing us to state our assumptions clearly.”"
+  },
+  {
+    "objectID": "lectures/handbook_ch00_preface.html#references",
+    "href": "lectures/handbook_ch00_preface.html#references",
+    "title": "Handbook Preface: Why Math in Psychology?",
+    "section": "References",
+    "text": "References\nAshby, F. G., Colonius, H., & Dzhafarov, E. N. (2023). Preface. In F. G. Ashby, H. Colonius, & E. N. Dzhafarov (Eds.), New handbook of mathematical psychology: Volume 3 (pp. vii-xvi). Cambridge University Press.\nLuce, R. D. (1959). On the possible psychophysical laws. Psychological Review, 66(2), 81-95.\nLuce, R. D. (1962). Comments on Rozeboom’s criticism. Psychological Review, 69(6), 548-551.\nRozeboom, W. W. (1962). The untenability of Luce’s principle. Psychological Review, 69(6), 542-547."
   }
 ]

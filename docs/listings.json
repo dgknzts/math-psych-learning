@@ -1,7 +1,9 @@
 [
   {
     "listing": "/lectures/index.html",
-    "items": []
+    "items": [
+      "/lectures/handbook_ch00_preface.html"
+    ]
   },
   {
     "listing": "/exercises/index.html",

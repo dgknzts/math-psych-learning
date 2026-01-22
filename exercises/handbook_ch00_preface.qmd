@@ -1,0 +1,121 @@
+---
+title: "Exercises: Why Math in Psychology?"
+subtitle: "New Handbook of Mathematical Psychology Vol.3 - Preface"
+categories: [preface, measurement, psychophysics]
+---
+
+## Conceptual Questions
+
+### Open-ended
+
+**Q1.** In your own words, explain the core message of the preface. Why do the authors argue that mathematics in psychology is "not about computing"?
+
+**Q2.** In the Dupin example from Edgar Allan Poe, what hidden assumptions lead to the false conclusion that "mathematics does not apply to motives"? List at least three.
+
+**Q3.** Compare and contrast Luce's approach (without dimensional constants) and Rozeboom's critique (with dimensional constants). What is the key difference in their conclusions about psychophysical laws?
+
+### Multiple Choice
+
+**Q4.** Which measurement scale allows only monotonic transformations?
+
+a)  Nominal scale
+b)  Ordinal scale
+c)  Interval scale
+d)  Ratio scale
+
+**Q5.** For a ratio scale, if f and g are two valid measurement functions, what is their relationship?
+
+a)  f(x) = g(x) + c for some constant c
+b)  f(x) = k · g(x) for some positive constant k
+c)  f(x) = a · g(x) + b for constants a and b
+d)  f(x) and g(x) are unrelated
+
+**Q6.** What was Luce's hidden assumption that Rozeboom identified?
+
+a)  Stimulus and sensation must be on ratio scales
+b)  The psychophysical function must be continuous
+c)  No dimensional constants are allowed in the formula
+d)  K(k) must be a power function
+
+## Mathematical Exercises
+
+**Q7.** Starting from Luce's functional equation ψ(kx) = K(k) · ψ(x), derive K(k) for the power function ψ(x) = x\^β.
+
+*Hint: Substitute ψ(x) = x\^β into both sides and simplify.*
+
+**Q8.** Show that the logarithmic function ψ(x) = log(x) does NOT satisfy Luce's principle.
+
+*Hint: Try to find K(k) = ψ(kx)/ψ(x) for different values of x. Is K(k) constant across different x values?*
+
+**Q9.** Prove that when dimensional constants are allowed, ANY function ψ in the form s = s₀ · ψ(x/x₀) is scale-invariant.
+
+*Hint: Show that when you rescale x → kx, you must also rescale x₀ → kx₀, and the ratio x/x₀ remains unchanged.*
+
+## Coding Exercises
+
+**Q10.** Write R code to verify that ψ(x) = x\^β satisfies Luce's principle for β = 0.5, 1, 2, and 3.
+
+For each β, show that K(k) = ψ(kx)/ψ(x) gives the same value for different x values.
+
+```{r}
+# Starter code
+k <- 3
+x_values <- c(2, 4, 8)
+
+
+# Your code here: compute K(k) for different beta values
+beta_values <- c(0.5, 1.2, 3)
+
+
+K <- function(x, beta, k) (k*x)^beta / x^beta
+answer_matrix <- matrix(nrow = length(x_values), ncol = length(beta_values))
+for (i in 1:length(x_values)) {
+  for (j in 1:length(beta_values)) {
+    answer_matrix[i,j] <- K(x_values[i], beta_values[j], k)
+  }
+}
+
+answer_matrix # Each row (x) in the same columnn (beta) is the same
+```
+
+**Q11.** Write R code to demonstrate that ψ(x) = log(x) fails Luce's principle.
+
+Compute K(k) = log(kx)/log(x) for k = 3 and x = 2, 4, 8. Show that K(k) depends on x.
+
+```{r}
+# Starter code
+k <- 3
+x_values <- c(2, 4, 8)
+
+# Your code here
+for (x in x_values) {
+  K_value <-log(k * x) / log(x)
+  cat("x =", x, ": K(k) =", K_value, "\n")
+}
+```
+
+**Q12.** Write R code to demonstrate that dimensional constants make the ratio x/x₀ scale-invariant.
+
+```{r}
+# Starter code
+x <- 10
+x0 <- 2
+k <- 5
+
+# Your code here: show (k*x)/(k*x0) == x/x0
+(k*x) / (k*x0) == x / x0
+```
+
+## Applied Problems
+
+**Q13.** A researcher proposes the psychophysical function ψ(x) = √x (square root).
+
+a)  Does this function satisfy Luce's principle (without dimensional constants)?
+b)  What is K(k) for this function?
+c)  If we rewrite it with a dimensional constant as s = s₀ · √(x/x₀), does it satisfy scale invariance? Why?
+
+**Q14.** Consider the order effects example from the preface. Classical logic says A ∧ B ≡ B ∧ A, but empirically the order of presentation matters.
+
+a)  What is the hidden assumption that leads to the apparent "failure" of logic?
+b)  How does positional labeling (A₁, A₂, B₁, B₂) resolve this?
+c)  Give another example from psychology where order might matter but the underlying mathematical structure is preserved.

@@ -1,0 +1,319 @@
+---
+title: "Handbook Preface: Why Math in Psychology?"
+subtitle: "New Handbook of Mathematical Psychology Vol.3"
+author: "Based on Ashby, Colonius, & Dzhafarov (2023)"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    smaller: true
+---
+
+## The Core Message
+
+Mathematics in psychology is **NOT** about computing.
+
+It is about:
+
+-   **Conceptual clarity**
+-   **Avoiding conceptual confusions**
+-   **Explicating hidden assumptions**
+
+. . .
+
+> "Before we can compute, we need to explicate the hidden assumptions we make, and often when we do this we find out these assumptions are not all that compelling."
+
+## The Dupin Example
+
+Edgar Allan Poe's character Mr. Dupin (1845):
+
+> "Two motives, each of a given value, have not, necessarily, a value when united, equal to the sum of their values apart."
+
+. . .
+
+**Hidden assumptions:**
+
+-   D1: Motives A and B can be combined
+-   D2-D3: Each can be assigned a real number value
+-   D4: Combination = sum of values (a + b)
+-   D5: Empirically, c ≠ a + b
+
+. . .
+
+**Conclusion:** Math doesn't apply? **No!** The hidden assumption D4 is wrong.
+
+## Order Effects in Logic
+
+Classical logic: A ∧ B ≡ B ∧ A (commutative)
+
+But: Order of presentation matters empirically!
+
+. . .
+
+**Hidden assumption:** "A presented first, B second" = A ∧ B
+
+**Solution:** Use positional labels:
+
+-   A₁ ∧ B₂ (A first, B second)
+-   A₂ ∧ B₁ (A second, B first)
+
+These are **different propositions**. Commutativity preserved: A₁ ∧ B₂ ≡ B₂ ∧ A₁
+
+## Representational Theory of Measurement
+
+Entities are measured on specific **scales**:
+
+| Scale    | Transformation | Example              |
+|----------|----------------|----------------------|
+| Ordinal  | Monotonic      | Rankings             |
+| Interval | f(x) = ax + b  | Temperature (°C, °F) |
+| Ratio    | f(x) = kx      | Length, mass         |
+
+. . .
+
+**Ratio scale:** Any two valid measurement functions f and g satisfy:
+
+$$f(x) = k \cdot g(x)$$
+
+for some positive constant k.
+
+## Luce's Principle of Theory Construction
+
+**Setup:**
+
+-   x = stimulus magnitude (ratio scale)
+-   s = sensation magnitude (ratio scale)
+-   ψ = psychophysical function: s = ψ(x)
+
+. . .
+
+**Key idea:** If we rescale stimulus by factor k:
+
+$$x' = kx$$
+
+Then sensation should also rescale by some factor c = K(k):
+
+$$s' = K(k) \cdot s$$
+
+## The Functional Equation
+
+From Luce's principle:
+
+$$\psi(kx) = K(k) \cdot \psi(x)$$
+
+. . .
+
+**The only solution** (for all positive k and x):
+
+$$\psi(x) = b \cdot x^\beta$$ $$K(k) = k^\beta$$
+
+. . .
+
+**Surprising conclusion:** Only power functions satisfy scale invariance!
+
+## But Wait... Fechner's Law
+
+Fechner (1861) proposed:
+
+$$s = s_0 \cdot \log\left(\frac{x}{x_0}\right)$$
+
+. . .
+
+This is NOT a power function. How can it exist?
+
+. . .
+
+**Rozeboom (1962)** found the hidden assumption:
+
+Luce assumed **no dimensional constants**.
+
+## What Are Dimensional Constants?
+
+A dimensional constant is measured in the **same units** as your variable:
+
+-   x₀ = threshold stimulus (same units as x)
+-   s₀ = baseline sensation (same units as s)
+
+. . .
+
+When you rescale x → kx, you must also rescale x₀ → kx₀:
+
+$$\frac{kx}{kx_0} = \frac{x}{x_0}$$
+
+The ratio is **unchanged** - automatically scale-invariant!
+
+## The Resolution
+
+With dimensional constants, **any** function works:
+
+$$s = s_0 \cdot \psi\left(\frac{x}{x_0}\right)$$
+
+. . .
+
+| Approach                       | Result               |
+|--------------------------------|----------------------|
+| Luce (no dim. constants)       | Only power functions |
+| Rozeboom (with dim. constants) | Any function of x/x₀ |
+
+. . .
+
+Luce accepted this criticism and withdrew his "principle" (Luce, 1962).
+
+## The Lesson
+
+Hidden assumptions can exist even in **rigorous** treatments.
+
+. . .
+
+1.  Someone makes a mathematical argument
+2.  The conclusion seems surprising or restrictive
+3.  Upon closer inspection: hidden assumption
+4.  Making it explicit resolves the puzzle
+
+. . .
+
+**Math forces us to state assumptions clearly.**
+
+## About This Volume
+
+**New Handbook of Mathematical Psychology, Volume 3**
+
+*Perceptual and Cognitive Processes*
+
+Editors: F. Gregory Ashby, Hans Colonius, Ehtibar N. Dzhafarov
+
+Cambridge University Press, 2023
+
+## Chapter 1: Visual Encoding
+
+**Principles and Consequences of the Initial Visual Encoding**
+
+*Brian Wandell & David Brainard*
+
+-   How light signals are transformed by the lens to retinal image
+-   Conversion to cone photoreceptor excitations
+-   Linear systems theory and signal-dependent noise
+-   Ideal observer and Bayesian methods
+
+## Chapter 2: Multisensory Integration
+
+**Measuring Multisensory Integration in Selected Paradigms**
+
+*Adele Diederich & Hans Colonius*
+
+-   Merging information from different sensory modalities
+-   Measures based on spike numbers, reaction time, accuracy
+-   Optimality in combining information
+-   Inverse effectiveness
+
+## Chapter 3: Fechnerian Scaling
+
+**Fechnerian Scaling: Dissimilarity Cumulation Theory**
+
+*Ehtibar N. Dzhafarov & Hans Colonius*
+
+-   Subjective distances via cumulating discriminability
+-   From stimulus pairs to metric geometry
+-   Generalized Finsler geometry
+-   Floyd-Warshall algorithm for computing distances
+
+## Chapter 4: Learning Models
+
+**Mathematical Models of Human Learning**
+
+*F. Gregory Ashby, Matthew J. Crossley, & Jeffrey B. Inglis*
+
+-   Multiple learning and memory systems
+-   Bayesian approaches vs. machine learning algorithms
+-   Neural networks mimicking neuroanatomy
+-   Biologically plausible synaptic plasticity
+
+## Chapter 5: Memory Models
+
+**Formal Models of Memory Based on Temporally-Varying Representations**
+
+*Marc W. Howard*
+
+-   Gradually changing internal states
+-   From statistical learning theory to distributed memory
+-   Scale-invariant temporal history
+-   Neural phenomena and cognitive models
+
+## Chapter 6: Statistical Decision Theory
+
+**Statistical Decision Theory**
+
+*F. Gregory Ashby & Michael J. Wenger*
+
+-   Signal Detection Theory (SDT) - 1D stimuli
+-   General Recognition Theory (GRT) - multidimensional
+-   Noisy sensory representations + decision rules
+-   Drift-diffusion models for response time
+
+## Chapter 7: Response Inhibition
+
+**Modeling Response Inhibition in the Stop-Signal Task**
+
+*Hans Colonius & Adele Diederich*
+
+-   Stop-signal task: withhold responses
+-   Estimating latency of stopping process
+-   Race models (parametric and nonparametric)
+-   Copula-based model classes
+
+## Chapter 8: Approximate Bayesian Computation
+
+**Approximate Bayesian Computation**
+
+*Noah Thomas, Brandon M. Turner, & Trisha Van Zandt*
+
+-   Solution for complex models without explicit likelihood
+-   When maximum likelihood estimation is impossible
+-   Activation-suppression race model example
+-   Parameter estimation accuracy
+
+## Chapter 9: Cognitive Diagnosis Models
+
+**Cognitive Diagnosis Models**
+
+*Jimmy de la Torre & Miguel A. Sorrel*
+
+-   Origins in educational measurement
+-   Classify examinees on binary attributes (master/nonmaster)
+-   Q-matrix specification
+-   Model fit, validity, reliability
+
+## Chapter 10: Encoding Models in Neuroimaging
+
+**Encoding Models in Neuroimaging**
+
+*Fabián A. Soto & F. Gregory Ashby*
+
+-   Predict neural responses from stimuli
+-   Voxel-based encoding models
+-   Decoding: predict stimulus from neural data
+-   Representational similarity analysis
+-   Model-based fMRI
+
+## Summary
+
+**Why math in psychology?**
+
+1.  **Conceptual clarity** - not computation
+2.  **Explicate hidden assumptions** - before we can calculate
+3.  **Avoid false constraints** - like Luce's "only power functions"
+4.  **Enable new questions** - dimensional constants, scale types
+
+. . .
+
+> "The value of mathematical thinking is not in the calculations themselves, but in forcing us to **state our assumptions clearly**."
+
+## References
+
+Ashby, F. G., Colonius, H., & Dzhafarov, E. N. (2023). Preface. In F. G. Ashby, H. Colonius, & E. N. Dzhafarov (Eds.), *New handbook of mathematical psychology: Volume 3* (pp. vii-xvi). Cambridge University Press.
+
+Luce, R. D. (1959). On the possible psychophysical laws. *Psychological Review, 66*(2), 81-95.
+
+Luce, R. D. (1962). Comments on Rozeboom's criticism. *Psychological Review, 69*(6), 548-551.
+
+Rozeboom, W. W. (1962). The untenability of Luce's principle. *Psychological Review, 69*(6), 542-547.
