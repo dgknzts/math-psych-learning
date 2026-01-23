@@ -9,20 +9,20 @@ subtitle: "New Handbook of Mathematical Psychology Vol.3 - Preface"
 
 **A2.** Hidden assumptions in the Dupin example:
 
-- D1: Motives A and B can be combined in a well-defined sense
-- D2: Each motive can be assigned a real number value (a and b)
-- D3: The combination of A and B can also be assigned a real number value (c)
-- D4: The combination is represented by the **sum** of values (a + b)
-- D5: We can empirically observe that c ≠ a + b
+-   D1: Motives A and B can be combined in a well-defined sense
+-   D2: Each motive can be assigned a real number value (a and b)
+-   D3: The combination of A and B can also be assigned a real number value (c)
+-   D4: The combination is represented by the **sum** of values (a + b)
+-   D5: We can empirically observe that c ≠ a + b
 
 The key hidden assumption is D4. If we don't assume combination = sum, then c doesn't have to equal a + b. It could be ab, max(a,b), or something else entirely.
 
 **A3.**
 
 | Aspect | Luce | Rozeboom |
-|--------|------|----------|
+|------------------------|------------------|------------------------------|
 | Dimensional constants | Not allowed | Allowed |
-| Conclusion | Only power functions ψ(x) = bx^β satisfy scale invariance | ANY function of x/x₀ satisfies scale invariance |
+| Conclusion | Only power functions ψ(x) = bx\^β satisfy scale invariance | ANY function of x/x₀ satisfies scale invariance |
 | Implication | Strong constraint on psychophysical laws | No constraint - Fechner's log law is valid |
 
 The key difference: Rozeboom showed that Luce's "principle" contained a hidden assumption (no dimensional constants). Once dimensional constants like x₀ are allowed, the restriction to power functions disappears.
@@ -35,23 +35,23 @@ The key difference: Rozeboom showed that Luce's "principle" contained a hidden a
 
 ## Mathematical Exercises
 
-**A7.** Starting with ψ(kx) = K(k) · ψ(x) and ψ(x) = x^β:
+**A7.** Starting with ψ(kx) = K(k) · ψ(x) and ψ(x) = x\^β:
 
-Left side: ψ(kx) = (kx)^β = k^β · x^β
+Left side: ψ(kx) = (kx)\^β = k\^β · x\^β
 
-Right side: K(k) · ψ(x) = K(k) · x^β
+Right side: K(k) · ψ(x) = K(k) · x\^β
 
-Setting them equal: k^β · x^β = K(k) · x^β
+Setting them equal: k\^β · x\^β = K(k) · x\^β
 
-Dividing both sides by x^β: k^β = K(k)
+Dividing both sides by x\^β: k\^β = K(k)
 
-Therefore: **K(k) = k^β**
+Therefore: **K(k) = k\^β**
 
 **A8.** For ψ(x) = log(x), we compute K(k) = ψ(kx)/ψ(x) = log(kx)/log(x):
 
-- For x = 2, k = 3: K(3) = log(6)/log(2) = 1.79/0.69 ≈ 2.58
-- For x = 4, k = 3: K(3) = log(12)/log(4) = 2.48/1.39 ≈ 1.79
-- For x = 8, k = 3: K(3) = log(24)/log(8) = 3.18/2.08 ≈ 1.53
+-   For x = 2, k = 3: K(3) = log(6)/log(2) = 1.79/0.69 ≈ 2.58
+-   For x = 4, k = 3: K(3) = log(12)/log(4) = 2.48/1.39 ≈ 1.79
+-   For x = 8, k = 3: K(3) = log(24)/log(8) = 3.18/2.08 ≈ 1.53
 
 K(k) gives **different values** for different x! This violates Luce's requirement that K(k) depend only on k, not on x. Therefore, the log function does NOT satisfy Luce's principle.
 
@@ -79,7 +79,7 @@ for (beta in c(0.5, 1, 2, 3)) {
 }
 ```
 
-Output shows K(k) = k^β is constant across all x values for each β.
+Output shows K(k) = k\^β is constant across all x values for each β.
 
 **A11.**
 
@@ -120,27 +120,29 @@ Output: Both ratios equal 5. The k cancels, proving scale invariance.
 
 **A13.**
 
-a) Yes, ψ(x) = √x = x^0.5 is a power function, so it satisfies Luce's principle.
+a)  Yes, ψ(x) = √x = x\^0.5 is a power function, so it satisfies Luce's principle.
 
-b) K(k) = k^0.5 = √k
+b)  K(k) = k\^0.5 = √k
 
-Verification: ψ(kx) = √(kx) = √k · √x = k^0.5 · ψ(x) ✓
+Verification: ψ(kx) = √(kx) = √k · √x = k\^0.5 · ψ(x) ✓
 
-c) Yes, s = s₀ · √(x/x₀) satisfies scale invariance because x/x₀ is dimensionless. When we rescale, (kx)/(kx₀) = x/x₀, so the ratio is unchanged.
+c)  Yes, s = s₀ · √(x/x₀) satisfies scale invariance because x/x₀ is dimensionless. When we rescale, (kx)/(kx₀) = x/x₀, so the ratio is unchanged.
 
 **A14.**
 
-a) The hidden assumption is that "A presented first, B presented second" is represented simply as A ∧ B. This ignores the temporal/positional information.
+a)  The hidden assumption is that "A presented first, B presented second" is represented simply as A ∧ B. This ignores the temporal/positional information.
 
-b) Positional labeling solves this by including position as part of the proposition:
-- A₁ = "A presented first"
-- B₂ = "B presented second"
+b)  Positional labeling solves this by including position as part of the proposition:
+
+-   A₁ = "A presented first"
+-   B₂ = "B presented second"
 
 Now A₁ ∧ B₂ and A₂ ∧ B₁ are **different propositions**. Commutativity is preserved: A₁ ∧ B₂ ≡ B₂ ∧ A₁.
 
-c) Examples from psychology:
-- **Priming effects**: Seeing word A before word B affects recognition differently than B before A
-- **Serial position effects in memory**: Items presented first (primacy) vs. last (recency) are remembered differently
-- **Anchoring effects**: The first number presented affects subsequent numerical judgments
+c)  Examples from psychology:
+
+-   **Priming effects**: Seeing word A before word B affects recognition differently than B before A
+-   **Serial position effects in memory**: Items presented first (primacy) vs. last (recency) are remembered differently
+-   **Anchoring effects**: The first number presented affects subsequent numerical judgments
 
 In each case, the underlying mathematical structure (e.g., memory strength, response probability) is preserved when we properly encode temporal position as part of the stimulus description.

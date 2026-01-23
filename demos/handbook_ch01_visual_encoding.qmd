@@ -1,0 +1,595 @@
+---
+title: "Initial Visual Encoding"
+subtitle: "Handbook Ch.1 - Wandell & Brainard"
+date: 2026-01-23
+format: html
+execute:
+  echo: true
+---
+
+```{r setup}
+#| echo: false
+#| message: false
+library(ggplot2)
+library(tidyr)
+```
+
+Vision science uses mathematics to communicate across disciplines. The initial visual encoding describes how light from a scene becomes neural signals - from physics (light) through optics (eye) to biology (photoreceptors).
+
+## 1.2 Scene to Retinal Image
+
+### Light Field
+
+Leonardo da Vinci noticed that a pinhole camera forms an image wherever you place it - meaning light rays must be present everywhere, traveling in all directions. Gershun (1939) formalized this as the **light field**:
+
+$$LF(x, y, z, \alpha, \beta, \lambda, \rho)$$
+
+Each ray is described by:
+
+-   Position: $(x, y, z)$
+-   Direction: $(\alpha, \beta)$
+-   Wavelength: $\lambda$
+-   Polarization: $\rho$
+
+This is a 7-dimensional function!
+
+### Incident Light Field
+
+The eye only captures rays entering the pupil - the **incident light field**:
+
+$$ILF(u, v, \alpha, \beta, \lambda, \rho, t)$$
+
+where $(u, v)$ is position at the pupil aperture and $t$ is time.
+
+### Plenoptic Function
+
+Adelson & Bergen (1991) simplified further for human vision. The eye focuses rays onto the retina, so direction is determined by retinal position $(r_x, r_y)$. Ignoring polarization (unimportant for perception):
+
+$$E(r_x, r_y, \lambda, t)$$
+
+This is the **retinal spectral irradiance** - power per unit area as a function of wavelength at each retinal location.
+
+```{r light-field-reduction}
+# The eye dramatically reduces information dimensionality
+dimensions <- data.frame(
+  representation = c("Light Field", "Incident Light Field", "Retinal Image"),
+  dimensions = c(7, 7, 4),
+  parameters = c("x,y,z,α,β,λ,ρ", "u,v,α,β,λ,ρ,t", "rx,ry,λ,t")
+)
+dimensions
+```
+
+The key insight: many different light fields produce the **same** retinal image. Information is inevitably lost.
+
+### Simulating a Light Field (Toy Model)
+
+> This is a simplified **toy model** for learning - not from a published source.
+
+Let's make the abstract light field concrete by building a simple 2D scene and querying it. We'll work in 2D (dropping z) with one direction angle α (dropping β) to keep things visualizable.
+
+**Our scene**: Three colored rectangles at different positions along a wall.
+
+```{r define-scene}
+# Define a simple scene: colored rectangles on a wall at y = 10
+# Each object has: x_min, x_max, and a spectrum (simplified to peak wavelength)
+scene <- list(
+  list(x_min = -3, x_max = -1, peak_wavelength = 620),  # red object
+  list(x_min = 1, x_max = 3, peak_wavelength = 530),    # green object
+  list(x_min = 5, x_max = 7, peak_wavelength = 460)     # blue object
+)
+wall_y <- 10
+```
+
+```{r plot-scene}
+#| fig-width: 7
+#| fig-height: 5
+
+# Visualize the scene from bird's eye view
+scene_plot <- ggplot() +
+  # Draw the wall
+  geom_segment(aes(x = -5, xend = 9, y = wall_y, yend = wall_y),
+               color = "gray50", linewidth = 1) +
+  # Draw the colored objects on the wall
+  geom_segment(aes(x = -3, xend = -1, y = wall_y, yend = wall_y),
+               color = "red", linewidth = 4) +
+  geom_segment(aes(x = 1, xend = 3, y = wall_y, yend = wall_y),
+               color = "green3", linewidth = 4) +
+  geom_segment(aes(x = 5, xend = 7, y = wall_y, yend = wall_y),
+               color = "blue", linewidth = 4) +
+  # Draw the observer
+  geom_point(aes(x = 0, y = 0), size = 4, color = "black") +
+  annotate("text", x = 0, y = -0.8, label = "Observer (0, 0)", size = 3.5) +
+  # Draw rays from observer to center of each object
+  geom_segment(aes(x = 0, xend = -2, y = 0, yend = wall_y),
+               color = "red", linetype = "dashed", alpha = 0.6) +
+  geom_segment(aes(x = 0, xend = 2, y = 0, yend = wall_y),
+               color = "green3", linetype = "dashed", alpha = 0.6) +
+  geom_segment(aes(x = 0, xend = 6, y = 0, yend = wall_y),
+               color = "blue", linetype = "dashed", alpha = 0.6) +
+  # Draw the "straight ahead" reference line
+  geom_segment(aes(x = 0, xend = 0, y = 0, yend = wall_y),
+               color = "gray30", linetype = "dotted") +
+  annotate("text", x = 0.3, y = 5, label = "α = 0°", size = 3, angle = 90) +
+  # Label the angles
+  annotate("text", x = -2, y = wall_y + 0.6, label = "α ≈ -11°",
+           size = 3, color = "red") +
+  annotate("text", x = 2, y = wall_y + 0.6, label = "α ≈ +11°",
+           size = 3, color = "green4") +
+  annotate("text", x = 6, y = wall_y + 0.6, label = "α ≈ +31°",
+           size = 3, color = "blue") +
+  # Formatting
+  coord_fixed(ratio = 1) +
+  xlim(-5, 9) + ylim(-2, 12) +
+  labs(title = "Bird's Eye View of the Scene",
+       subtitle = "Observer at origin, wall at y = 10, three colored objects",
+       x = "x position", y = "y position") +
+  theme_minimal()
+
+scene_plot
+```
+
+**Understanding the angles:**
+
+The angle α tells you which direction you're looking:
+
+-   **α = 0** means looking straight ahead (along the y-axis)
+-   **α \< 0** (negative) means looking LEFT
+-   **α \> 0** (positive) means looking RIGHT
+
+The angle to each object depends on geometry. From (0, 0), to hit the center of the green object at (2, 10):
+
+$$\alpha = \arctan\left(\frac{x_{object}}{y_{wall}}\right) = \arctan\left(\frac{2}{10}\right) \approx 11.3°$$
+
+```{r angle-calculation}
+# Calculate the viewing angle to each object's center
+object_centers <- c(-2, 2, 6)  # x-coordinates of object centers
+angles_to_objects <- atan(object_centers / wall_y) * 180 / pi  # convert to degrees
+
+data.frame(
+  object = c("Red", "Green", "Blue"),
+  center_x = object_centers,
+  angle_degrees = round(angles_to_objects, 1)
+)
+```
+
+**The light field function:**
+
+```{r light-field-function}
+light_field <- function(x, y, alpha, lambda) {
+  if (y >= wall_y) return(0)
+
+  # Ray trace: where does ray hit the wall?
+  hit_x <- x + (wall_y - y) * tan(alpha)
+
+  # Check if we hit an object
+  for (obj in scene) {
+    if (hit_x >= obj$x_min && hit_x <= obj$x_max) {
+      # Return spectrum (Gaussian centered at object's peak wavelength)
+      return(exp(-0.5 * ((lambda - obj$peak_wavelength) / 30)^2))
+    }
+  }
+  return(0.05)  # empty wall
+}
+```
+
+> **Reality vs Toy Model:** Real radiance varies due to light source distance, surface angle, texture, and shadows. Our toy model only uses spectrum match (Gaussian).
+
+**Scan across directions** from (0,0):
+
+```{r query-directions}
+#| fig-width: 6
+#| fig-height: 3
+
+angles <- seq(-0.6, 0.6, length.out = 200)
+results <- data.frame(
+  angle = rep(angles * 180/pi, 3),
+  radiance = c(
+    sapply(angles, function(a) light_field(0, 0, a, 620)),
+    sapply(angles, function(a) light_field(0, 0, a, 530)),
+    sapply(angles, function(a) light_field(0, 0, a, 460))
+  ),
+  color = rep(c("red", "green", "blue"), each = 200)
+)
+
+ggplot(results, aes(angle, radiance, color = color)) +
+  geom_line(linewidth = 1) +
+  scale_color_identity() +
+  labs(title = "Light field: scanning left to right",
+       x = "Angle (degrees)", y = "Radiance") +
+  theme_minimal()
+```
+
+Each peak = one object. The function answers: "Looking in direction α, how much light of wavelength λ do I see?"
+
+### From Light Field to Cone Response
+
+The eye compresses the light field in two steps:
+
+1.  **Direction → Retinal position**: The lens maps viewing angle to a spot on the retina
+2.  **Many wavelengths → 3 cone values**: Each cone type sums up light weighted by its sensitivity
+
+```{r compression-step1}
+#| fig-width: 5
+#| fig-height: 3
+
+directions <- seq(-0.4, 0.7, length.out = 30)
+wavelengths <- seq(400, 700, by = 10)
+
+# Pick a direction (change this to see different objects!)
+alpha <- -0.1
+
+# What spectrum arrives at this direction?
+spectrum_at_alpha <- sapply(wavelengths, function(w) light_field(0, 0, alpha, w))
+
+# Determine color based on which object we're looking at
+hit_x <- (wall_y - 0) * tan(alpha)
+plot_color <- if (hit_x >= -3 && hit_x <= -1) "red" else
+              if (hit_x >= 1 && hit_x <= 3) "green3" else
+              if (hit_x >= 5 && hit_x <= 7) "blue" else "gray50"
+object_name <- if (hit_x >= -3 && hit_x <= -1) "red" else
+               if (hit_x >= 1 && hit_x <= 3) "green" else
+               if (hit_x >= 5 && hit_x <= 7) "blue" else "wall"
+
+ggplot(data.frame(w = wavelengths, r = spectrum_at_alpha), aes(w, r)) +
+  geom_line(color = plot_color, linewidth = 1) +
+  geom_area(fill = plot_color, alpha = 0.3) +
+  labs(title = paste0("Spectrum at α = ", round(alpha * 180/pi, 1), "°"),
+       subtitle = paste0("This spot sees the ", object_name, " object"),
+       x = "Wavelength (nm)", y = "Radiance") +
+  theme_minimal()
+```
+
+```{r compression-step2}
+#| fig-width: 5
+#| fig-height: 3
+
+# Cone sensitivities (different widths reflect real biology!)
+# S-cone: narrow (SD=35), M-cone: medium (SD=45), L-cone: wide (SD=50)
+L_sens <- exp(-0.5 * ((wavelengths - 565) / 50)^2)
+M_sens <- exp(-0.5 * ((wavelengths - 535) / 45)^2)
+S_sens <- exp(-0.5 * ((wavelengths - 445) / 35)^2)
+
+# Cone response = sum(spectrum × sensitivity)
+L_resp <- sum(spectrum_at_alpha * L_sens)
+M_resp <- sum(spectrum_at_alpha * M_sens)
+S_resp <- sum(spectrum_at_alpha * S_sens)
+
+ggplot(data.frame(cone = c("L", "M", "S"), response = c(L_resp, M_resp, S_resp)),
+       aes(cone, response, fill = cone)) +
+  geom_col() +
+  scale_fill_manual(values = c("L" = "red", "M" = "green", "S" = "blue")) +
+  labs(title = "Cone responses at this position",
+       subtitle = "31 wavelengths → 3 numbers",
+       x = "", y = "Response") +
+  theme_minimal() + theme(legend.position = "none")
+```
+
+M-cone responds most because green object matches M-cone sensitivity!
+
+> **Note:** The different bandwidths (SD = 35, 45, 50) approximate real cone biology. S-cones are narrowest (most selective), L-cones are widest (respond to broader range). This comes from the molecular structure of each cone's photopigment (opsin).
+
+```{r compression-full}
+#| fig-width: 6
+#| fig-height: 3
+
+# Do this for ALL retinal positions
+L_responses <- c()
+M_responses <- c()
+S_responses <- c()
+
+for (a in directions) {
+  # Step 1: Get spectrum at this direction
+  spectrum <- c()
+  for (w in wavelengths) {
+    spectrum <- c(spectrum, light_field(0, 0, a, w))
+  }
+
+  # Step 2: Compute cone responses (weighted sum)
+  L_responses <- c(L_responses, sum(spectrum * L_sens))
+  M_responses <- c(M_responses, sum(spectrum * M_sens))
+  S_responses <- c(S_responses, sum(spectrum * S_sens))
+}
+
+# Combine into data frame for plotting
+cone_responses <- data.frame(
+  position = rep(directions * 180/pi, 3),
+  response = c(L_responses, M_responses, S_responses),
+  cone = rep(c("L", "M", "S"), each = length(directions))
+)
+
+ggplot(cone_responses, aes(position, response, color = cone)) +
+  geom_line(linewidth = 1.2) +
+  scale_color_manual(values = c("L" = "red", "M" = "green", "S" = "blue")) +
+  labs(title = "Cone responses across retina",
+       x = "Retinal position (degrees)", y = "Response") +
+  theme_minimal()
+```
+
+**The compression:** Light field (position × direction × wavelength) → just 3 numbers (L, M, S) per retinal spot. This is the "initial visual encoding."
+
+## 1.3 Mathematical Principles
+
+### Linear Systems
+
+A system $L$ is **linear** if it follows the superposition rule:
+
+$$L(x + y) = L(x) + L(y)$$
+
+This implies **homogeneity**: $L(mx) = mL(x)$ for any scalar $m$.
+
+```{r linear-system}
+# Example: a linear transformation (like cone absorption)
+L <- function(input) {
+  0.6 * input[1] + 0.3 * input[2] + 0.1 * input[3]
+}
+
+x <- c(1, 2, 3)
+y <- c(0.5, 1.5, 2.5)
+
+# Test superposition: L(x + y) should equal L(x) + L(y)
+L_sum <- L(x + y)
+sum_L <- L(x) + L(y)
+
+data.frame(
+  test = c("L(x + y)", "L(x) + L(y)"),
+  value = c(L_sum, sum_L)
+)
+```
+
+Why is linearity so powerful? If we know how a system responds to a set of **basis inputs**, we can predict its response to **any** input (as a weighted sum of those basis responses).
+
+### Cone Excitations
+
+The transformation from spectral irradiance to cone excitations is linear. For a cone with fundamental $C(\lambda)$:
+
+$$N(r_x, r_y) = \int C(\lambda) \cdot E(r_x, r_y, \lambda) \, d\lambda$$
+
+In discrete form (how we compute it):
+
+$$N(r_x, r_y) = \sum_{\lambda_i} C(\lambda_i) \cdot E(r_x, r_y, \lambda_i) \cdot \Delta\lambda$$
+
+This is just a weighted sum - the inner product of the cone fundamental with the spectrum.
+
+```{r cone-fundamentals}
+# Simplified cone fundamentals (Gaussian approximations)
+wavelengths <- seq(400, 700, by = 5)
+
+# L-cone peaks ~565nm, M-cone ~535nm, S-cone ~445nm
+L_cone <- exp(-0.5 * ((wavelengths - 565) / 50)^2)
+M_cone <- exp(-0.5 * ((wavelengths - 535) / 45)^2)
+S_cone <- exp(-0.5 * ((wavelengths - 445) / 35)^2)
+
+cone_data <- data.frame(
+  wavelength = rep(wavelengths, 3),
+  sensitivity = c(L_cone, M_cone, S_cone),
+  cone = rep(c("L (long)", "M (medium)", "S (short)"), each = length(wavelengths))
+)
+
+ggplot(cone_data, aes(x = wavelength, y = sensitivity, color = cone)) +
+  geom_line(linewidth = 1) +
+  scale_color_manual(values = c("L (long)" = "red", "M (medium)" = "green", "S (short)" = "blue")) +
+  labs(title = "Human Cone Fundamentals (simplified)",
+       x = "Wavelength (nm)", y = "Relative Sensitivity") +
+  theme_minimal()
+```
+
+### Matrix Formulation
+
+With three cone types (L, M, S), we can write cone excitations as matrix multiplication:
+
+$$\mathbf{n}(r_x, r_y) = \mathbf{C} \cdot \mathbf{e}(r_x, r_y)$$
+
+where:
+
+-   $\mathbf{C}$ is a $3 \times w$ matrix (3 cone types, $w$ wavelengths)
+-   $\mathbf{e}$ is a $w \times 1$ vector (spectral irradiance at one location)
+-   $\mathbf{n}$ is a $3 \times 1$ vector (L, M, S cone excitations)
+
+```{r matrix-formulation}
+# Create cone matrix C (3 x w)
+C <- rbind(L_cone, M_cone, S_cone)
+
+# Example spectrum: "white" light (equal energy)
+e_white <- rep(1, length(wavelengths))
+
+# Compute cone excitations: n = C * e
+n_white <- C %*% e_white
+
+data.frame(
+  cone = c("L", "M", "S"),
+  excitation = round(as.vector(n_white), 2)
+)
+```
+
+### Color Matching and Metamers
+
+A profound consequence: **different spectra can produce identical cone excitations**. These pairs are called **metamers**.
+
+For two spectra $\mathbf{e}_1$ and $\mathbf{e}_2$ to be metamers:
+
+$$\mathbf{C} \cdot \mathbf{e}_1 = \mathbf{C} \cdot \mathbf{e}_2$$
+
+This means their difference is in the **null space** of $\mathbf{C}$:
+
+$$\mathbf{C} \cdot (\mathbf{e}_2 - \mathbf{e}_1) = \mathbf{0}$$
+
+Wyszecki called vectors in this null space "**metameric blacks**" - adding them to any spectrum creates a metamer.
+
+```{r metamers}
+# Create two different spectra that produce the same cone response
+
+# Spectrum 1: narrow yellow (580nm)
+e_yellow <- exp(-0.5 * ((wavelengths - 580) / 15)^2)
+
+# Spectrum 2: mixture of red + green
+e_red <- exp(-0.5 * ((wavelengths - 620) / 15)^2)
+e_green <- exp(-0.5 * ((wavelengths - 540) / 15)^2)
+
+# Find weights to match yellow's cone excitations
+n_yellow <- C %*% e_yellow
+
+# We want: w_r * C*e_red + w_g * C*e_green = C*e_yellow
+# Solve for weights using least squares
+A <- cbind(C %*% e_red, C %*% e_green)
+weights <- solve(t(A) %*% A) %*% t(A) %*% n_yellow
+
+e_mixture <- as.numeric(weights[1]) * e_red + as.numeric(weights[2]) * e_green
+n_mixture <- C %*% e_mixture
+
+# Compare
+data.frame(
+  cone = c("L", "M", "S"),
+  yellow = round(as.vector(n_yellow), 3),
+  red_green_mix = round(as.vector(n_mixture), 3),
+  difference = round(as.vector(n_yellow - n_mixture), 6)
+)
+```
+
+The spectra are physically different, but perceptually identical!
+
+```{r plot-metamers}
+#| fig-width: 6
+#| fig-height: 3
+
+metamer_data <- data.frame(
+  wavelength = rep(wavelengths, 2),
+  intensity = c(e_yellow / max(e_yellow), e_mixture / max(e_mixture)),
+  spectrum = rep(c("Yellow (narrow)", "Red+Green mix"), each = length(wavelengths))
+)
+
+ggplot(metamer_data, aes(x = wavelength, y = intensity, color = spectrum)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Metameric Spectra",
+       subtitle = "Different physics, same perception",
+       x = "Wavelength (nm)", y = "Relative Intensity") +
+  theme_minimal()
+```
+
+This is why displays work! They don't reproduce the original spectrum - they produce a **metamer** using just RGB primaries.
+
+### Noise in Sensory Measurements
+
+Cone excitations are inherently noisy. Two distributions matter:
+
+**Gaussian**: $N(x; \mu, \sigma) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$
+
+-   Two parameters: mean $\mu$, variance $\sigma^2$
+-   Often used for "signal-independent" noise (same variance everywhere)
+
+**Poisson**: $P(M; \mu) = e^{-\mu} \frac{\mu^M}{M!}$
+
+-   One parameter: $\mu$ (mean = variance)
+-   "Signal-dependent" noise: variance scales with signal
+
+Cone excitations follow **Poisson** statistics - this is fundamental.
+
+```{r noise-comparison}
+#| fig-width: 7
+#| fig-height: 3
+
+# Compare Poisson and Gaussian for different means
+mu_values <- c(5, 20, 100)
+
+noise_data <- data.frame()
+
+for (mu in mu_values) {
+  x_range <- seq(max(0, mu - 4*sqrt(mu)), mu + 4*sqrt(mu), by = 1)
+
+  noise_data <- rbind(noise_data,
+    data.frame(x = x_range,
+               prob = dpois(x_range, mu),
+               dist = "Poisson",
+               mu = paste0("mean = ", mu)),
+    data.frame(x = x_range,
+               prob = dnorm(x_range, mu, sqrt(mu)),
+               dist = "Gaussian",
+               mu = paste0("mean = ", mu))
+  )
+}
+
+ggplot(noise_data, aes(x = x, y = prob, color = dist)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(data = subset(noise_data, dist == "Poisson"), size = 1) +
+  facet_wrap(~mu, scales = "free") +
+  labs(title = "Gaussian approximation to Poisson",
+       subtitle = "Works well when mean > 10",
+       x = "Count", y = "Probability") +
+  theme_minimal()
+```
+
+The critical difference: for **signal-independent** noise, variance is constant. For **Poisson** (signal-dependent), variance scales with the mean. This matters for dark vs bright regions!
+
+### Image Formation and Shift-Invariance
+
+For a planar image, the retinal image $E$ is formed from the displayed image $I$ through the optics:
+
+$$E(r_x, r_y, \lambda) = \alpha E_1(r_x, r_y, \lambda) + \beta E_2(r_x, r_y, \lambda)$$
+
+This is linear! But what about **shift-invariance**? A system is shift-invariant if shifting the input just shifts the output (without changing its form).
+
+For shift-invariant systems, we can use **convolution**:
+
+$$E(r_x, r_y) = \int \int I(u, v) \cdot P(r_x - u, r_y - v) \, du \, dv$$
+
+where $P(r_x, r_y)$ is the **point spread function** - the retinal image of a single point.
+
+```{r convolution}
+#| fig-width: 6
+#| fig-height: 3
+
+# Simple 1D demonstration: sharp edge blurred by PSF
+x <- 1:100
+
+# Sharp edge (step function)
+edge <- ifelse(x > 50, 1, 0)
+
+# Point spread function (Gaussian blur)
+psf_width <- 5
+psf <- dnorm(seq(-15, 15), 0, psf_width)
+psf <- psf / sum(psf)
+
+# Convolve (using R's built-in filter)
+blurred <- stats::filter(edge, psf, sides = 2)
+blurred[is.na(blurred)] <- edge[is.na(blurred)]
+
+conv_data <- data.frame(
+  position = rep(x, 2),
+  intensity = c(edge, blurred),
+  image = rep(c("Original (display)", "Blurred (retina)"), each = length(x))
+)
+
+ggplot(conv_data, aes(x = position, y = intensity, color = image)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Image formation by convolution",
+       subtitle = "E(r) = I(x) * P(r-x)",
+       x = "Position", y = "Intensity") +
+  theme_minimal()
+```
+
+**Important caveat**: The human eye is NOT perfectly shift-invariant:
+
+-   PSF varies with retinal eccentricity
+-   PSF varies with wavelength (chromatic aberration)
+-   Cone density varies across the retina
+
+This is why computational models (like ISETBio) are essential for accurate predictions.
+
+## Summary of Key Equations
+
+| Equation | Description |
+|------------------------------------|------------------------------------|
+| $LF(x,y,z,\alpha,\beta,\lambda,\rho)$ | Light field (Eq. 1.1) |
+| $E(r_x, r_y, \lambda, t)$ | Retinal spectral irradiance (Eq. 1.3) |
+| $L(x+y) = L(x) + L(y)$ | Superposition (linearity) (Eq. 1.4) |
+| $N = \int C(\lambda) E(\lambda) d\lambda$ | Cone excitation (Eq. 1.7) |
+| $\mathbf{n} = \mathbf{C} \mathbf{e}$ | Matrix form (Eq. 1.9) |
+| $\mathbf{C}(\mathbf{e}_2 - \mathbf{e}_1) = \mathbf{0}$ | Metamerism condition (Eq. 1.10) |
+| $E = \int I(u,v) P(r-u) du dv$ | Convolution (Eq. 1.13) |
+
+## References
+
+Wandell, B. & Brainard, D. (2024). Principles and consequences of the initial visual encoding. In J. Batchelder et al. (Eds.), *New handbook of mathematical psychology* (Vol. 3). Cambridge University Press.
+
+Adelson, E. H., & Bergen, J. (1991). The plenoptic function and the elements of early vision. In M. Landy & J. Movshon (Eds.), *Computational models of visual processing* (pp. 3-20). MIT Press.
+
+Gershun, A. (1939). The light field. *Journal of Mathematical Physics, 18*(1-4), 51-151.
