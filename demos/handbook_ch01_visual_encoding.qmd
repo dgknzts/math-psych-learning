@@ -14,7 +14,149 @@ library(ggplot2)
 library(tidyr)
 ```
 
+## 1.1 Introduction
+
 Vision science uses mathematics to communicate across disciplines. The initial visual encoding describes how light from a scene becomes neural signals - from physics (light) through optics (eye) to biology (photoreceptors).
+
+::: {.callout-note title="Why Mathematics in Vision Science?"}
+Vision research serves many purposes:
+
+| Investigator        | Goal                                 |
+|---------------------|--------------------------------------|
+| **Medical**         | Diagnose and repair visual disorders |
+| **Psychologists**   | Quantify rules of perception         |
+| **Neuroscientists** | Relate experience to neural signals  |
+| **Engineers**       | Design artificial vision systems     |
+
+Mathematics provides a **common language** across all these disciplines.
+:::
+
+### Core Mathematical Methods
+
+This chapter covers three fundamental approaches:
+
+```{r intro-methods}
+#| fig-cap: "The three mathematical pillars of vision science"
+#| fig-width: 10
+#| fig-height: 3
+
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# 1. Linear Algebra - show a matrix transformation
+set.seed(42)
+x <- rnorm(50, 0, 1)
+y <- rnorm(50, 0, 1)
+
+# Apply a linear transformation (rotation + scaling)
+theta <- pi/6  # 30 degree rotation
+A <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), 2, 2) * 1.5
+transformed <- t(A %*% rbind(x, y))
+
+plot(x, y, pch = 19, col = "blue", xlim = c(-4, 4), ylim = c(-4, 4),
+     xlab = "x", ylab = "y", main = "1. Linear Algebra\n(Transformations)")
+points(transformed[,1], transformed[,2], pch = 19, col = "red")
+arrows(x, y, transformed[,1], transformed[,2], length = 0.05, col = "gray")
+legend("topright", c("Original", "Transformed"), col = c("blue", "red"), pch = 19, cex = 0.8)
+
+# 2. Noise Distributions - Poisson
+lambda <- 100  # mean photon count
+samples <- rpois(1000, lambda)
+
+hist(samples, breaks = 30, col = "lightblue", border = "white",
+     main = "2. Noise Distributions\n(Poisson photon noise)",
+     xlab = "Photon count", prob = TRUE)
+curve(dnorm(x, lambda, sqrt(lambda)), add = TRUE, col = "red", lwd = 2)
+abline(v = lambda, lty = 2, col = "blue", lwd = 2)
+text(lambda + 5, 0.035, sprintf("mean = %d", lambda), col = "blue")
+
+# 3. Bayesian Inference - prior × likelihood = posterior
+x_vals <- seq(-3, 5, length.out = 200)
+prior <- dnorm(x_vals, 0, 1)
+likelihood <- dnorm(x_vals, 2, 0.8)
+posterior <- prior * likelihood
+posterior <- posterior / sum(posterior) * length(x_vals) / 8  # normalize for plotting
+
+plot(x_vals, prior, type = "l", col = "blue", lwd = 2,
+     xlab = "Parameter value", ylab = "Density",
+     main = "3. Bayesian Inference\n(Prior × Likelihood = Posterior)",
+     ylim = c(0, max(c(prior, likelihood, posterior)) * 1.1))
+lines(x_vals, likelihood, col = "green", lwd = 2)
+lines(x_vals, posterior, col = "red", lwd = 2)
+legend("topright", c("Prior", "Likelihood", "Posterior"),
+       col = c("blue", "green", "red"), lwd = 2, cex = 0.8)
+```
+
+### Chapter Structure: The Forward-Inverse Framework
+
+```{r intro-chapter-structure}
+#| fig-cap: "Chapter structure: Forward calculation then inverse inference"
+#| fig-width: 10
+#| fig-height: 4
+
+par(mar = c(1, 1, 2, 1))
+plot(NULL, xlim = c(0, 10), ylim = c(0, 6), axes = FALSE, xlab = "", ylab = "",
+     main = "Chapter Roadmap")
+
+# Boxes
+rect(0.5, 4, 2.5, 5.5, col = "lightyellow", border = "orange", lwd = 2)
+rect(3.5, 4, 5.5, 5.5, col = "lightblue", border = "blue", lwd = 2)
+rect(6.5, 4, 8.5, 5.5, col = "lightgreen", border = "darkgreen", lwd = 2)
+
+# Labels
+text(1.5, 4.75, "SCENE\n(Light Field)", cex = 0.9)
+text(4.5, 4.75, "OPTICS\n(Eye)", cex = 0.9)
+text(7.5, 4.75, "CONES\n(Excitations)", cex = 0.9)
+
+# Forward arrows
+arrows(2.5, 4.75, 3.5, 4.75, lwd = 2, col = "black")
+arrows(5.5, 4.75, 6.5, 4.75, lwd = 2, col = "black")
+
+# Section labels
+text(3, 5.8, "§1.2-1.3", col = "gray40", cex = 0.8)
+text(6, 5.8, "§1.4", col = "gray40", cex = 0.8)
+
+# Part labels
+text(4.5, 6, "PART 1: Forward Calculation", col = "blue", font = 2)
+
+# Inference arrow (curved, going back)
+arrows(7.5, 3.8, 1.5, 3.8, lwd = 2, col = "red", code = 1)
+text(4.5, 3.5, "PART 2: Inverse Problem (§1.5)", col = "red", font = 2)
+text(4.5, 3, "Given cone excitations, infer scene properties", col = "red", cex = 0.8)
+
+# Bottom: perception
+rect(3.5, 1, 5.5, 2.5, col = "lavender", border = "purple", lwd = 2)
+text(4.5, 1.75, "PERCEPTION\n(Inference)", cex = 0.9)
+arrows(4.5, 3.8, 4.5, 2.5, lwd = 2, col = "purple")
+
+cat("Chapter structure:\n")
+cat("  Part 1 (§1.2-1.4): Forward calculation - how scene becomes cone signals\n")
+cat("  Part 2 (§1.5): Inverse problem - how brain infers scene from signals\n")
+```
+
+### Helmholtz's Key Insight (1866)
+
+::: {.callout-important title="Unconscious Inference"}
+> "The general rule determining the ideas of vision... is that such objects are always imagined as being present in the field of vision as **would have to be there in order to produce the same impression on the nervous mechanism**." — Hermann von Helmholtz (1866)
+
+**Translation:** We perceive what would most likely have caused our sensory signals!
+
+This is the foundation for Bayesian models of perception.
+:::
+
+### Principles vs. Computation
+
+Mathematical principles are essential but not sufficient:
+
+-   **Analogy:** Newton's gravity law is simple, but predicting tides at a specific harbor requires detailed computation accounting for local geography.
+-   **In vision:** "Color vision is 3D" is a principle, but predicting color matches at different retinal locations requires accounting for macular pigment, chromatic aberration, and cone density variations.
+
+::: {.callout-tip title="Chapter Goals"}
+1.  **Value both** principles (equations) AND computations (software)
+2.  **Build knowledge**: develop principles → test against experiments → combine with computation
+3.  **Produce models** that account for visual performance and enable engineering advances
+:::
+
+------------------------------------------------------------------------
 
 ## 1.2 Scene to Retinal Image
 
@@ -574,22 +716,2905 @@ ggplot(conv_data, aes(x = position, y = intensity, color = image)) +
 
 This is why computational models (like ISETBio) are essential for accurate predictions.
 
-## Summary of Key Equations
+## 1.4 Computational Model of the Initial Encoding
 
-| Equation | Description |
-|------------------------------------|------------------------------------|
-| $LF(x,y,z,\alpha,\beta,\lambda,\rho)$ | Light field (Eq. 1.1) |
-| $E(r_x, r_y, \lambda, t)$ | Retinal spectral irradiance (Eq. 1.3) |
-| $L(x+y) = L(x) + L(y)$ | Superposition (linearity) (Eq. 1.4) |
-| $N = \int C(\lambda) E(\lambda) d\lambda$ | Cone excitation (Eq. 1.7) |
-| $\mathbf{n} = \mathbf{C} \mathbf{e}$ | Matrix form (Eq. 1.9) |
-| $\mathbf{C}(\mathbf{e}_2 - \mathbf{e}_1) = \mathbf{0}$ | Metamerism condition (Eq. 1.10) |
-| $E = \int I(u,v) P(r-u) du dv$ | Convolution (Eq. 1.13) |
+### Why Computational Modeling?
+
+The mathematical principles (linearity, convolution) are powerful guides, but the real eye **deviates significantly** from idealized assumptions:
+
+-   Point spread function (PSF) varies with retinal eccentricity
+-   PSF varies with wavelength (chromatic aberration)
+-   Cone density and size vary across the retina
+-   Pigment density varies
+
+To make accurate predictions, we need **computational models** that account for these variations (e.g., ISETBio).
+
+### Shift-Varying Point Spread
+
+The PSF describes how a single point of light spreads on the retina. It varies with:
+
+1.  **Eccentricity**: blur increases away from fovea
+2.  **Wavelength**: different wavelengths focus at different depths (chromatic aberration)
+3.  **Pupil size**: larger pupil = more aberrations
+
+```{r psf-eccentricity}
+#| fig-width: 7
+#| fig-height: 3
+
+# Simulate PSF at different eccentricities
+# PSF width increases with eccentricity
+eccentricities <- c(0, 5, 15)  # degrees from fovea
+psf_widths <- c(1, 2, 4)       # blur increases
+
+x <- seq(-10, 10, length.out = 100)
+
+psf_data <- data.frame()
+for (i in 1:length(eccentricities)) {
+  psf <- exp(-0.5 * (x / psf_widths[i])^2)
+  psf <- psf / max(psf)
+  psf_data <- rbind(psf_data, data.frame(
+    x = x,
+    psf = psf,
+    eccentricity = paste0(eccentricities[i], "° from fovea")
+  ))
+}
+
+ggplot(psf_data, aes(x, psf, color = eccentricity)) +
+  geom_line(linewidth = 1.2) +
+  labs(title = "Point Spread Function varies with eccentricity",
+       subtitle = "More blur in peripheral vision",
+       x = "Position (arcmin)", y = "Normalized intensity") +
+  theme_minimal()
+```
+
+### Shift-Varying Sampling
+
+Cone density is **highest in the fovea** and decreases dramatically with eccentricity:
+
+```{r cone-density}
+#| fig-width: 7
+#| fig-height: 3
+
+# Approximate cone density vs eccentricity (based on Curcio et al., 1990)
+eccentricity <- seq(0, 30, by = 0.5)
+
+# Cone density falls off approximately exponentially from fovea
+# Peak ~200,000 cones/mm² at fovea, drops to ~5,000 at 30°
+cone_density <- 5000 + 195000 * exp(-eccentricity / 3)
+
+density_df <- data.frame(eccentricity, cone_density)
+
+ggplot(density_df, aes(eccentricity, cone_density / 1000)) +
+  geom_line(linewidth = 1.2, color = "darkgreen") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
+  annotate("text", x = 1, y = 180, label = "Fovea", hjust = 0) +
+  labs(title = "Cone density decreases with eccentricity",
+       subtitle = "Less spatial information in peripheral vision",
+       x = "Eccentricity (degrees)", y = "Cone density (thousands/mm²)") +
+  theme_minimal()
+```
+
+**Key facts about the cone mosaic:**
+
+-   No S-cones in the very central fovea (specialized for high resolution)
+-   Cones become larger (bigger apertures) in periphery
+-   Cone spacing limits spatial resolution
+
+```{r mosaic-schematic}
+#| fig-width: 7
+#| fig-height: 3
+
+# Schematic: cone spacing at different eccentricities
+set.seed(42)
+
+# Fovea: dense, small cones
+n_fovea <- 100
+fovea_x <- runif(n_fovea, 0, 10)
+fovea_y <- runif(n_fovea, 0, 10)
+
+# Periphery: sparse, large cones
+n_periph <- 20
+periph_x <- runif(n_periph, 0, 10)
+periph_y <- runif(n_periph, 0, 10)
+
+par(mfrow = c(1, 2), mar = c(3, 1, 3, 1))
+
+plot(fovea_x, fovea_y, pch = 19, cex = 0.8, col = "darkgreen",
+     xlim = c(0, 10), ylim = c(0, 10), asp = 1,
+     main = "Fovea (0°)", xlab = "", ylab = "", axes = FALSE)
+box()
+
+plot(periph_x, periph_y, pch = 19, cex = 2.5, col = "darkgreen",
+     xlim = c(0, 10), ylim = c(0, 10), asp = 1,
+     main = "Periphery (15°)", xlab = "", ylab = "", axes = FALSE)
+box()
+```
+
+### Spatial Derivatives
+
+Neurons in the visual system compute **local differences** - approximations to spatial derivatives:
+
+-   **Spatial position**: edge detectors (luminance changes)
+-   **Wavelength**: color opponent cells (L-M, S-(L+M))
+-   **Time**: motion detectors
+-   **Between eyes**: stereo disparity
+
+Why derivatives? Local **contrast** (change), not absolute intensity, provides critical information.
+
+```{r derivatives}
+#| fig-width: 7
+#| fig-height: 4
+
+# Demo: edge detection as derivative
+x <- 1:100
+# Image with edge
+image <- ifelse(x > 50, 1, 0.3)
+
+# Derivative (difference)
+derivative <- c(0, diff(image))
+
+par(mfrow = c(2, 1), mar = c(3, 4, 2, 1))
+plot(x, image, type = "l", lwd = 2, col = "black",
+     main = "Original image (intensity)", ylab = "Intensity", xlab = "")
+plot(x, derivative, type = "l", lwd = 2, col = "red",
+     main = "Spatial derivative (edge detection)", ylab = "dI/dx", xlab = "Position")
+abline(h = 0, lty = 2, col = "gray")
+```
+
+Derivatives are also **compressible** - natural images change slowly, so most derivatives are near zero.
+
+## 1.5 Perceptual Inference
+
+### The Ambiguity Problem
+
+A critical insight: **many different physical scenes can produce the same cone response**.
+
+Examples of many-to-one mappings:
+
+1.  **Metamerism**: Different spectra → same L, M, S values
+2.  **Depth reconstruction**: 3D world → 2D retinal image
+
+```{r ambiguity-visual}
+#| fig-width: 6
+#| fig-height: 4
+
+# Visual: multiple scenes → same cone response
+par(mar = c(1, 1, 3, 1))
+plot(1, type = "n", xlim = c(0, 10), ylim = c(0, 8),
+     axes = FALSE, xlab = "", ylab = "",
+     main = "Many scenes can produce the same neural response")
+
+# Multiple scenes on left
+rect(0.5, 5.5, 2.5, 7.5, border = "blue", lwd = 2)
+text(1.5, 6.5, "Scene A", cex = 0.9)
+
+rect(0.5, 3, 2.5, 5, border = "red", lwd = 2)
+text(1.5, 4, "Scene B", cex = 0.9)
+
+rect(0.5, 0.5, 2.5, 2.5, border = "darkgreen", lwd = 2)
+text(1.5, 1.5, "Scene C", cex = 0.9)
+
+# Arrows pointing to single response
+arrows(2.7, 6.5, 5.3, 4, length = 0.1, lwd = 1.5)
+arrows(2.7, 4, 5.3, 4, length = 0.1, lwd = 1.5)
+arrows(2.7, 1.5, 5.3, 4, length = 0.1, lwd = 1.5)
+
+# Single cone response box
+rect(5.5, 2.5, 8.5, 5.5, border = "black", lwd = 3)
+text(7, 4, "Same cone\nresponse\n(L, M, S)", cex = 1)
+
+# Question mark
+text(9.2, 4, "?", cex = 3, col = "red")
+```
+
+The brain must **infer** which scene actually produced the observed response. This is Helmholtz's "unconscious inference."
+
+### Bayesian Framework
+
+Let:
+
+-   **x** = scene state (what's actually out there)
+-   **y** = sensory measurements (noisy cone excitations)
+
+We want to know: given what I measured (y), what scene (x) is most likely?
+
+**Bayes' Rule:**
+
+$$p(x|y) = \frac{p(y|x) \cdot p(x)}{p(y)}$$
+
+Or simply: **posterior ∝ likelihood × prior**
+
+```{r bayes-components}
+#| fig-width: 8
+#| fig-height: 3
+
+# Visualize the three components of Bayesian inference
+x <- seq(-1, 1, length.out = 200)
+
+# Prior: what scenes are likely (before seeing data)
+prior <- dnorm(x, mean = 0, sd = 0.1)
+
+# Likelihood: how likely is data given each scene
+likelihood <- dnorm(x, mean = 0.5, sd = 0.1)
+
+# Posterior: prior × likelihood (normalized)
+posterior_unnorm <- prior * likelihood
+posterior <- posterior_unnorm / sum(posterior_unnorm) * length(x)
+
+bayes_df <- data.frame(
+  x = rep(x, 3),
+  density = c(prior, likelihood * 2, posterior),  # scale for visibility
+  component = rep(c("Prior p(x)", "Likelihood p(y|x)", "Posterior p(x|y)"), each = length(x))
+)
+bayes_df$component <- factor(bayes_df$component,
+                              levels = c("Prior p(x)", "Likelihood p(y|x)", "Posterior p(x|y)"))
+
+ggplot(bayes_df, aes(x, density, color = component)) +
+  geom_line(linewidth = 1.2) +
+  scale_color_manual(values = c("Prior p(x)" = "blue",
+                                 "Likelihood p(y|x)" = "red",
+                                 "Posterior p(x|y)" = "purple")) +
+  labs(title = "Bayesian Inference: Posterior = Prior × Likelihood",
+       subtitle = "The posterior combines what's likely (prior) with what data says (likelihood)",
+       x = "Scene parameter x", y = "Density") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+**The key components:**
+
+| Component | Meaning | Example |
+|----|----|----|
+| **Prior** p(x) | What scenes are likely before seeing data | "Natural images have smooth gradients" |
+| **Likelihood** p(y\|x) | How likely is this data if scene is x | Forward model: scene → cone response + noise |
+| **Posterior** p(x\|y) | What scene is most likely given data | Our best guess about the world |
+
+### Simple Example: Estimating Light Intensity
+
+Suppose a cone receives photons from a light source. The true intensity is unknown, but we:
+
+1.  Have a **prior** belief about likely intensities
+2.  Observe noisy **data** (photon count follows Poisson)
+
+```{r bayes-example}
+#| fig-width: 8
+#| fig-height: 6
+
+# Simple Bayesian estimation example
+#set.seed(123)
+
+# True intensity (unknown to observer)
+true_intensity <- 25
+
+# Observed data: noisy photon count (Poisson)
+observed_count <- rpois(1, true_intensity)
+
+# Possible intensities
+intensities <- seq(0, 60, by = 0.5)
+
+# Prior: broad belief about intensities (log-normal, typical for light)
+prior <- dlnorm(intensities, meanlog = log(20), sdlog = 0.5)
+prior <- prior / sum(prior)
+
+# Likelihood: Poisson probability of observed count given each intensity
+likelihood <- dpois(observed_count, lambda = intensities)
+likelihood[1] <- 0  # avoid div by 0
+
+# Posterior (unnormalized)
+posterior_unnorm <- prior * likelihood
+posterior <- posterior_unnorm / sum(posterior_unnorm)
+
+# MAP estimate
+map_estimate <- intensities[which.max(posterior)]
+
+par(mfrow = c(3, 1), mar = c(4, 4, 3, 1))
+
+plot(intensities, prior, type = "l", lwd = 2, col = "blue",
+     main = "Step 1: Prior belief about intensity",
+     xlab = "Intensity", ylab = "Probability")
+abline(v = true_intensity, lty = 2, col = "gray50")
+legend("topright", "True intensity", lty = 2, col = "gray50", bty = "n")
+
+plot(intensities, likelihood, type = "l", lwd = 2, col = "red",
+     main = paste0("Step 2: Likelihood (observed ", observed_count, " photons)"),
+     xlab = "Intensity", ylab = "Likelihood")
+abline(v = true_intensity, lty = 2, col = "gray50")
+
+plot(intensities, posterior, type = "l", lwd = 2, col = "purple",
+     main = paste0("Step 3: Posterior (MAP estimate = ", map_estimate, ")"),
+     xlab = "Intensity", ylab = "Probability")
+abline(v = true_intensity, lty = 2, col = "gray50")
+abline(v = map_estimate, lty = 1, col = "purple")
+legend("topright", c("True intensity", "MAP estimate"),
+       lty = c(2, 1), col = c("gray50", "purple"), bty = "n")
+```
+
+The posterior is **more concentrated** than either prior or likelihood alone - we've combined both sources of information.
+
+### Linear Model with Gaussian Noise
+
+For the initial encoding, we can write:
+
+$$y = Cx + \epsilon$$
+
+where:
+
+-   y = noisy cone excitations
+-   C = cone sensitivity matrix
+-   x = scene (spectral radiance)
+-   ε = noise
+
+If we assume Gaussian noise and a Gaussian prior, the posterior is also Gaussian (nice math!):
+
+$$p(y|x) = \text{Normal}(Cx, \sigma^2 I)$$ $$p(x) = \text{Normal}(\mu_x, \Sigma_x)$$
+
+```{r gaussian-posterior-setup}
+#| echo: true
+
+# =============================================================================
+# 2D MATRIX EXAMPLE: 2-pixel display with 1 cone measurement
+# Based on Figure 1.9 from Wandell & Brainard
+# =============================================================================
+#
+# THE SETUP (Equation 1.15):
+#   y = C·x + ε
+#
+# Variables:
+#   x = [x₁, x₂]ᵀ     Scene: 2 pixel intensities (what we want to infer)
+#   C = [0.5, 0.5]    Cone sensitivity: equally sensitive to both pixels
+#   y = scalar        Measurement: single noisy cone excitation
+#   ε ~ N(0, σ²)      Noise: Gaussian with σ = 0.1
+#
+# The forward model:
+#   E[y] = 0.5·x₁ + 0.5·x₂  (weighted average of pixel values)
+#
+# THE PROBLEM:
+#   Given observation y, what was x = [x₁, x₂]?
+#   Many x values produce the same y! (ambiguity)
+
+# Define the model parameters
+C <- matrix(c(0.5, 0.5), nrow = 1)  # 1×2 cone sensitivity matrix
+sigma_noise <- 0.1                   # measurement noise SD
+
+cat("Cone sensitivity matrix C:\n")
+print(C)
+cat("\nForward model: y = C·x + noise = 0.5·x₁ + 0.5·x₂ + ε\n")
+```
+
+### The Prior: What scenes are likely?
+
+Natural images have **correlated** nearby pixels - if one pixel is bright, its neighbor is likely bright too. We encode this as a **bivariate Gaussian prior**:
+
+$$p(\mathbf{x}) = \mathcal{N}(\boldsymbol{\mu}_x, \boldsymbol{\Sigma}_x)$$
+
+```{r gaussian-prior-params}
+# Prior parameters (Equation 1.17)
+mu_x <- c(0.5, 0.5)        # prior mean: expect mid-gray pixels
+sigma_x <- 0.2             # marginal SD for each pixel
+rho <- 0.89                # correlation: nearby pixels are similar
+
+# Covariance matrix Σ_x
+Sigma_x <- matrix(c(sigma_x^2,           rho*sigma_x^2,
+                    rho*sigma_x^2,       sigma_x^2),
+                  nrow = 2, byrow = TRUE)
+
+cat("Prior mean μ_x:\n")
+print(mu_x)
+cat("\nPrior covariance Σ_x:\n")
+print(round(Sigma_x, 4))
+cat("\nCorrelation ρ =", rho, "(high correlation = natural images)\n")
+```
+
+::: callout-note
+## Reminder: What is a Covariance Matrix?
+
+The **covariance matrix** $\boldsymbol{\Sigma}$ captures how variables vary together:
+
+$$\boldsymbol{\Sigma} = \begin{bmatrix} \text{Var}(X_1) & \text{Cov}(X_1, X_2) \\ \text{Cov}(X_2, X_1) & \text{Var}(X_2) \end{bmatrix} = \begin{bmatrix} \sigma_1^2 & \rho\sigma_1\sigma_2 \\ \rho\sigma_1\sigma_2 & \sigma_2^2 \end{bmatrix}$$
+
+**Key properties:**
+
+| Property | Meaning |
+|----|----|
+| **Diagonal elements** | Variances: how much each variable spreads |
+| **Off-diagonal elements** | Covariances: how variables move together |
+| **Always symmetric** | $\Sigma_{ij} = \Sigma_{ji}$ because $\text{Cov}(X_i, X_j) = \text{Cov}(X_j, X_i)$ |
+| **Positive semi-definite** | $\mathbf{v}^T \Sigma \mathbf{v} \geq 0$ for all vectors $\mathbf{v}$ |
+
+**Correlation vs Covariance:**
+
+-   Covariance: $\text{Cov}(X_1, X_2) = \rho \cdot \sigma_1 \cdot \sigma_2$ (depends on scale)
+-   Correlation: $\rho = \frac{\text{Cov}(X_1, X_2)}{\sigma_1 \sigma_2}$ (normalized, always between -1 and +1)
+
+In our example: $\rho = 0.89$ means pixels are **strongly positively correlated** — when one is bright, the other likely is too.
+:::
+
+**Step 1: Create a grid of possible scenes**
+
+We want to evaluate the prior probability for many possible $(x_1, x_2)$ combinations:
+
+```{r prior-grid-setup}
+# Create grid for 2D plotting
+# Each pixel can range from 0 (black) to 1 (white)
+x1_seq <- seq(0, 1, length.out = 100)  # 100 possible values for pixel 1
+x2_seq <- seq(0, 1, length.out = 100)  # 100 possible values for pixel 2
+
+# expand.grid creates ALL combinations: 100 × 100 = 10,000 possible scenes
+grid <- expand.grid(x1 = x1_seq, x2 = x2_seq)
+
+cat("Grid dimensions:", nrow(grid), "rows (one per possible scene)\n")
+```
+
+::: callout-note
+## From 1D Gaussian to Multivariate Gaussian
+
+**1D Gaussian (univariate):** One variable, bell curve
+
+$$p(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$$
+
+**2D Gaussian (bivariate):** Two variables, bell "hill"
+
+$$p(x_1, x_2) = \frac{1}{2\pi|\boldsymbol{\Sigma}|^{1/2}} \exp\left(-\frac{1}{2}(\mathbf{x} - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x} - \boldsymbol{\mu})\right)$$
+
+| 1D Gaussian | 2D Gaussian |
+|----|----|
+| Mean: $\mu$ (a number) | Mean: $\boldsymbol{\mu} = [\mu_1, \mu_2]^T$ (a vector) |
+| Variance: $\sigma^2$ (a number) | Covariance: $\boldsymbol{\Sigma}$ (a 2×2 matrix) |
+| $(x - \mu)^2$ | $(\mathbf{x} - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x} - \boldsymbol{\mu})$ |
+
+The key insight: **the covariance matrix replaces the single variance**, and it can encode correlations between variables!
+:::
+
+**Step 1b: Visualizing 1D vs 2D Gaussian**
+
+```{r gaussian-1d-2d-3d}
+#| fig-width: 10
+#| fig-height: 4
+
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# LEFT: 1D Gaussian - Bell Curve
+x_1d <- seq(-3, 3, length.out = 100)
+y_1d <- dnorm(x_1d, mean = 0, sd = 1)
+plot(x_1d, y_1d, type = "l", lwd = 3, col = "blue",
+     main = "1D Gaussian\nBell Curve",
+     xlab = "x", ylab = "p(x)")
+polygon(c(x_1d, rev(x_1d)), c(y_1d, rep(0, length(y_1d))),
+        col = rgb(0, 0, 1, 0.2), border = NA)
+abline(v = 0, lty = 2, col = "red")
+
+# MIDDLE: 2D Gaussian - Contours (top view)
+x1_temp <- seq(-3, 3, length.out = 50)
+x2_temp <- seq(-3, 3, length.out = 50)
+z_2d <- outer(x1_temp, x2_temp, function(a, b) {
+  dnorm(a, 0, 1) * dnorm(b, 0, 1)
+})
+contour(x1_temp, x2_temp, z_2d, nlevels = 10, col = "blue",
+        main = "2D Gaussian\nContours (top view)",
+        xlab = expression(x[1]), ylab = expression(x[2]))
+points(0, 0, pch = 19, col = "red", cex = 1.5)
+
+# RIGHT: 2D Gaussian - 3D Surface (the actual bell hill!)
+persp(x1_temp, x2_temp, z_2d,
+      theta = 30, phi = 25,        # viewing angles
+      col = "lightblue",
+      shade = 0.5,
+      border = NA,
+      main = "2D Gaussian\n3D Surface (bell hill)",
+      xlab = "x₁", ylab = "x₂", zlab = "p(x)")
+```
+
+**The 3D view shows the actual "bell hill"** — contours are like elevation lines on a topographic map!
+
+**Step 1b-2: 3D surfaces with different correlations**
+
+```{r gaussian-3d-correlations}
+#| fig-width: 10
+#| fig-height: 8
+
+# Create 3D surface for a given covariance matrix
+make_gaussian_surface <- function(Sigma, n = 50) {
+  x1 <- seq(-3, 3, length.out = n)
+  x2 <- seq(-3, 3, length.out = n)
+  inv_Sigma <- solve(Sigma)
+
+  z <- outer(x1, x2, function(a, b) {
+    sapply(1:length(a), function(i) {
+      x <- c(a[i], b[i])
+      mahal <- sum(x * (inv_Sigma %*% x))
+      exp(-0.5 * mahal) / (2 * pi * sqrt(det(Sigma)))
+    })
+  })
+  list(x1 = x1, x2 = x2, z = z)
+}
+
+par(mfrow = c(2, 2), mar = c(1, 1, 3, 1))
+
+# Case 1: Independent (ρ = 0) - circular base
+Sigma1 <- matrix(c(1, 0, 0, 1), 2, 2)
+surf1 <- make_gaussian_surface(Sigma1)
+persp(surf1$x1, surf1$x2, surf1$z,
+      theta = 30, phi = 25, col = "lightblue", shade = 0.5, border = NA,
+      main = "ρ = 0 (independent)\nCircular base",
+      xlab = "", ylab = "", zlab = "", ticktype = "detailed")
+
+# Case 2: Positive correlation (ρ = 0.8) - tilted ridge
+Sigma2 <- matrix(c(1, 0.8, 0.8, 1), 2, 2)
+surf2 <- make_gaussian_surface(Sigma2)
+persp(surf2$x1, surf2$x2, surf2$z,
+      theta = 30, phi = 25, col = "lightgreen", shade = 0.5, border = NA,
+      main = "ρ = 0.8 (positive correlation)\nRidge along diagonal",
+      xlab = "", ylab = "", zlab = "", ticktype = "detailed")
+
+# Case 3: Negative correlation (ρ = -0.8) - tilted other way
+Sigma3 <- matrix(c(1, -0.8, -0.8, 1), 2, 2)
+surf3 <- make_gaussian_surface(Sigma3)
+persp(surf3$x1, surf3$x2, surf3$z,
+      theta = 30, phi = 25, col = "lightyellow", shade = 0.5, border = NA,
+      main = "ρ = -0.8 (negative correlation)\nRidge along anti-diagonal",
+      xlab = "", ylab = "", zlab = "", ticktype = "detailed")
+
+# Case 4: High correlation (ρ = 0.95) - very narrow ridge
+Sigma4 <- matrix(c(1, 0.95, 0.95, 1), 2, 2)
+surf4 <- make_gaussian_surface(Sigma4)
+persp(surf4$x1, surf4$x2, surf4$z,
+      theta = 30, phi = 25, col = "pink", shade = 0.5, border = NA,
+      main = "ρ = 0.95 (very high correlation)\nNarrow ridge - x1 ≈ x2",
+      xlab = "", ylab = "", zlab = "", ticktype = "detailed")
+```
+
+**Key insight from 3D view:**
+
+-   **ρ = 0**: Bell hill with circular base (variables independent)
+-   **ρ \> 0**: Ridge stretched along diagonal (when $x_1$ ↑, $x_2$ ↑ too)
+-   **ρ \< 0**: Ridge stretched along anti-diagonal (when $x_1$ ↑, $x_2$ ↓)
+-   **ρ → 1**: Ridge becomes a narrow "blade" — knowing $x_1$ almost tells you $x_2$
+
+Our prior uses **ρ = 0.89** — a fairly narrow ridge, meaning the two pixels are expected to be very similar!
+
+**Step 1c: How the covariance matrix shapes the distribution**
+
+The covariance matrix $\boldsymbol{\Sigma}$ controls the **shape and orientation** of the Gaussian:
+
+```{r covariance-shapes}
+#| fig-width: 10
+#| fig-height: 8
+
+# Function to plot 2D Gaussian contours
+plot_2d_gaussian <- function(Sigma, title, show_matrix = TRUE) {
+  # Create grid
+  x1 <- seq(-3, 3, length.out = 100)
+  x2 <- seq(-3, 3, length.out = 100)
+
+  # Compute density
+  z <- matrix(0, length(x1), length(x2))
+  for (i in 1:length(x1)) {
+    for (j in 1:length(x2)) {
+      x <- c(x1[i], x2[j])
+      inv_S <- solve(Sigma)
+      mahal <- sum(x * (inv_S %*% x))
+      z[i, j] <- exp(-0.5 * mahal)
+    }
+  }
+
+  contour(x1, x2, z, nlevels = 8, col = "blue", lwd = 1.5,
+          main = title, xlab = expression(x[1]), ylab = expression(x[2]),
+          asp = 1)
+  abline(h = 0, v = 0, lty = 3, col = "gray")
+  points(0, 0, pch = 19, col = "red")
+
+  if (show_matrix) {
+    # Show matrix values in corner
+    legend("topright",
+           legend = c(paste0("Σ₁₁ = ", Sigma[1,1]),
+                      paste0("Σ₁₂ = ", Sigma[1,2]),
+                      paste0("Σ₂₂ = ", Sigma[2,2])),
+           bty = "n", cex = 0.9)
+  }
+}
+
+par(mfrow = c(2, 2), mar = c(4, 4, 3, 1))
+
+# Case 1: Identity (independent, equal variance)
+Sigma1 <- matrix(c(1, 0, 0, 1), 2, 2)
+plot_2d_gaussian(Sigma1, "Independent, equal variance\nρ = 0, σ₁ = σ₂ = 1")
+
+# Case 2: Different variances (still independent)
+Sigma2 <- matrix(c(2, 0, 0, 0.5), 2, 2)
+plot_2d_gaussian(Sigma2, "Independent, different variance\nρ = 0, σ₁ = 1.4, σ₂ = 0.7")
+
+# Case 3: Positive correlation
+Sigma3 <- matrix(c(1, 0.8, 0.8, 1), 2, 2)
+plot_2d_gaussian(Sigma3, "Positive correlation\nρ = 0.8")
+
+# Case 4: Negative correlation
+Sigma4 <- matrix(c(1, -0.8, -0.8, 1), 2, 2)
+plot_2d_gaussian(Sigma4, "Negative correlation\nρ = -0.8")
+```
+
+**Key observations:**
+
+| Covariance Matrix | Shape | Meaning |
+|----|----|----|
+| $\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$ | Circle | Variables are independent, equal spread |
+| $\begin{bmatrix} 2 & 0 \\ 0 & 0.5 \end{bmatrix}$ | Horizontal ellipse | $x_1$ has more variance than $x_2$ |
+| $\begin{bmatrix} 1 & 0.8 \\ 0.8 & 1 \end{bmatrix}$ | Tilted ellipse (↗) | Positive correlation: $x_1$ ↑ means $x_2$ ↑ |
+| $\begin{bmatrix} 1 & -0.8 \\ -0.8 & 1 \end{bmatrix}$ | Tilted ellipse (↘) | Negative correlation: $x_1$ ↑ means $x_2$ ↓ |
+
+**Step 1d: The matrix algebra - visualized step by step**
+
+::: callout-note
+## What is a Matrix Inverse? (Σ⁻¹)
+
+**The problem:** In the Gaussian formula, we need to "divide" by the covariance matrix. But you can't divide by a matrix! Instead, we multiply by its **inverse**.
+
+**Analogy with numbers:** - To compute $\frac{5}{2}$, you can write it as $5 \times \frac{1}{2} = 5 \times 2^{-1}$ - The inverse of 2 is $2^{-1} = 0.5$ because $2 \times 0.5 = 1$
+
+**For matrices:** - The inverse of $\boldsymbol{\Sigma}$ is $\boldsymbol{\Sigma}^{-1}$ such that $\boldsymbol{\Sigma} \times \boldsymbol{\Sigma}^{-1} = \mathbf{I}$ (identity matrix) - Identity matrix $\mathbf{I} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$ is like "1" for matrices
+
+**For a 2×2 matrix**, there's a formula:
+
+$$\boldsymbol{\Sigma} = \begin{bmatrix} a & b \\ c & d \end{bmatrix} \quad \Rightarrow \quad \boldsymbol{\Sigma}^{-1} = \frac{1}{ad - bc} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix}$$
+
+The term $(ad - bc)$ is called the **determinant** (written $|\boldsymbol{\Sigma}|$ or $\det(\boldsymbol{\Sigma})$).
+
+**In R:** `solve(Sigma)` computes the inverse.
+:::
+
+```{r matrix-inverse-example}
+# Let's see this concretely with our covariance matrix
+cat("Our covariance matrix Σ:\n")
+print(Sigma_x)
+
+cat("\nCompute inverse using solve():\n")
+inv_Sigma_x <- solve(Sigma_x)
+print(round(inv_Sigma_x, 4))
+
+cat("\nVerify: Σ × Σ⁻¹ should equal Identity matrix I:\n")
+print(round(Sigma_x %*% inv_Sigma_x, 10))
+
+cat("\nYes! The off-diagonals are essentially 0, diagonals are 1.\n")
+```
+
+```{r matrix-inverse-visual}
+#| fig-width: 10
+#| fig-height: 4
+
+# Visualize what the inverse does
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# Function to draw an ellipse from covariance matrix
+draw_cov_ellipse <- function(Sigma, mu = c(0, 0), col = "blue", ...) {
+  angles <- seq(0, 2*pi, length.out = 100)
+  circle <- cbind(cos(angles), sin(angles))
+  # Transform circle by sqrt of covariance (Cholesky)
+  L <- chol(Sigma)
+  ellipse <- t(t(circle %*% L) + mu)
+  lines(ellipse, col = col, lwd = 2, ...)
+}
+
+# LEFT: Original covariance Σ - wide ellipse along diagonal
+plot(NULL, xlim = c(-4, 4), ylim = c(-4, 4), asp = 1,
+     main = "Covariance Σ\n(spreads data along diagonal)",
+     xlab = expression(x[1]), ylab = expression(x[2]))
+abline(h = 0, v = 0, col = "gray", lty = 2)
+draw_cov_ellipse(Sigma_x * 20, col = "blue")  # scaled for visibility
+text(2, 2, "Wide along\ndiagonal", col = "blue")
+
+# MIDDLE: Inverse covariance Σ⁻¹ - narrow ellipse perpendicular
+plot(NULL, xlim = c(-4, 4), ylim = c(-4, 4), asp = 1,
+     main = expression("Inverse " * Sigma^-1 * "\n(narrow perpendicular)"),
+     xlab = expression(x[1]), ylab = expression(x[2]))
+abline(h = 0, v = 0, col = "gray", lty = 2)
+draw_cov_ellipse(inv_Sigma_x / 50, col = "red")  # scaled for visibility
+text(-2, 2, "Narrow\nperpendicular", col = "red")
+
+# RIGHT: What this means for distance
+plot(NULL, xlim = c(-3, 3), ylim = c(-3, 3), asp = 1,
+     main = "Effect on Distance",
+     xlab = expression(x[1]), ylab = expression(x[2]))
+abline(h = 0, v = 0, col = "gray", lty = 2)
+abline(0, 1, col = "blue", lty = 2)  # diagonal
+abline(0, -1, col = "red", lty = 2)  # anti-diagonal
+
+# Two points same Euclidean distance from origin
+p1 <- c(1.5, 1.5) / sqrt(2)  # on diagonal
+p2 <- c(1.5, -1.5) / sqrt(2)  # perpendicular
+
+points(p1[1], p1[2], pch = 19, col = "blue", cex = 2)
+points(p2[1], p2[2], pch = 19, col = "red", cex = 2)
+
+text(p1[1] + 0.3, p1[2], "Small Mahal.\ndistance", col = "blue", cex = 0.8)
+text(p2[1] + 0.3, p2[2], "Large Mahal.\ndistance", col = "red", cex = 0.8)
+legend("topleft", c("Along correlation", "Against correlation"),
+       col = c("blue", "red"), pch = 19, bty = "n")
+```
+
+**Key insight:** The inverse Σ⁻¹ "flips" the covariance's shape: - Where Σ is wide (along diagonal), Σ⁻¹ is narrow → moving along correlation costs **less** - Where Σ is narrow (perpendicular), Σ⁻¹ is wide → moving against correlation costs **more**
+
+This is why the Mahalanobis distance is smaller along the correlation direction!
+
+::: callout-note
+## Why Transpose? Understanding Matrix Dimensions
+
+**The problem:** We need the Mahalanobis distance to be a **single number** (scalar), not a vector or matrix.
+
+**Column vector vs Row vector:**
+
+```         
+Column vector (2×1):     Row vector (1×2):
+    ┌───┐
+    │ a │                [ a  b ]
+    │ b │
+    └───┘
+```
+
+By convention, vectors are **column vectors**. The transpose (ᵀ) flips a column into a row:
+
+$$\mathbf{v} = \begin{bmatrix} a \\ b \end{bmatrix} \quad \Rightarrow \quad \mathbf{v}^T = \begin{bmatrix} a & b \end{bmatrix}$$
+
+**Matrix multiplication dimension rules:**
+
+To multiply matrices, inner dimensions must match:
+
+```         
+(m × n) × (n × p) = (m × p)
+        ↑   ↑
+      must match
+```
+
+**For Mahalanobis distance** $(x-\mu)^T \Sigma^{-1} (x-\mu)$:
+
+```         
+Step 1: Σ⁻¹ × (x - μ)
+        (2×2) × (2×1) = (2×1)  ← result is column vector
+
+Step 2: (x - μ)ᵀ × [result from Step 1]
+        (1×2) × (2×1) = (1×1)  ← SCALAR! ✓
+```
+
+Without the transpose, we'd get:
+
+```         
+(2×1) × (2×1) = ERROR! Dimensions don't match!
+```
+:::
+
+```{r transpose-visual}
+#| fig-width: 8
+#| fig-height: 3
+
+# Visualize the matrix multiplication dimensions
+par(mar = c(1, 1, 2, 1))
+plot(NULL, xlim = c(0, 10), ylim = c(0, 3), axes = FALSE,
+     main = "Matrix Multiplication: (x-μ)ᵀ Σ^-1 (x-μ) = scalar")
+
+# (x - μ)ᵀ : 1×2
+rect(0.5, 1.5, 1.5, 2.5, border = "blue", lwd = 2)
+text(1, 2, "1×2", col = "blue", cex = 0.9)
+text(1, 1.2, "(x-μ)ᵀ", col = "blue", cex = 0.8)
+
+# × symbol
+text(1.8, 2, "×", cex = 1.2)
+
+# Σ⁻¹ : 2×2
+rect(2.2, 1, 3.5, 2.5, border = "red", lwd = 2)
+text(2.85, 1.75, "2×2", col = "red", cex = 0.9)
+text(2.85, 0.7, "Σ^-1", col = "red", cex = 0.8)
+
+# × symbol
+text(3.8, 2, "×", cex = 1.2)
+
+# (x - μ) : 2×1
+rect(4.2, 1, 4.8, 2.5, border = "darkgreen", lwd = 2)
+text(4.5, 1.75, "2×1", col = "darkgreen", cex = 0.9)
+text(4.5, 0.7, "(x-μ)", col = "darkgreen", cex = 0.8)
+
+# = symbol
+text(5.3, 2, "=", cex = 1.2)
+
+# Result: 1×1 (scalar)
+rect(5.7, 1.8, 6.3, 2.3, border = "purple", lwd = 3)
+text(6, 2.05, "1×1", col = "purple", cex = 0.9)
+text(6, 1.5, "scalar!", col = "purple", cex = 0.9, font = 2)
+
+# Show dimension matching
+arrows(1.3, 2.5, 2.4, 2.5, length = 0.1, col = "gray50")
+text(1.85, 2.7, "2=2", cex = 0.7, col = "gray50")
+
+arrows(3.3, 2.5, 4.0, 2.5, length = 0.1, col = "gray50")
+text(3.65, 2.7, "2=2", cex = 0.7, col = "gray50")
+```
+
+Let's compute the Mahalanobis distance for a specific point, showing each matrix operation:
+
+```{r matrix-algebra-visual}
+#| fig-width: 9
+#| fig-height: 6
+
+# Our covariance matrix (from the prior)
+cat("=== STEP-BY-STEP MATRIX ALGEBRA ===\n\n")
+
+# The point we're evaluating
+x_point <- c(0.7, 0.5)
+mu_point <- c(0.5, 0.5)
+
+cat("Point x =", x_point[1], ",", x_point[2], "\n")
+cat("Mean μ =", mu_point[1], ",", mu_point[2], "\n\n")
+
+# Step A: Center the point
+cat("STEP A: Center the point (x - μ)\n")
+x_centered <- x_point - mu_point
+cat("x - μ = [", x_point[1], "-", mu_point[1], ",", x_point[2], "-", mu_point[2], "]\n")
+cat("     = [", x_centered[1], ",", x_centered[2], "]\n\n")
+
+# Step B: Show the covariance matrix
+cat("STEP B: The covariance matrix Σ\n")
+print(Sigma_x)
+cat("\nThis encodes: σ² =", sigma_x^2, ", ρ =", rho, "\n\n")
+
+# Step C: Compute the inverse
+cat("STEP C: Compute Σ⁻¹ (the inverse)\n")
+inv_Sigma_x <- solve(Sigma_x)
+cat("Σ⁻¹ =\n")
+print(round(inv_Sigma_x, 3))
+cat("\n")
+
+# Step D: Matrix multiplication Σ⁻¹(x - μ)
+cat("STEP D: Multiply Σ⁻¹ × (x - μ)\n")
+step_d <- inv_Sigma_x %*% x_centered
+cat("Σ⁻¹(x - μ) = [", round(step_d[1], 3), ",", round(step_d[2], 3), "]ᵀ\n\n")
+
+# Step E: Dot product (x - μ)ᵀ × [Σ⁻¹(x - μ)]
+cat("STEP E: Compute (x - μ)ᵀ Σ⁻¹ (x - μ)\n")
+mahal_squared <- sum(x_centered * step_d)
+cat("= [", x_centered[1], ",", x_centered[2], "] · [",
+    round(step_d[1], 3), ",", round(step_d[2], 3), "]\n")
+cat("=", x_centered[1], "×", round(step_d[1], 3), "+",
+    x_centered[2], "×", round(step_d[2], 3), "\n")
+cat("=", round(mahal_squared, 4), "(Mahalanobis distance squared)\n\n")
+
+# Step F: Final density
+cat("STEP F: Compute the density\n")
+k <- 2
+normalizer <- sqrt((2*pi)^k * det(Sigma_x))
+density_value <- exp(-0.5 * mahal_squared) / normalizer
+cat("p(x) = exp(-0.5 ×", round(mahal_squared, 4), ") / √(2π)² |Σ|\n")
+cat("     = exp(", round(-0.5 * mahal_squared, 4), ") /", round(normalizer, 4), "\n")
+cat("     =", round(density_value, 6), "\n")
+```
+
+```{r matrix-algebra-plot}
+#| fig-width: 7
+#| fig-height: 6
+
+# Visualize this computation
+par(mar = c(4, 4, 3, 1))
+
+# Plot the prior contours
+x1_plot <- seq(0, 1, length.out = 100)
+x2_plot <- seq(0, 1, length.out = 100)
+z_plot <- matrix(0, length(x1_plot), length(x2_plot))
+for (i in 1:length(x1_plot)) {
+  for (j in 1:length(x2_plot)) {
+    x_temp <- c(x1_plot[i], x2_plot[j])
+    x_c <- x_temp - mu_point
+    m <- sum(x_c * (inv_Sigma_x %*% x_c))
+    z_plot[i, j] <- exp(-0.5 * m)
+  }
+}
+
+contour(x1_plot, x2_plot, z_plot, nlevels = 10, col = "purple",
+        main = "Visualizing the Matrix Algebra",
+        xlab = expression(x[1]), ylab = expression(x[2]), asp = 1)
+
+# Mark the mean
+points(mu_point[1], mu_point[2], pch = 19, col = "blue", cex = 2)
+text(mu_point[1] + 0.05, mu_point[2] + 0.05, "μ = (0.5, 0.5)", pos = 4, col = "blue")
+
+# Mark the point
+points(x_point[1], x_point[2], pch = 17, col = "red", cex = 2)
+text(x_point[1] + 0.02, x_point[2] - 0.05, "x = (0.7, 0.5)", pos = 4, col = "red")
+
+# Draw the vector (x - μ)
+arrows(mu_point[1], mu_point[2], x_point[1], x_point[2],
+       col = "darkgreen", lwd = 2, length = 0.1)
+text(0.6, 0.52, "x - μ", col = "darkgreen", pos = 3)
+
+# Add legend
+legend("bottomright",
+       legend = c("Mean μ", "Point x", "Vector (x - μ)"),
+       pch = c(19, 17, NA), lty = c(NA, NA, 1), lwd = c(NA, NA, 2),
+       col = c("blue", "red", "darkgreen"), bty = "n")
+```
+
+**Step 2: Define the multivariate Gaussian density**
+
+The multivariate Gaussian (normal) density function is:
+
+$$p(\mathbf{x}) = \frac{1}{\sqrt{(2\pi)^k |\boldsymbol{\Sigma}|}} \exp\left(-\frac{1}{2}(\mathbf{x} - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x} - \boldsymbol{\mu})\right)$$
+
+Let's break this down:
+
+```{r dmvnorm-explanation}
+# Multivariate Gaussian density function - explained step by step
+dmvnorm <- function(x, mu, Sigma) {
+
+  # k = number of dimensions (2 for our 2-pixel case)
+  k <- length(mu)
+
+  # Step A: Center the data (subtract the mean)
+  # x_centered = (x - μ)
+  # This shifts the distribution to be centered at origin
+  x_centered <- x - mu
+
+  # Step B: Compute the "Mahalanobis distance" squared
+  # This measures how far x is from μ, accounting for correlation
+  # Formula: (x - μ)ᵀ Σ⁻¹ (x - μ)
+  inv_Sigma <- solve(Sigma)  # Σ⁻¹ = inverse of covariance matrix
+  mahal <- sum(x_centered * (inv_Sigma %*% x_centered))
+
+  # Step C: Compute the density
+  # Numerator: exp(-0.5 × mahalanobis²) — the "bell" shape
+  # Denominator: √((2π)^k × |Σ|) — normalization constant
+  density <- exp(-0.5 * mahal) / sqrt((2*pi)^k * det(Sigma))
+
+  return(density)
+}
+```
+
+::: callout-tip
+## Understanding the Mahalanobis Distance
+
+The **Mahalanobis distance** is like Euclidean distance, but stretched/rotated by the covariance:
+
+-   **Euclidean:** $d = \sqrt{(x_1 - \mu_1)^2 + (x_2 - \mu_2)^2}$ — treats all directions equally
+-   **Mahalanobis:** $d = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x} - \boldsymbol{\mu})}$ — accounts for correlation
+
+When variables are correlated, moving along the correlation direction is "shorter" than moving perpendicular to it.
+
+```{r mahalanobis-example}
+# Example: Two points at same Euclidean distance from mean
+point_diagonal <- c(0.6, 0.6)      # Along correlation direction
+point_perpendicular <- c(0.6, 0.4) # Perpendicular to correlation
+
+euclidean_diag <- sqrt(sum((point_diagonal - mu_x)^2))
+euclidean_perp <- sqrt(sum((point_perpendicular - mu_x)^2))
+
+inv_Sigma <- solve(Sigma_x)
+mahal_diag <- sqrt(sum((point_diagonal - mu_x) * (inv_Sigma %*% (point_diagonal - mu_x))))
+mahal_perp <- sqrt(sum((point_perpendicular - mu_x) * (inv_Sigma %*% (point_perpendicular - mu_x))))
+
+data.frame(
+  point = c("(0.6, 0.6) - along diagonal", "(0.6, 0.4) - off diagonal"),
+  euclidean_distance = round(c(euclidean_diag, euclidean_perp), 3),
+  mahalanobis_distance = round(c(mahal_diag, mahal_perp), 3),
+  prior_density = round(c(dmvnorm(point_diagonal, mu_x, Sigma_x),
+                          dmvnorm(point_perpendicular, mu_x, Sigma_x)), 4)
+)
+```
+
+The point along the diagonal has **smaller Mahalanobis distance** → **higher probability** under our correlated prior!
+:::
+
+**Step 3: Compute and plot the prior**
+
+```{r gaussian-prior-2d}
+#| fig-width: 5
+#| fig-height: 5
+
+# Compute prior density for every point in the grid
+# Using a for loop (easier to understand than apply)
+
+grid$prior <- numeric(nrow(grid))  # Create empty vector to store results
+
+for (i in 1:nrow(grid)) {
+  # Get the i-th point (x1, x2)
+  x1 <- grid$x1[i]
+  x2 <- grid$x2[i]
+  point <- c(x1, x2)
+
+  # Compute the Gaussian density at this point
+  density <- dmvnorm(point, mu_x, Sigma_x)
+
+  # Store the result
+  grid$prior[i] <- density
+}
+
+# Plot as contour map (top view)
+contour_plot <- ggplot(grid, aes(x1, x2)) +
+  geom_contour_filled(aes(z = prior), bins = 12) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "white", linewidth = 0.8) +
+  scale_fill_viridis_d(option = "plasma") +
+  coord_fixed() +
+  labs(title = "Contour (top view)",
+       x = expression(x[1] ~ "(pixel 1)"),
+       y = expression(x[2] ~ "(pixel 2)")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+print(contour_plot)
+```
+
+Now let's see the same prior as a **3D surface** (the actual bell hill):
+
+```{r gaussian-prior-3d}
+#| fig-width: 8
+#| fig-height: 6
+
+# Convert grid to matrix format for 3D plotting
+# We need a matrix where z[i,j] = density at (x1[i], x2[j])
+z_matrix <- matrix(grid$prior, nrow = 100, ncol = 100, byrow = FALSE)
+
+# Create color gradient based on height
+n_colors <- 50
+colors <- hcl.colors(n_colors, palette = "Purple-Yellow")
+z_normalized <- (z_matrix - min(z_matrix)) / (max(z_matrix) - min(z_matrix))
+color_indices <- pmax(1, ceiling(z_normalized * n_colors))
+facet_colors <- colors[color_indices]
+
+# 3D surface plot
+persp(x1_seq, x2_seq, z_matrix,
+      theta = 35,              # rotation angle (left-right)
+      phi = 25,                # tilt angle (up-down)
+      col = facet_colors,      # color by height
+      shade = 0.3,             # shading for depth
+      border = NA,             # no grid lines
+      xlab = "X1 (pixel 1)",
+      ylab = "x2 (pixel 2)",
+      zlab = "p(x)",
+      main = "Prior p(x) as 3D Surface\nρ = 0.89 creates a ridge along the diagonal",
+      ticktype = "detailed")
+```
+
+**The 3D view shows:**
+
+-   The **peak** is at μ = (0.5, 0.5)
+-   The hill is stretched into a **ridge along the diagonal** (because ρ = 0.89)
+-   Points where x₁ ≈ x₂ have high probability (on the ridge)
+-   Points where x₁ ≠ x₂ have low probability (off the ridge)
+
+The prior is elongated along the diagonal because **correlated pixels** (x₁ ≈ x₂) are more probable than anti-correlated ones.
+
+### The Likelihood: What does the data say?
+
+We observe **y = 0.5** (a single cone measurement). The likelihood tells us: for each possible scene x, how probable is this measurement?
+
+$$p(y|\mathbf{x}) = \mathcal{N}(y; \mathbf{C}\mathbf{x}, \sigma_y^2)$$
+
+```{r gaussian-likelihood-2d}
+#| fig-width: 5
+#| fig-height: 5
+
+# Observed measurement
+y_obs <- 0.2
+
+# Likelihood: p(y|x) = N(y; Cx, σ²)
+# For each x, compute the Gaussian density of observing y_obs
+grid$likelihood <- dnorm(y_obs,
+                          mean = 0.5 * grid$x1 + 0.5 * grid$x2,  # Cx
+                          sd = sigma_noise)
+
+# Plot likelihood
+ggplot(grid, aes(x1, x2)) +
+  geom_contour_filled(aes(z = likelihood), bins = 12) +
+  # Show the constraint line: 0.5*x1 + 0.5*x2 = y_obs
+  geom_abline(slope = -1, intercept = 2*y_obs,
+              linetype = "dashed", color = "white", linewidth = 1) +
+  scale_fill_viridis_d(option = "viridis") +
+  coord_fixed() +
+  labs(title = "Likelihood p(y|x): What does data say?",
+       subtitle = paste0("Observation y = ", y_obs, " constrains x to a RIDGE"),
+       x = expression(x[1] ~ "(pixel 1)"),
+       y = expression(x[2] ~ "(pixel 2)")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+**The ambiguity is visible!** The likelihood is a **ridge** along the constraint line $0.5x_1 + 0.5x_2 = 0.5$. Many different scenes produce the same measurement: - (0, 1), (0.5, 0.5), (1, 0) all give y = 0.5
+
+### The Posterior: Combining prior and likelihood
+
+Bayes' rule combines both:
+
+$$p(\mathbf{x}|y) \propto p(y|\mathbf{x}) \cdot p(\mathbf{x})$$
+
+```{r gaussian-posterior-2d}
+#| fig-width: 5
+#| fig-height: 5
+
+# Posterior = Prior × Likelihood (unnormalized)
+grid$posterior_unnorm <- grid$prior * grid$likelihood
+grid$posterior <- grid$posterior_unnorm / sum(grid$posterior_unnorm)
+
+# Find MAP estimate (maximum of posterior)
+map_idx <- which.max(grid$posterior)
+x_map <- c(grid$x1[map_idx], grid$x2[map_idx])
+
+# Plot posterior
+ggplot(grid, aes(x1, x2)) +
+  geom_contour_filled(aes(z = posterior), bins = 12) +
+  # Show constraint line from likelihood
+  geom_abline(slope = -1, intercept = 2*y_obs,
+              linetype = "dashed", color = "white", linewidth = 0.5, alpha = 0.5) +
+  # Show diagonal from prior
+  geom_abline(slope = 1, intercept = 0,
+              linetype = "dotted", color = "white", linewidth = 0.5, alpha = 0.5) +
+  # Mark MAP estimate
+  geom_point(aes(x = x_map[1], y = x_map[2]),
+             color = "red", size = 3, shape = 4, stroke = 2) +
+  annotate("text", x = x_map[1] + 0.08, y = x_map[2] - 0.05,
+           label = paste0("MAP: (", round(x_map[1], 2), ", ", round(x_map[2], 2), ")"),
+           color = "white", size = 3.5, hjust = 0) +
+  scale_fill_viridis_d(option = "magma") +
+  coord_fixed() +
+  labs(title = "Posterior p(x|y): Best guess about scene",
+       subtitle = "Prior resolves the ambiguity in the likelihood",
+       x = expression(x[1] ~ "(pixel 1)"),
+       y = expression(x[2] ~ "(pixel 2)")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+**Key insight:** The posterior is concentrated near (0.5, 0.5) because:
+
+1\. The **likelihood** says x must lie on the ridge where 0.5x₁ + 0.5x₂ = 0.5
+
+2\. The **prior** says x₁ ≈ x₂ is most probable
+
+3\. The intersection picks out (0.5, 0.5) as the best estimate
+
+### All three together
+
+```{r gaussian-posterior-combined}
+#| fig-width: 10
+#| fig-height: 4
+
+library(gridExtra)
+
+# Normalize for comparable visualization
+grid$prior_norm <- grid$prior / max(grid$prior)
+grid$likelihood_norm <- grid$likelihood / max(grid$likelihood)
+grid$posterior_norm <- grid$posterior / max(grid$posterior)
+
+p1 <- ggplot(grid, aes(x1, x2)) +
+  geom_contour_filled(aes(z = prior_norm), bins = 10) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "white") +
+  scale_fill_viridis_d(option = "plasma") +
+  coord_fixed() +
+  labs(title = "Prior p(x)",
+       subtitle = "x1 ≈ x2 expected",
+       x = expression(x[1]), y = expression(x[2])) +
+  theme_minimal() + theme(legend.position = "none")
+
+p2 <- ggplot(grid, aes(x1, x2)) +
+  geom_contour_filled(aes(z = likelihood_norm), bins = 10) +
+  geom_abline(slope = -1, intercept = 2*y_obs, linetype = "dashed", color = "white") +
+  scale_fill_viridis_d(option = "viridis") +
+  coord_fixed() +
+  labs(title = paste0("Likelihood p(y=", y_obs, "|x)"),
+       subtitle = "Ridge of ambiguity",
+       x = expression(x[1]), y = expression(x[2])) +
+  theme_minimal() + theme(legend.position = "none")
+
+p3 <- ggplot(grid, aes(x1, x2)) +
+  geom_contour_filled(aes(z = posterior_norm), bins = 10) +
+  geom_point(aes(x = x_map[1], y = x_map[2]), color = "red", size = 3, shape = 4, stroke = 2) +
+  scale_fill_viridis_d(option = "magma") +
+  coord_fixed() +
+  labs(title = "Posterior p(x|y)",
+       subtitle = paste0("MAP = (", round(x_map[1],2), ", ", round(x_map[2],2), ")"),
+       x = expression(x[1]), y = expression(x[2])) +
+  theme_minimal() + theme(legend.position = "none")
+
+grid.arrange(p1, p2, p3, ncol = 3)
+```
+
+**The math in action:**
+
+| Symbol | Meaning | Value |
+|----|----|----|
+| $\mathbf{x} = [x_1, x_2]^T$ | Scene (2 pixels) | Unknown |
+| $\mathbf{C} = [0.5, 0.5]$ | Cone sensitivity matrix | $1 \times 2$ |
+| $y$ | Measurement | 0.5 |
+| $\boldsymbol{\mu}_x$ | Prior mean | \[0.5, 0.5\] |
+| $\boldsymbol{\Sigma}_x$ | Prior covariance | Correlated (ρ=0.89) |
+| $\sigma_y$ | Noise SD | 0.1 |
+| $\hat{\mathbf{x}}_{MAP}$ | Best estimate | (`r round(x_map[1],2)`, `r round(x_map[2],2)`) |
+
+### Thresholds and Ideal Observer Theory
+
+**Threshold** = minimum difference needed to discriminate two stimuli.
+
+::: callout-note
+## What is a 2IFC Task?
+
+**2IFC = Two-Interval Forced Choice**
+
+A classic psychophysics experiment:
+
+1.  **Interval 1:** Show stimulus A (e.g., blank gray screen)
+2.  **Interval 2:** Show stimulus B (e.g., faint striped pattern)
+3.  **Question:** "Which interval had the pattern?"
+
+The observer **must choose** one (forced choice), even if unsure. By measuring how often they're correct at different pattern strengths, we find their **threshold** — the minimum detectable difference.
+:::
+
+**Step 1: Create the two stimuli**
+
+```{r threshold-stimuli}
+set.seed(42)  # For reproducibility
+
+# We have 50 cones in a row
+n_cones <- 50
+
+# REFERENCE stimulus: uniform gray field
+# Every cone gets the same mean excitation (100 photons)
+ref_mean <- rep(100, n_cones)
+
+cat("Reference stimulus (uniform):\n")
+cat("All cones have mean =", ref_mean[1], "excitations\n")
+```
+
+```{r threshold-grating}
+# COMPARISON stimulus: faint grating (striped pattern)
+# A sine wave adds light/dark stripes
+
+contrast <- 0.4  # 10% contrast (pretty faint!)
+
+# Create sine wave pattern (2 full cycles across 50 cones)
+grating <- sin(seq(0, 4*pi, length.out = n_cones))
+
+# Apply contrast to the mean
+# Where grating = +1: excitation = 100 × (1 + 0.1) = 110
+# Where grating = -1: excitation = 100 × (1 - 0.1) = 90
+# Where grating =  0: excitation = 100 × (1 + 0)   = 100
+comp_mean <- ref_mean * (1 + contrast * grating)
+
+cat("Comparison stimulus (grating):\n")
+cat("Cone excitations vary from", round(min(comp_mean)), "to", round(max(comp_mean)), "\n")
+cat("Contrast =", contrast * 100, "%\n")
+```
+
+```{r threshold-plot-means}
+#| fig-width: 7
+#| fig-height: 3
+
+# Plot the MEAN responses (no noise yet)
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+plot(1:n_cones, ref_mean, type = "l", lwd = 2, col = "blue",
+     ylim = c(80, 120), main = "Reference (uniform)",
+     xlab = "Cone position", ylab = "Mean excitations")
+
+plot(1:n_cones, comp_mean, type = "l", lwd = 2, col = "red",
+     ylim = c(80, 120), main = "Comparison (grating)",
+     xlab = "Cone position", ylab = "Mean excitations")
+```
+
+**Step 2: Add Poisson noise (what the cones actually report)**
+
+The cones don't report the true mean — they report **noisy samples** from a Poisson distribution:
+
+```{r threshold-add-noise}
+# Simulate what the cones actually report (with Poisson noise)
+# Each cone draws a random number from Poisson(mean)
+
+ref_response <- rpois(n_cones, ref_mean)    # Noisy reference
+comp_response <- rpois(n_cones, comp_mean)  # Noisy comparison
+
+cat("Example: Cone 1\n")
+cat("  Reference: mean =", ref_mean[1], ", actual response =", ref_response[1], "\n")
+cat("  Comparison: mean =", round(comp_mean[1], 1), ", actual response =", comp_response[1], "\n")
+```
+
+**Step 3: The discrimination challenge**
+
+Now look at what the observer actually sees (the noisy responses):
+
+```{r threshold-task-plot}
+#| fig-width: 7
+#| fig-height: 4
+
+response_df <- data.frame(
+  cone = rep(1:n_cones, 2),
+  response = c(ref_response, comp_response),
+  stimulus = rep(c("Reference (uniform)", "Comparison (grating)"), each = n_cones)
+)
+
+ggplot(response_df, aes(cone, response, color = stimulus)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1) +
+  labs(title = "2IFC Task: Can YOU tell which has the grating?",
+       subtitle = "Both have Poisson noise — the pattern is hidden in the noise!",
+       x = "Cone position", y = "Excitations") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+**The problem:** The grating pattern is **buried in noise**! The brain must figure out which stimulus has the pattern based on these noisy measurements.
+
+This is why **thresholds exist** — if the contrast is too low, the pattern disappears into the noise and becomes undetectable.
+
+### Ideal Observer Decision Rule
+
+The **ideal observer** uses Bayes' rule to make optimal decisions.
+
+::: callout-note
+## What is an Ideal Observer?
+
+An **ideal observer** is a theoretical "perfect" decision-maker that:
+
+1.  Knows the true statistics of the stimuli (means, noise distributions)
+2.  Uses Bayes' rule to make the mathematically optimal decision
+3.  Represents the **best possible performance** given the available information
+
+Comparing humans to ideal observers tells us how much information is "lost" in neural processing.
+:::
+
+**Step 1: Setup the simple discrimination task**
+
+Let's simplify to a single cone comparing two intensities:
+
+```{r ideal-setup}
+set.seed(123)
+
+# Two stimuli with slightly different means
+mean_ref <- 100   # Reference: dimmer
+mean_comp <- 105  # Comparison: brighter (5% difference)
+
+cat("Reference stimulus: mean =", mean_ref, "excitations\n")
+cat("Comparison stimulus: mean =", mean_comp, "excitations\n")
+cat("Difference:", mean_comp - mean_ref, "excitations (",
+    round((mean_comp - mean_ref) / mean_ref * 100, 1), "% )\n")
+```
+
+**Step 2: Walk through ONE trial**
+
+```{r ideal-one-trial}
+# On each trial, stimuli are shown in random order
+# The observer must guess which order they were shown
+
+# Let's say the TRUE order is: reference first, comparison second
+true_order <- 1  # 1 = ref first, 2 = comp first
+
+# What the cone actually reports (noisy Poisson samples)
+obs_1 <- rpois(1, mean_ref)   # First interval: drew from reference
+obs_2 <- rpois(1, mean_comp)  # Second interval: drew from comparison
+
+cat("TRUE order: Reference first, Comparison second\n\n")
+cat("Interval 1: observed", obs_1, "excitations (true mean was", mean_ref, ")\n")
+cat("Interval 2: observed", obs_2, "excitations (true mean was", mean_comp, ")\n")
+```
+
+**Step 3: The ideal observer's decision rule**
+
+The ideal observer asks: "Which ordering is more likely to have produced these observations?"
+
+```{r ideal-likelihood}
+# Hypothesis 1: Reference was first (obs_1 ~ Poisson(100), obs_2 ~ Poisson(105))
+# Hypothesis 2: Comparison was first (obs_1 ~ Poisson(105), obs_2 ~ Poisson(100))
+
+# Compute log-likelihood for each hypothesis
+# P(obs_1 | mean) × P(obs_2 | mean) ... use log for numerical stability
+
+# If reference was first:
+ll_ref_first <- dpois(obs_1, mean_ref, log = TRUE) +
+                dpois(obs_2, mean_comp, log = TRUE)
+
+# If comparison was first:
+ll_comp_first <- dpois(obs_1, mean_comp, log = TRUE) +
+                 dpois(obs_2, mean_ref, log = TRUE)
+
+cat("Log-likelihood if REFERENCE first:", round(ll_ref_first, 3), "\n")
+cat("Log-likelihood if COMPARISON first:", round(ll_comp_first, 3), "\n")
+```
+
+```{r ideal-decision}
+# Decision variable: difference in log-likelihoods
+delta <- ll_ref_first - ll_comp_first
+
+cat("\nDecision variable δ =", round(delta, 3), "\n\n")
+
+# Decision rule:
+# If δ ≥ 0: more likely that reference was first → choose "ref first"
+# If δ < 0: more likely that comparison was first → choose "comp first"
+
+if (delta >= 0) {
+  decision <- 1
+  cat("δ ≥ 0, so decide: REFERENCE was first\n")
+} else {
+  decision <- 2
+  cat("δ < 0, so decide: COMPARISON was first\n")
+}
+
+# Was the decision correct?
+if (decision == true_order) {
+  cat("✓ CORRECT!\n")
+} else {
+  cat("✗ WRONG!\n")
+}
+```
+
+**Step 4: Run many trials to measure performance**
+
+```{r ideal-simulation}
+n_trials <- 500
+correct <- 0
+delta_values <- c()
+
+for (trial in 1:n_trials) {
+
+  # Random order: 1 = ref first, 2 = comp first
+  true_order <- sample(1:2, 1)
+
+  # Generate noisy observations based on true order
+  if (true_order == 1) {
+    # Reference first, comparison second
+    obs_1 <- rpois(1, mean_ref)
+    obs_2 <- rpois(1, mean_comp)
+  } else {
+    # Comparison first, reference second
+    obs_1 <- rpois(1, mean_comp)
+    obs_2 <- rpois(1, mean_ref)
+  }
+
+  # Compute log-likelihoods
+  ll_ref_first <- dpois(obs_1, mean_ref, log = TRUE) +
+                  dpois(obs_2, mean_comp, log = TRUE)
+  ll_comp_first <- dpois(obs_1, mean_comp, log = TRUE) +
+                   dpois(obs_2, mean_ref, log = TRUE)
+
+  # Decision variable
+  delta <- ll_ref_first - ll_comp_first
+  delta_values <- c(delta_values, delta)
+
+  # Make decision
+  decision <- ifelse(delta >= 0, 1, 2)
+
+  # Track correctness
+  if (decision == true_order) {
+    correct <- correct + 1
+  }
+}
+
+percent_correct <- correct / n_trials * 100
+cat("Results after", n_trials, "trials:\n")
+cat("Correct:", correct, "/", n_trials, "\n")
+cat("Percent correct:", round(percent_correct, 1), "%\n")
+```
+
+**Step 5: Visualize the decision variable distribution**
+
+```{r ideal-plot}
+#| fig-width: 7
+#| fig-height: 4
+
+delta_df <- data.frame(delta = delta_values)
+
+ggplot(delta_df, aes(delta)) +
+  geom_histogram(bins = 40, fill = "steelblue", alpha = 0.7) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "red", linewidth = 1) +
+  annotate("text", x = 0.3, y = 35, label = "Decision\nboundary\n(δ = 0)",
+           color = "red", hjust = 0) +
+  annotate("text", x = -1.5, y = 30, label = "Choose\n'comp first'", color = "gray40") +
+  annotate("text", x = 1.5, y = 30, label = "Choose\n'ref first'", color = "gray40") +
+  labs(title = paste0("Ideal Observer Performance: ", round(percent_correct, 1), "% correct"),
+       subtitle = paste0("Discriminating ", mean_ref, " vs ", mean_comp, " mean excitations"),
+       x = "Decision variable (δ)", y = "Count") +
+  theme_minimal()
+```
+
+**Key insight:** The decision variable δ is sometimes positive, sometimes negative (due to noise). When it crosses the wrong side of 0, the observer makes an error. The closer the two means, the more overlap → more errors → lower percent correct.
+
+### Contrast Sensitivity Function
+
+::: callout-note
+## What is Spatial Frequency?
+
+**Spatial frequency** = how many light/dark cycles fit in one degree of visual angle
+
+```         
+Low frequency (1 cpd):     High frequency (10 cpd):
+█████░░░░░█████░░░░░       █░█░█░█░█░█░█░█░█░█░
+     1 cycle                    10 cycles
+←───── 1 degree ─────→     ←───── 1 degree ─────→
+```
+
+-   **Low frequency**: Wide stripes (easy to see even when blurry)
+-   **High frequency**: Narrow stripes (need sharp vision)
+-   **Units**: cycles per degree (cpd)
+:::
+
+**Step 1: What do different spatial frequencies look like?**
+
+```{r csf-gratings}
+#| fig-width: 10
+#| fig-height: 3
+
+# Create gratings at different spatial frequencies
+par(mfrow = c(1, 4), mar = c(2, 1, 3, 1))
+
+for (freq in c(1, 3, 10, 30)) {
+  # Create a sinusoidal grating
+  x <- seq(0, 1, length.out = 200)
+  grating <- matrix(rep(sin(2 * pi * freq * x), 100), nrow = 100, byrow = TRUE)
+
+  image(grating, col = gray.colors(100), axes = FALSE,
+        main = paste0(freq, " cycles/degree"))
+}
+```
+
+**Step 2: What is contrast threshold?**
+
+```{r csf-threshold-concept}
+#| fig-width: 8
+#| fig-height: 3
+
+# Show gratings at decreasing contrast
+par(mfrow = c(1, 4), mar = c(2, 1, 3, 1))
+
+freq <- 5  # Fixed frequency
+contrasts <- c(1.0, 0.3, 0.1, 0.03)
+
+for (c in contrasts) {
+  x <- seq(0, 1, length.out = 200)
+  # Grating with contrast c: values range from 0.5-c/2 to 0.5+c/2
+  grating <- 0.5 + c/2 * sin(2 * pi * freq * x)
+  grating_mat <- matrix(rep(grating, 100), nrow = 100, byrow = TRUE)
+
+  image(grating_mat, col = gray.colors(100), axes = FALSE, zlim = c(0, 1),
+        main = paste0("Contrast = ", c * 100, "%"))
+}
+```
+
+-   **High contrast (100%)**: Easy to see
+-   **Low contrast (3%)**: Hard to see — near threshold!
+
+**Threshold** = the minimum contrast needed to detect the grating (e.g., 75% correct in 2IFC)
+
+**Step 3: What is contrast sensitivity?**
+
+```{r csf-sensitivity-concept}
+# Sensitivity is the INVERSE of threshold
+
+# Example:
+threshold_low_freq <- 0.01   # 1% contrast needed → easy to detect
+threshold_high_freq <- 0.10  # 10% contrast needed → harder to detect
+
+sensitivity_low_freq <- 1 / threshold_low_freq    # = 100
+sensitivity_high_freq <- 1 / threshold_high_freq  # = 10
+
+cat("Low frequency (2 cpd):\n")
+cat("  Threshold =", threshold_low_freq * 100, "% → Sensitivity =", sensitivity_low_freq, "\n\n")
+
+cat("High frequency (20 cpd):\n")
+cat("  Threshold =", threshold_high_freq * 100, "% → Sensitivity =", sensitivity_high_freq, "\n\n")
+
+cat("Higher sensitivity = lower threshold = easier to see!\n")
+```
+
+**Step 4: The human CSF curve**
+
+```{r csf-curve}
+#| fig-width: 7
+#| fig-height: 5
+
+# Spatial frequencies to test (0.5 to 50 cycles per degree)
+spatial_freq <- seq(0.5, 50, length.out = 100)
+
+# Human CSF model (approximate)
+# - Rises at low frequencies (up to peak at ~3-6 cpd)
+# - Falls at high frequencies (optical blur, cone spacing)
+csf <- 300 * (spatial_freq / 4)^0.8 * exp(-(spatial_freq / 20)^1.5)
+
+# Find the peak
+peak_freq <- spatial_freq[which.max(csf)]
+peak_sens <- max(csf)
+
+cat("Peak sensitivity at", round(peak_freq, 1), "cycles/degree\n")
+cat("Peak sensitivity =", round(peak_sens), "(threshold =", round(1/peak_sens * 100, 2), "%)\n")
+```
+
+```{r csf-plot}
+#| fig-width: 8
+#| fig-height: 5
+
+ggplot(data.frame(sf = spatial_freq, sensitivity = csf), aes(sf, sensitivity)) +
+  geom_line(linewidth = 1.5, color = "darkblue") +
+  geom_vline(xintercept = peak_freq, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = peak_freq * 1.3, y = peak_sens * 0.9,
+           label = paste0("Peak at ~", round(peak_freq), " cpd"), color = "red") +
+  annotate("text", x = 1, y = 50, label = "Low freq:\nneural limits", hjust = 0, size = 3) +
+  annotate("text", x = 25, y = 20, label = "High freq:\noptical blur +\ncone spacing", hjust = 0, size = 3) +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(title = "Human Contrast Sensitivity Function (CSF)",
+       subtitle = "We're most sensitive to medium spatial frequencies (3-6 cpd)",
+       x = "Spatial frequency (cycles/degree)",
+       y = "Contrast sensitivity (1/threshold)") +
+  theme_minimal()
+```
+
+**Step 5: Why this shape?**
+
+```{r csf-explanation}
+#| fig-width: 9
+#| fig-height: 4
+
+# Visual explanation of the CSF shape
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# Low frequencies - neural limits
+x <- seq(0, 1, length.out = 200)
+grating_low <- 0.5 + 0.3 * sin(2 * pi * 1 * x)
+plot(x * 100, grating_low, type = "l", lwd = 2, ylim = c(0, 1),
+     main = "Low Frequency (1 cpd)\nLIMITED BY: Neural processing",
+     xlab = "Position", ylab = "Intensity", col = "blue")
+text(50, 0.15, "Brain computes DIFFERENCES\nUniform regions give weak signal", cex = 0.8)
+
+# Medium frequencies - optimal
+grating_mid <- 0.5 + 0.3 * sin(2 * pi * 5 * x)
+plot(x * 100, grating_mid, type = "l", lwd = 2, ylim = c(0, 1),
+     main = "Medium Frequency (5 cpd)\nOPTIMAL: Best match to cones",
+     xlab = "Position", ylab = "Intensity", col = "darkgreen")
+text(50, 0.15, "Good balance of\ncontrast and sharpness", cex = 0.8)
+
+# High frequencies - optical limits
+grating_high <- 0.5 + 0.3 * sin(2 * pi * 20 * x)
+# Blur it to simulate optics
+blurred <- stats::filter(grating_high, rep(1/15, 15), sides = 2)
+blurred[is.na(blurred)] <- 0.5
+plot(x * 100, blurred, type = "l", lwd = 2, ylim = c(0, 1),
+     main = "High Frequency (20 cpd)\nLIMITED BY: Optical blur",
+     xlab = "Position", ylab = "Intensity", col = "red")
+lines(x * 100, grating_high, lwd = 1, col = "pink", lty = 2)
+legend("bottomright", c("After blur", "Original"), col = c("red", "pink"),
+       lty = c(1, 2), lwd = c(2, 1), bty = "n", cex = 0.8)
+text(50, 0.15, "Optics blur fine details\nCones too sparse to sample", cex = 0.8)
+```
+
+**Summary: Why the inverted-U shape?**
+
+| Region | Spatial Freq | Limiting Factor |
+|----|----|----|
+| **Left (low freq)** | \< 2 cpd | Neural: brain computes derivatives, ignores uniform regions |
+| **Peak (mid freq)** | 3-6 cpd | Optimal: matches cone spacing, survives blur |
+| **Right (high freq)** | \> 10 cpd | Optical: blur + cone spacing can't resolve fine stripes |
+
+**Ideal observer analysis** helps explain the CSF:
+
+-   **High frequency rolloff**: optical blur + cone sampling limits
+-   **Low frequency rolloff**: neural factors (lateral inhibition, computes derivatives)
+-   **Gap from ideal**: efficiency loss from additional noise, stimulus uncertainty
+
+### Fitting the CSF Model to Real Data
+
+How do we find the best parameters for real experimental data? **Nonlinear least squares!**
+
+**Step 1: The CSF model with parameters**
+
+Our model has 4 free parameters:
+
+$$\text{Sensitivity}(f) = A \cdot \left(\frac{f}{f_{peak}}\right)^{s_1} \cdot \exp\left(-\left(\frac{f}{f_{cut}}\right)^{s_2}\right)$$
+
+```{r csf-model-function}
+# Define the CSF model as a function with parameters
+csf_model <- function(freq, A, f_peak, s1, f_cut, s2) {
+  # A      = amplitude (peak sensitivity)
+  # f_peak = frequency scaling for rise
+  # s1     = low-frequency slope
+  # f_cut  = high-frequency cutoff
+  # s2     = high-frequency slope
+
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  return(sensitivity)
+}
+
+cat("Parameters:\n")
+cat("  A      = overall amplitude (peak height)\n")
+cat("  f_peak = controls where sensitivity rises\n")
+cat("  s1     = low-frequency slope (how fast it rises)\n")
+cat("  f_cut  = high-frequency cutoff\n")
+cat("  s2     = high-frequency slope (how fast it falls)\n")
+```
+
+::: {.callout-note title="Understanding the CSF Equation"}
+The CSF model has two main parts multiplied together:
+
+$$\text{Sensitivity}(f) = \underbrace{A \cdot \left(\frac{f}{f_{peak}}\right)^{s_1}}_{\text{Low-frequency rise}} \cdot \underbrace{\exp\left(-\left(\frac{f}{f_{cut}}\right)^{s_2}\right)}_{\text{High-frequency fall}}$$
+
+**Part 1: Rising part** $(f/f_{peak})^{s_1}$
+
+\- When $f < f_{peak}$: this is less than 1, so sensitivity is lower
+
+\- When $f = f_{peak}$: this equals 1
+
+\- $s_1$ controls how steep the rise is
+
+**Part 2: Falling part** $\exp(-(f/f_{cut})^{s_2})$
+
+\- When $f \ll f_{cut}$: exponent is near 0, so this equals \~1
+
+\- When $f = f_{cut}$: this equals $e^{-1} \approx 0.37$
+
+\- When $f > f_{cut}$: this drops rapidly toward 0
+
+\- $s_2$ controls how steep the fall is
+:::
+
+**Let's visualize what each parameter does:**
+
+```{r csf-param-A}
+#| fig-cap: "Effect of A (amplitude): Scales the entire curve up or down"
+#| fig-width: 8
+#| fig-height: 4
+
+# Fixed parameters
+f_peak <- 4
+s1 <- 0.9
+f_cut <- 18
+s2 <- 1.4
+
+# Frequency range
+freq <- seq(0.5, 50, length.out = 200)
+
+# Vary A
+A_values <- c(100, 200, 300, 400)
+
+par(mfrow = c(1, 2))
+
+# Linear scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(0, 600),
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of A (Amplitude) - Linear Scale")
+
+colors <- c("blue", "green", "orange", "red")
+for (i in seq_along(A_values)) {
+  A <- A_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("topright", legend = paste("A =", A_values), col = colors, lwd = 2)
+
+# Log scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(1, 500), log = "xy",
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of A (Amplitude) - Log Scale")
+
+for (i in seq_along(A_values)) {
+  A <- A_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("bottomright", legend = paste("A =", A_values), col = colors, lwd = 2)
+
+cat("A simply scales the height of the curve.\n")
+cat("Higher A = more sensitive overall (lower thresholds).\n")
+```
+
+```{r csf-param-fpeak}
+#| fig-cap: "Effect of f_peak: Controls where the low-frequency rise reaches maximum"
+#| fig-width: 8
+#| fig-height: 4
+
+# Fixed parameters
+A <- 280
+s1 <- 0.9
+f_cut <- 18
+s2 <- 1.4
+
+# Vary f_peak
+f_peak_values <- c(2, 4, 6, 8)
+
+par(mfrow = c(1, 2))
+
+# Linear scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(0, 850),
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of f_peak - Linear Scale")
+
+colors <- c("blue", "green", "orange", "red")
+for (i in seq_along(f_peak_values)) {
+  f_peak <- f_peak_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("topright", legend = paste("f_peak =", f_peak_values), col = colors, lwd = 2)
+abline(v = f_peak_values, col = colors, lty = 2, lwd = 1)
+
+# Log scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(1, 600), log = "xy",
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of f_peak - Log Scale")
+
+for (i in seq_along(f_peak_values)) {
+  f_peak <- f_peak_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("bottomright", legend = paste("f_peak =", f_peak_values), col = colors, lwd = 2)
+
+cat("f_peak controls where the rising part reaches its contribution.\n")
+cat("Larger f_peak shifts the curve to the right.\n")
+```
+
+```{r csf-param-s1}
+#| fig-cap: "Effect of s1: Controls the steepness of the low-frequency rise"
+#| fig-width: 8
+#| fig-height: 4
+
+# Fixed parameters
+A <- 280
+f_peak <- 4
+f_cut <- 18
+s2 <- 1.4
+
+# Vary s1 (low-frequency slope)
+s1_values <- c(0.3, 0.6, 0.9, 1.2)
+
+par(mfrow = c(1, 2))
+
+# Linear scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(0, 800),
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of s1 (low-freq slope) - Linear")
+
+colors <- c("blue", "green", "orange", "red")
+for (i in seq_along(s1_values)) {
+  s1 <- s1_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("topright", legend = paste("s1 =", s1_values), col = colors, lwd = 2)
+
+# Log scale - this shows the slope more clearly!
+plot(NULL, xlim = c(0.5, 50), ylim = c(1, 700), log = "xy",
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of s1 - Log Scale (slope visible!)")
+
+for (i in seq_along(s1_values)) {
+  s1 <- s1_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("bottomright", legend = paste("s1 =", s1_values), col = colors, lwd = 2)
+
+cat("s1 controls how steep the left side of the curve is.\n")
+cat("On a log-log plot, s1 IS the slope at low frequencies!\n")
+cat("s1 = 0 would be flat, s1 = 1 would be proportional to frequency.\n")
+```
+
+```{r csf-param-fcut}
+#| fig-cap: "Effect of f_cut: Controls where the high-frequency fall-off begins"
+#| fig-width: 8
+#| fig-height: 4
+
+# Fixed parameters
+A <- 280
+f_peak <- 4
+s1 <- 0.9
+s2 <- 1.4
+
+# Vary f_cut (high-frequency cutoff)
+f_cut_values <- c(10, 15, 20, 25)
+
+par(mfrow = c(1, 2))
+
+# Linear scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(0, 750),
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of f_cut - Linear Scale")
+
+colors <- c("blue", "green", "orange", "red")
+for (i in seq_along(f_cut_values)) {
+  f_cut <- f_cut_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("topright", legend = paste("f_cut =", f_cut_values), col = colors, lwd = 2)
+abline(v = f_cut_values, col = colors, lty = 2, lwd = 1)
+
+# Log scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(1, 700), log = "xy",
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of f_cut - Log Scale")
+
+for (i in seq_along(f_cut_values)) {
+  f_cut <- f_cut_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("bottomleft", legend = paste("f_cut =", f_cut_values), col = colors, lwd = 2)
+
+cat("f_cut controls WHERE the curve starts falling sharply.\n")
+cat("Larger f_cut = sensitivity extends to higher frequencies.\n")
+cat("Dashed lines show the f_cut values.\n")
+```
+
+```{r csf-param-s2}
+#| fig-cap: "Effect of s2: Controls the steepness of the high-frequency fall"
+#| fig-width: 8
+#| fig-height: 4
+
+# Fixed parameters
+A <- 280
+f_peak <- 4
+s1 <- 0.9
+f_cut <- 18
+
+# Vary s2 (high-frequency slope)
+s2_values <- c(0.8, 1.2, 1.6, 2.0)
+
+par(mfrow = c(1, 2))
+
+# Linear scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(0, 850),
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of s2 (high-freq slope) - Linear")
+
+colors <- c("blue", "green", "orange", "red")
+for (i in seq_along(s2_values)) {
+  s2 <- s2_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("topright", legend = paste("s2 =", s2_values), col = colors, lwd = 2)
+
+# Log scale
+plot(NULL, xlim = c(0.5, 50), ylim = c(0.01, 700), log = "xy",
+     xlab = "Spatial Frequency (cycles/degree)", ylab = "Sensitivity",
+     main = "Effect of s2 - Log Scale")
+
+for (i in seq_along(s2_values)) {
+  s2 <- s2_values[i]
+  sensitivity <- A * (freq / f_peak)^s1 * exp(-(freq / f_cut)^s2)
+  lines(freq, sensitivity, col = colors[i], lwd = 2)
+}
+legend("bottomleft", legend = paste("s2 =", s2_values), col = colors, lwd = 2)
+
+cat("s2 controls how SHARPLY sensitivity drops at high frequencies.\n")
+cat("Larger s2 = steeper drop-off = sharper cutoff.\n")
+cat("This relates to optical blur and cone spacing limits.\n")
+```
+
+::: {.callout-tip title="Summary: What Each Parameter Controls"}
+| Parameter | Name | What it controls | Physical interpretation |
+|----|----|----|----|
+| **A** | Amplitude | Overall height | Overall neural sensitivity |
+| **f_peak** | Peak frequency | Left-right position of rise | Related to neural tuning |
+| **s1** | Low-freq slope | Steepness at low frequencies | Lateral inhibition effects |
+| **f_cut** | Cutoff frequency | Where drop-off begins | Optical blur + cone spacing |
+| **s2** | High-freq slope | Steepness of drop-off | Sharpness of resolution limit |
+
+**Fitting strategy:** 1. Start with **A** to get the overall scale right 2. Adjust **f_cut** to match where sensitivity drops 3. Adjust **s2** to get the steepness of the drop 4. Adjust **f_peak** and **s1** to fit the low-frequency side
+:::
+
+```{r csf-param-combined}
+#| fig-cap: "How the two parts combine to create the CSF"
+#| fig-width: 10
+#| fig-height: 4
+
+# Parameters
+A <- 280
+f_peak <- 4
+s1 <- 0.9
+f_cut <- 18
+s2 <- 1.4
+
+freq <- seq(0.5, 50, length.out = 200)
+
+# Compute each part separately
+rising_part <- A * (freq / f_peak)^s1
+falling_part <- exp(-(freq / f_cut)^s2)
+combined <- rising_part * falling_part
+
+par(mfrow = c(1, 3))
+
+# Part 1: Rising
+plot(freq, rising_part, type = "l", col = "blue", lwd = 2,
+     xlab = "Frequency", ylab = "Value",
+     main = "Part 1: Rising Part\nA × (f/f_peak)^s1",
+     xlim = c(0, 50), ylim = c(0, max(rising_part)))
+abline(h = A, lty = 2, col = "gray")
+text(40, A + 20, "A", col = "gray")
+
+# Part 2: Falling
+plot(freq, falling_part, type = "l", col = "red", lwd = 2,
+     xlab = "Frequency", ylab = "Value",
+     main = "Part 2: Falling Part\nexp(-(f/f_cut)^s2)",
+     xlim = c(0, 50), ylim = c(0, 1))
+abline(v = f_cut, lty = 2, col = "gray")
+abline(h = exp(-1), lty = 2, col = "gray")
+text(f_cut + 3, 0.1, "f_cut", col = "gray")
+text(5, exp(-1) + 0.05, "1/e", col = "gray")
+
+# Combined
+plot(freq, combined, type = "l", col = "purple", lwd = 3,
+     xlab = "Frequency", ylab = "Sensitivity",
+     main = "Combined CSF\n(Part 1) × (Part 2)",
+     xlim = c(0, 50), ylim = c(0, max(combined) * 1.1))
+
+# Find and mark the peak
+peak_idx <- which.max(combined)
+peak_freq <- freq[peak_idx]
+peak_sens <- combined[peak_idx]
+points(peak_freq, peak_sens, pch = 19, col = "purple", cex = 2)
+text(peak_freq + 5, peak_sens, sprintf("Peak at %.1f cpd", peak_freq))
+
+cat("The CSF is the PRODUCT of:\n")
+cat("  1. A rising power function (blue)\n")
+cat("  2. A falling exponential (red)\n")
+cat("The product creates the inverted-U shape!\n")
+```
+
+### How Real Behavioral Data Becomes Sensitivity
+
+::: {.callout-important title="From Behavior to Sensitivity"}
+In a real experiment, you don't measure sensitivity directly. You measure **threshold contrast** through a behavioral task:
+
+**Step 1: Run 2IFC trials at one spatial frequency** - Present grating vs. uniform field (random order) - Subject says which interval had the grating - Vary contrast using a staircase procedure
+
+**Step 2: Find threshold** - Threshold = contrast where subject is \~75% correct - Example: At 4 cpd, threshold might be 0.5% contrast
+
+**Step 3: Convert to sensitivity** $$\text{Sensitivity} = \frac{1}{\text{Threshold Contrast}}$$ - If threshold = 0.005 (0.5%), then sensitivity = 200 - If threshold = 0.02 (2%), then sensitivity = 50
+
+**Repeat for each spatial frequency!**
+:::
+
+```{r csf-threshold-to-sensitivity}
+#| fig-cap: "How thresholds become sensitivity values"
+#| fig-width: 10
+#| fig-height: 4
+
+# Simulate a psychometric function for ONE spatial frequency
+# This is what you'd get from many trials at different contrasts
+
+set.seed(123)
+
+# Contrasts tested (log-spaced is typical)
+contrasts <- c(0.001, 0.002, 0.004, 0.008, 0.016, 0.032, 0.064)
+
+# True threshold for this frequency (4 cpd)
+true_threshold <- 0.02  # 0.5% contrast
+
+# Psychometric function (Weibull is common)
+# Probability correct as function of contrast
+weibull_psychometric <- function(contrast, threshold, slope = 2) {
+  # gamma = 0.5 (chance level for 2IFC)
+  # lambda = 0.02 (lapse rate)
+  gamma <- 0.5
+  lambda <- 0.02
+  p_correct <- gamma + (1 - gamma - lambda) * (1 - exp(-(contrast/threshold)^slope))
+  return(p_correct)
+}
+
+# True probability correct at each contrast
+p_correct <- weibull_psychometric(contrasts, true_threshold)
+
+# Simulate 50 trials at each contrast
+n_trials <- 50
+n_correct <- rbinom(length(contrasts), n_trials, p_correct)
+observed_p <- n_correct / n_trials
+
+par(mfrow = c(1, 3))
+
+# Panel 1: Psychometric function
+plot(contrasts, observed_p, pch = 19, cex = 1.5,
+     xlab = "Contrast", ylab = "Proportion Correct",
+     main = "Step 1: Psychometric Function\n(one spatial frequency)",
+     xlim = c(0, 0.07), ylim = c(0.4, 1))
+
+# Smooth curve
+contrast_smooth <- seq(0.0005, 0.07, length.out = 100)
+lines(contrast_smooth, weibull_psychometric(contrast_smooth, true_threshold),
+      col = "blue", lwd = 2)
+
+# Mark threshold (75% correct for 2IFC)
+abline(h = 0.75, lty = 2, col = "red")
+abline(v = true_threshold, lty = 2, col = "red")
+points(true_threshold, 0.75, pch = 4, cex = 2, col = "red", lwd = 3)
+text(true_threshold + 0.015, 0.75, "Threshold\n(75% correct)", col = "red")
+text(true_threshold, 0.45, sprintf("%.1f%%", true_threshold * 100), col = "red")
+
+# Panel 2: Thresholds at multiple frequencies
+# Simulated threshold data at different spatial frequencies
+frequencies <- c(0.5, 1, 2, 4, 8, 16, 32)
+# Thresholds follow inverse of CSF (with some noise)
+true_sensitivities <- 280 * (frequencies / 4)^0.9 * exp(-(frequencies / 18)^1.4)
+true_thresholds <- 1 / true_sensitivities
+# Add measurement noise
+measured_thresholds <- true_thresholds * exp(rnorm(length(frequencies), 0, 0.1))
+
+plot(frequencies, measured_thresholds * 100, pch = 19, cex = 1.5,
+     xlab = "Spatial Frequency (cpd)", ylab = "Threshold Contrast (%)",
+     main = "Step 2: Measure Threshold\nat Each Frequency",
+     log = "xy")
+lines(frequencies, measured_thresholds * 100, col = "blue", lwd = 1)
+
+cat("Lower threshold = easier to see = MORE sensitive\n")
+
+# Panel 3: Convert to sensitivity
+measured_sensitivity <- 1 / measured_thresholds
+
+plot(frequencies, measured_sensitivity, pch = 19, cex = 1.5,
+     xlab = "Spatial Frequency (cpd)", ylab = "Sensitivity (1/threshold)",
+     main = "Step 3: Sensitivity = 1/Threshold\n(This is the CSF!)",
+     log = "xy")
+lines(frequencies, measured_sensitivity, col = "blue", lwd = 1)
+
+cat("\nSensitivity = 1 / Threshold Contrast\n")
+cat("High sensitivity = low threshold = easy to detect\n")
+```
+
+```{r csf-real-data-example}
+# Show what real experimental data looks like
+cat("Example: Real data from one subject\n")
+cat("=========================================\n\n")
+
+example_data <- data.frame(
+  Frequency_cpd = c(0.5, 1, 2, 4, 8, 16, 32),
+  Threshold_pct = c(2.1, 0.8, 0.4, 0.35, 0.5, 1.8, 12.5),
+  Trials_per_threshold = rep(100, 7)
+)
+
+example_data$Sensitivity <- 100 / example_data$Threshold_pct
+
+print(example_data)
+
+cat("\nKey insight: Each 'sensitivity' value represents ~100 trials!\n")
+cat("The CSF curve is fitted to these ~7-10 data points.\n")
+```
+
+**Step 2: Simulate "real" experimental data**
+
+In a real experiment, you would measure thresholds at several spatial frequencies. Let's simulate this:
+
+```{r csf-simulate-data}
+set.seed(42)
+
+# "True" parameters (unknown to the fitting procedure)
+true_A <- 280
+true_f_peak <- 4
+true_s1 <- 0.9
+true_f_cut <- 18
+true_s2 <- 1.4
+
+# Spatial frequencies tested in experiment (typically 8-12 values)
+test_frequencies <- c(0.5, 1, 2, 4, 6, 8, 12, 16, 24, 32)
+
+# "True" sensitivity at each frequency
+true_sensitivity <- csf_model(test_frequencies, true_A, true_f_peak, true_s1, true_f_cut, true_s2)
+
+# Add measurement noise (real data is noisy!)
+# Use multiplicative noise (log-normal) since sensitivity spans orders of magnitude
+noise <- exp(rnorm(length(test_frequencies), mean = 0, sd = 0.15))
+observed_sensitivity <- true_sensitivity * noise
+
+# Create data frame
+exp_data <- data.frame(
+  frequency = test_frequencies,
+  sensitivity = observed_sensitivity
+)
+
+cat("Simulated experimental data:\n")
+print(round(exp_data, 1))
+```
+
+```{r csf-plot-data}
+#| fig-width: 7
+#| fig-height: 4
+
+ggplot(exp_data, aes(frequency, sensitivity)) +
+  geom_point(size = 3, color = "red") +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(title = "Simulated Experimental Data",
+       subtitle = "10 threshold measurements (with noise)",
+       x = "Spatial frequency (cpd)",
+       y = "Contrast sensitivity") +
+  theme_minimal()
+```
+
+**Step 3: Fit the model using optimization**
+
+### How does `optim()` work?
+
+::: {.callout-note title="The Idea Behind Optimization"}
+**Goal:** Find parameter values that make our model best match the data.
+
+**How:** 1. Start with initial guesses for parameters 2. Compute how "wrong" the model is (the **loss**) 3. Adjust parameters to reduce the loss 4. Repeat until loss stops decreasing
+
+It's like finding the lowest point in a valley while blindfolded - you feel which direction goes downhill and step that way!
+:::
+
+```{r optim-explanation}
+#| fig-cap: "How optimization finds the best parameters"
+#| fig-width: 10
+#| fig-height: 4
+
+# Let's visualize optimization with a SIMPLE 1-parameter example first
+# Question: What value of 'A' best fits our data (holding other params fixed)?
+
+# Fix all parameters except A
+fixed_f_peak <- 4
+fixed_s1 <- 0.9
+fixed_f_cut <- 18
+fixed_s2 <- 1.4
+
+# Try many values of A and compute the loss for each
+A_values <- seq(100, 500, by = 5)
+
+# Compute loss (SSE) for each A value
+losses <- numeric(length(A_values))
+for (i in seq_along(A_values)) {
+  A <- A_values[i]
+  predicted <- A * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+               exp(-(exp_data$frequency / fixed_f_cut)^fixed_s2)
+  losses[i] <- sum((log(exp_data$sensitivity) - log(predicted))^2)
+}
+
+par(mfrow = c(1, 3))
+
+# Panel 1: The loss landscape
+plot(A_values, losses, type = "l", lwd = 2, col = "blue",
+     xlab = "Parameter A", ylab = "Loss (SSE)",
+     main = "Panel 1: Loss Landscape\n(for one parameter)")
+best_A <- A_values[which.min(losses)]
+abline(v = best_A, col = "red", lty = 2, lwd = 2)
+points(best_A, min(losses), pch = 19, col = "red", cex = 2)
+text(best_A + 30, min(losses) + 0.5, sprintf("Best A = %.0f", best_A), col = "red")
+
+# Panel 2: Show the optimization steps
+# Simulate gradient descent
+set.seed(42)
+A_current <- 150  # Start far from optimum
+learning_rate <- 50
+A_history <- A_current
+loss_history <- sum((log(exp_data$sensitivity) -
+                    log(A_current * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                    exp(-(exp_data$frequency / fixed_f_cut)^fixed_s2)))^2)
+
+for (step in 1:10) {
+  # Compute gradient (numerical approximation)
+  eps <- 1
+  loss_plus <- sum((log(exp_data$sensitivity) -
+                   log((A_current + eps) * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                   exp(-(exp_data$frequency / fixed_f_cut)^fixed_s2)))^2)
+  loss_minus <- sum((log(exp_data$sensitivity) -
+                    log((A_current - eps) * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                    exp(-(exp_data$frequency / fixed_f_cut)^fixed_s2)))^2)
+  gradient <- (loss_plus - loss_minus) / (2 * eps)
+
+  # Update A (move in direction that decreases loss)
+  A_current <- A_current - learning_rate * sign(gradient)
+  A_current <- max(100, min(500, A_current))  # Stay in bounds
+
+  # Record history
+  A_history <- c(A_history, A_current)
+  current_loss <- sum((log(exp_data$sensitivity) -
+                      log(A_current * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                      exp(-(exp_data$frequency / fixed_f_cut)^fixed_s2)))^2)
+  loss_history <- c(loss_history, current_loss)
+}
+
+plot(A_values, losses, type = "l", lwd = 2, col = "lightblue",
+     xlab = "Parameter A", ylab = "Loss (SSE)",
+     main = "Panel 2: Optimization Steps\n(walking downhill)")
+# Draw the path
+for (i in 1:(length(A_history)-1)) {
+  arrows(A_history[i], loss_history[i],
+         A_history[i+1], loss_history[i+1],
+         col = "red", lwd = 2, length = 0.1)
+}
+points(A_history, loss_history, pch = 19, col = "red", cex = 1.5)
+text(A_history[1], loss_history[1] + 1, "Start", col = "red")
+text(A_history[length(A_history)], loss_history[length(loss_history)] - 0.5,
+     "End", col = "red")
+
+# Panel 3: Loss decreasing over iterations
+plot(0:(length(loss_history)-1), loss_history, type = "b", pch = 19, col = "red",
+     xlab = "Iteration", ylab = "Loss (SSE)",
+     main = "Panel 3: Loss vs Iteration\n(should decrease!)")
+
+cat("Optimization is like walking downhill:\n")
+cat("  1. Look around to see which direction is 'downhill' (compute gradient)\n")
+cat("  2. Take a step in that direction (update parameters)\n")
+cat("  3. Repeat until you reach the bottom (loss stops decreasing)\n")
+```
+
+```{r optim-2d-landscape}
+#| fig-cap: "With 2 parameters, we search a 2D landscape"
+#| fig-width: 8
+#| fig-height: 6
+
+# Now show 2-parameter optimization: A and f_cut
+# This is a 2D loss landscape (like a terrain map)
+
+A_range <- seq(150, 400, length.out = 30)
+fcut_range <- seq(10, 30, length.out = 30)
+
+# Compute loss for each combination
+loss_grid <- matrix(NA, nrow = length(A_range), ncol = length(fcut_range))
+for (i in seq_along(A_range)) {
+  for (j in seq_along(fcut_range)) {
+    A <- A_range[i]
+    f_cut <- fcut_range[j]
+    predicted <- A * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                 exp(-(exp_data$frequency / f_cut)^fixed_s2)
+    loss_grid[i, j] <- sum((log(exp_data$sensitivity) - log(predicted))^2)
+  }
+}
+
+# Find the minimum
+min_idx <- which(loss_grid == min(loss_grid), arr.ind = TRUE)
+best_A_2d <- A_range[min_idx[1]]
+best_fcut_2d <- fcut_range[min_idx[2]]
+
+par(mfrow = c(1, 2))
+
+# Contour plot (top view of the landscape)
+contour(A_range, fcut_range, loss_grid, nlevels = 20,
+        xlab = "A (amplitude)", ylab = "f_cut (cutoff frequency)",
+        main = "2D Loss Landscape (Top View)\nContour = same loss")
+points(best_A_2d, best_fcut_2d, pch = 4, col = "red", cex = 3, lwd = 3)
+text(best_A_2d + 20, best_fcut_2d, "Minimum!", col = "red")
+
+# Simulate 2D optimization path
+A_curr <- 180
+fcut_curr <- 25
+path_A <- A_curr
+path_fcut <- fcut_curr
+
+for (step in 1:15) {
+  # Numerical gradient for A
+  eps <- 1
+  pred_plus <- A_curr + eps
+  pred_base <- A_curr
+  loss_plus_A <- sum((log(exp_data$sensitivity) -
+                     log(pred_plus * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                     exp(-(exp_data$frequency / fcut_curr)^fixed_s2)))^2)
+  loss_base <- sum((log(exp_data$sensitivity) -
+                   log(pred_base * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                   exp(-(exp_data$frequency / fcut_curr)^fixed_s2)))^2)
+  grad_A <- (loss_plus_A - loss_base) / eps
+
+  # Numerical gradient for f_cut
+  loss_plus_fcut <- sum((log(exp_data$sensitivity) -
+                        log(A_curr * (exp_data$frequency / fixed_f_peak)^fixed_s1 *
+                        exp(-(exp_data$frequency / (fcut_curr + eps))^fixed_s2)))^2)
+  grad_fcut <- (loss_plus_fcut - loss_base) / eps
+
+  # Update
+  A_curr <- A_curr - 5 * sign(grad_A)
+  fcut_curr <- fcut_curr - 0.5 * sign(grad_fcut)
+
+  path_A <- c(path_A, A_curr)
+  path_fcut <- c(path_fcut, fcut_curr)
+}
+
+# Add path to contour plot
+lines(path_A, path_fcut, col = "red", lwd = 2)
+points(path_A, path_fcut, pch = 19, col = "red", cex = 0.8)
+points(path_A[1], path_fcut[1], pch = 19, col = "blue", cex = 2)
+text(path_A[1] - 15, path_fcut[1], "Start", col = "blue")
+
+# 3D surface plot
+persp(A_range, fcut_range, loss_grid,
+      theta = 35, phi = 25,
+      xlab = "A", ylab = "f_cut", zlab = "Loss",
+      main = "3D Loss Landscape\n(find the valley!)",
+      col = "lightblue", shade = 0.5)
+
+cat("\nWith 5 parameters, optim() searches a 5-dimensional landscape!\n")
+cat("Same principle: walk downhill until you reach the bottom.\n")
+```
+
+::: {.callout-tip title="What optim() Returns"}
+``` r
+fit <- optim(par, fn, ...)
+```
+
+| Component         | Description                              |
+|-------------------|------------------------------------------|
+| `fit$par`         | Best parameter values found              |
+| `fit$value`       | Final loss (should be small)             |
+| `fit$convergence` | 0 = success, other = problem             |
+| `fit$counts`      | How many times it evaluated the function |
+:::
+
+```{r csf-fit-model}
+# We minimize sum of squared errors in LOG space
+
+# Define the loss function
+csf_loss <- function(params, data) {
+  A <- params[1]
+  f_peak <- params[2]
+  s1 <- params[3]
+  f_cut <- params[4]
+  s2 <- params[5]
+
+  # Predicted sensitivity
+  predicted <- A * (data$frequency / f_peak)^s1 * exp(-(data$frequency / f_cut)^s2)
+
+  # Sum of squared errors in log space
+  # (log space because sensitivity spans orders of magnitude)
+  sse <- sum((log(data$sensitivity) - log(predicted))^2)
+  return(sse)
+}
+
+# Starting values (initial guesses) - as a vector
+start_params <- c(A = 200, f_peak = 3, s1 = 0.8, f_cut = 15, s2 = 1.5)
+
+# Fit using optim() with L-BFGS-B method (allows parameter bounds)
+fit <- optim(
+  par = start_params,
+  fn = csf_loss,
+  data = exp_data,
+  method = "L-BFGS-B",
+  lower = c(10, 0.5, 0.1, 5, 0.5),   # Lower bounds (sensible constraints)
+  upper = c(1000, 20, 3, 50, 5)      # Upper bounds
+)
+
+# Extract fitted parameters
+fitted_params <- fit$par
+names(fitted_params) <- c("A", "f_peak", "s1", "f_cut", "s2")
+
+cat("=== FITTING RESULTS ===\n\n")
+
+# Check convergence (0 = success)
+if (fit$convergence == 0) {
+  cat("Optimization converged successfully!\n\n")
+} else {
+  cat("Warning: Optimization may not have converged (code:", fit$convergence, ")\n\n")
+}
+
+cat("Fitted parameters:\n")
+for (name in names(fitted_params)) {
+  cat("  ", name, "=", round(fitted_params[name], 2), "\n")
+}
+
+cat("\nTrue parameters (for comparison):\n")
+cat("   A =", true_A, "\n")
+cat("   f_peak =", true_f_peak, "\n")
+cat("   s1 =", true_s1, "\n")
+cat("   f_cut =", true_f_cut, "\n")
+cat("   s2 =", true_s2, "\n")
+```
+
+**Step 4: Evaluate the fit**
+
+```{r csf-evaluate-fit}
+# Compute R-squared
+predicted <- csf_model(exp_data$frequency,
+                       fitted_params["A"],
+                       fitted_params["f_peak"],
+                       fitted_params["s1"],
+                       fitted_params["f_cut"],
+                       fitted_params["s2"])
+
+SS_res <- sum((log(exp_data$sensitivity) - log(predicted))^2)
+SS_tot <- sum((log(exp_data$sensitivity) - mean(log(exp_data$sensitivity)))^2)
+R_squared <- 1 - SS_res / SS_tot
+
+cat("Model fit quality:\n")
+cat("  R² =", round(R_squared, 4), "\n")
+cat("  (1.0 = perfect fit, >0.95 = excellent)\n")
+```
+
+**Step 5: Plot data with fitted curve**
+
+```{r csf-plot-fit}
+#| fig-width: 8
+#| fig-height: 5
+
+# Generate smooth curve from fitted model
+freq_smooth <- seq(0.5, 50, length.out = 200)
+fitted_curve <- csf_model(freq_smooth,
+                          fitted_params["A"],
+                          fitted_params["f_peak"],
+                          fitted_params["s1"],
+                          fitted_params["f_cut"],
+                          fitted_params["s2"])
+
+# Also show the true curve for comparison
+true_curve <- csf_model(freq_smooth, true_A, true_f_peak, true_s1, true_f_cut, true_s2)
+
+# Create plot data
+plot_data <- data.frame(
+  frequency = rep(freq_smooth, 2),
+  sensitivity = c(fitted_curve, true_curve),
+  curve = rep(c("Fitted", "True"), each = length(freq_smooth))
+)
+
+ggplot() +
+  # Data points
+  geom_point(data = exp_data, aes(frequency, sensitivity),
+             size = 4, color = "red", shape = 19) +
+  # Fitted curve
+  geom_line(data = subset(plot_data, curve == "Fitted"),
+            aes(frequency, sensitivity, color = "Fitted"),
+            linewidth = 1.5) +
+  # True curve (dashed)
+  geom_line(data = subset(plot_data, curve == "True"),
+            aes(frequency, sensitivity, color = "True"),
+            linewidth = 1, linetype = "dashed") +
+  scale_color_manual(values = c("Fitted" = "blue", "True" = "gray50")) +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(title = paste0("CSF Model Fit (R² = ", round(R_squared, 3), ")"),
+       subtitle = "Red points = data, Blue = fitted model, Gray dashed = true curve",
+       x = "Spatial frequency (cpd)",
+       y = "Contrast sensitivity",
+       color = "Curve") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+::: callout-tip
+## Fitting Tips for Real Data
+
+1.  **Starting values matter**: Bad initial guesses can lead to poor fits. Use visual inspection to estimate starting values.
+
+2.  **Fit in log space**: Sensitivity spans orders of magnitude. Fitting `log(sensitivity)` gives equal weight to all data points.
+
+3.  **Check residuals**: Plot residuals vs. frequency — they should be random, not systematic.
+
+4.  **Consider simpler models**: Sometimes 3-4 parameters are enough. More parameters = risk of overfitting.
+
+5.  **Bootstrap for confidence intervals**: Resample your data and refit to get parameter uncertainty.
+:::
+
+**Good fit indicators:** - Residuals are **randomly scattered** around 0 (no pattern) - Residuals are **approximately normal** (bell-shaped histogram)
+
+------------------------------------------------------------------------
+
+### 1.5.4 Computational Observers
+
+The ideal observer we built uses a simplified model. What happens when we add more realistic details?
+
+```{r computational-observer}
+#| fig-cap: "Building up from ideal to computational observer"
+#| fig-width: 10
+#| fig-height: 5
+
+# Simulate how different factors affect the CSF
+freq <- seq(0.5, 50, length.out = 100)
+
+# Ideal observer (Poisson-limited)
+ideal_csf <- 400 * (freq / 4)^0.9 * exp(-(freq / 25)^1.5)
+
+# Add realistic factors one by one:
+# 1. More accurate optics (Thibos et al., 2002) - modest effect
+optics_csf <- 380 * (freq / 4)^0.9 * exp(-(freq / 22)^1.5)
+
+# 2. Trained linear classifier (not optimal) - reduces sensitivity
+classifier_csf <- 300 * (freq / 4)^0.9 * exp(-(freq / 22)^1.5)
+
+# 3. Fixational eye movements - further reduction
+fixation_csf <- 250 * (freq / 4)^0.8 * exp(-(freq / 20)^1.4)
+
+# 4. Photocurrent transformation - brings high-freq in line with human
+photocurrent_csf <- 280 * (freq / 4)^0.7 * exp(-(freq / 18)^1.4)
+
+# Human data (approximate)
+human_csf <- 280 * (freq / 4)^0.9 * exp(-(freq / 18)^1.4)
+
+par(mfrow = c(1, 2))
+
+# Panel 1: Building up the model
+plot(freq, ideal_csf, type = "l", log = "xy", col = "gray70", lwd = 2,
+     xlab = "Spatial Frequency (cpd)", ylab = "Sensitivity",
+     main = "Adding Realistic Factors", ylim = c(1, 700))
+lines(freq, optics_csf, col = "red", lwd = 2)
+lines(freq, classifier_csf, col = "orange", lwd = 2)
+lines(freq, fixation_csf, col = "green", lwd = 2)
+lines(freq, photocurrent_csf, col = "blue", lwd = 2)
+lines(freq, human_csf, col = "black", lwd = 3, lty = 2)
+
+legend("bottomright",
+       c("Ideal (Poisson)", "+ Better optics", "+ Linear classifier",
+         "+ Eye movements", "+ Photocurrent", "Human data"),
+       col = c("gray70", "red", "orange", "green", "blue", "black"),
+       lwd = c(2,2,2,2,2,3), lty = c(1,1,1,1,1,2), cex = 0.7)
+
+# Panel 2: Summary of effects
+effects <- data.frame(
+  Factor = c("Ideal\n(Poisson)", "Realistic\noptics", "Linear\nclassifier",
+             "Eye\nmovements", "Photo-\ncurrent"),
+  Sensitivity = c(400, 380, 300, 250, 280),
+  x = 1:5
+)
+
+barplot(effects$Sensitivity, names.arg = effects$Factor, col = c("gray70", "red", "orange", "green", "blue"),
+        main = "Peak Sensitivity After Each Factor",
+        ylab = "Peak Sensitivity", ylim = c(0, 450))
+abline(h = 280, lty = 2, col = "black", lwd = 2)
+text(5.5, 290, "Human", col = "black")
+
+cat("Key insight: Combining principles + detailed computation\n")
+cat("accounts for both SHAPE and ABSOLUTE LEVEL of human CSF.\n")
+```
+
+::: {.callout-note title="What Each Factor Does"}
+| Factor | Effect on CSF |
+|----|----|
+| **Better optics** (Thibos et al.) | Modest effect - more accurate but similar shape |
+| **Linear classifier** | Reduces absolute sensitivity (not optimal like ideal) |
+| **Fixational eye movements** | Further reduces performance (image motion) |
+| **Photocurrent transformation** | Gain control + noise brings high-freq in line with human |
+:::
+
+------------------------------------------------------------------------
+
+### 1.5.5 Image Reconstruction
+
+So far we've focused on **thresholds** (can you detect it?). But what about **suprathreshold vision** - what do clearly visible things look like?
+
+```{r image-reconstruction-concept}
+#| fig-cap: "Image reconstruction: From cone excitations back to image"
+#| fig-width: 10
+#| fig-height: 4
+
+par(mfrow = c(1, 3), mar = c(2, 2, 3, 1))
+
+# Create a simple "image" (2D Gaussian blob)
+set.seed(42)
+n <- 32
+x <- seq(-2, 2, length.out = n)
+y <- seq(-2, 2, length.out = n)
+grid <- expand.grid(x = x, y = y)
+
+# Original image: Gaussian blob
+original <- matrix(exp(-0.5 * (grid$x^2 + grid$y^2)), n, n)
+
+image(x, y, original, col = heat.colors(100), main = "Original Image\n(Scene)",
+      xlab = "", ylab = "", axes = FALSE)
+box()
+
+# Cone excitations: blurred + sampled + noisy
+# Blur (simple convolution approximation)
+blur_kernel <- matrix(c(1,2,1,2,4,2,1,2,1)/16, 3, 3)
+
+blurred <- original
+for (i in 2:(n-1)) {
+  for (j in 2:(n-1)) {
+    blurred[i,j] <- sum(original[(i-1):(i+1), (j-1):(j+1)] * blur_kernel)
+  }
+}
+
+# Add Poisson-like noise (scaled)
+cone_excitations <- blurred + matrix(rnorm(n*n, 0, 0.05), n, n)
+cone_excitations[cone_excitations < 0] <- 0
+
+image(x, y, cone_excitations, col = heat.colors(100),
+      main = "Cone Excitations\n(Blurred + Noisy)",
+      xlab = "", ylab = "", axes = FALSE)
+box()
+
+# Reconstruction (simplified - just smoothed version)
+# In reality this uses Bayesian inference with natural image prior
+reconstructed <- cone_excitations
+for (iter in 1:3) {
+  for (i in 2:(n-1)) {
+    for (j in 2:(n-1)) {
+      # Simple smoothing (like applying a prior that nearby pixels are similar)
+      reconstructed[i,j] <- 0.5 * cone_excitations[i,j] +
+                           0.5 * mean(reconstructed[(i-1):(i+1), (j-1):(j+1)])
+    }
+  }
+}
+
+image(x, y, reconstructed, col = heat.colors(100),
+      main = "Reconstruction\n(Bayesian estimate)",
+      xlab = "", ylab = "", axes = FALSE)
+box()
+
+cat("Forward: Image → Blur → Sample → Add noise → Cone excitations\n")
+cat("Inverse: Cone excitations → Bayesian inference → Reconstructed image\n")
+```
+
+::: {.callout-important title="The Reconstruction Equation"}
+**Forward model:** $$\bar{\mathbf{y}} = \mathbf{R}\mathbf{x}$$
+
+Where $\mathbf{R}$ encodes optics + cone sampling.
+
+**Likelihood:** Poisson noise $$p(\mathbf{y}|\mathbf{x}) = \prod_i \text{Poisson}(y_i | [\mathbf{R}\mathbf{x}]_i)$$
+
+**Prior:** Natural images have correlations - Nearby pixels tend to be similar (spatial correlation) - Nearby wavelengths tend to be similar (spectral correlation)
+
+**Posterior:** Combine likelihood × prior to get best estimate of original image!
+:::
+
+```{r reconstruction-eccentricity}
+#| fig-cap: "Reconstruction quality depends on retinal location"
+#| fig-width: 10
+#| fig-height: 4
+
+# Simulate reconstruction at different eccentricities
+# Key factor: cone density decreases with eccentricity
+
+par(mfrow = c(1, 4), mar = c(2, 1, 3, 1))
+
+# Original
+set.seed(123)
+n <- 32
+original <- matrix(0, n, n)
+# Simple pattern: vertical stripes
+for (i in 1:n) {
+  original[, i] <- sin(2 * pi * i / 8) * 0.5 + 0.5
+}
+
+image(original, col = gray.colors(100), main = "Original",
+      axes = FALSE, asp = 1)
+box()
+
+# Function to simulate reconstruction at different eccentricities
+simulate_recon <- function(original, cone_spacing, noise_level) {
+  n <- nrow(original)
+  # Subsample (fewer cones)
+  sampled <- original
+  if (cone_spacing > 1) {
+    sampled <- matrix(0, n, n)
+    for (i in seq(1, n, by = cone_spacing)) {
+      for (j in seq(1, n, by = cone_spacing)) {
+        val <- original[min(i, n), min(j, n)]
+        # Fill in the region
+        i_end <- min(i + cone_spacing - 1, n)
+        j_end <- min(j + cone_spacing - 1, n)
+        sampled[i:i_end, j:j_end] <- val
+      }
+    }
+  }
+  # Add noise
+  sampled + matrix(rnorm(n*n, 0, noise_level), n, n)
+}
+
+# 1° eccentricity (high cone density)
+recon_1deg <- simulate_recon(original, cone_spacing = 1, noise_level = 0.05)
+image(recon_1deg, col = gray.colors(100), main = "1° eccentricity\n(fovea - dense cones)",
+      axes = FALSE, asp = 1)
+box()
+
+# 10° eccentricity
+recon_10deg <- simulate_recon(original, cone_spacing = 2, noise_level = 0.1)
+image(recon_10deg, col = gray.colors(100), main = "10° eccentricity\n(fewer cones)",
+      axes = FALSE, asp = 1)
+box()
+
+# 18° eccentricity
+recon_18deg <- simulate_recon(original, cone_spacing = 3, noise_level = 0.15)
+image(recon_18deg, col = gray.colors(100), main = "18° eccentricity\n(sparse cones)",
+      axes = FALSE, asp = 1)
+box()
+
+cat("Fovea (1°): Dense cones → good reconstruction\n")
+cat("Periphery (18°): Sparse cones → more distortion, but still recognizable!\n")
+cat("\nThe PRIOR helps fill in missing information from sparse sampling.\n")
+```
+
+------------------------------------------------------------------------
+
+### 1.5.6 Optimizing Sensory Measurements
+
+A deeper question: **Why does the visual system measure what it measures?**
+
+```{r optimal-measurements}
+#| fig-cap: "Why local derivatives might be optimal measurements"
+#| fig-width: 10
+#| fig-height: 4
+
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# Natural images have 1/f power spectrum
+# This means most information is in LOW frequencies
+# But we also need edges (HIGH frequencies)
+
+freq <- seq(0.1, 50, length.out = 100)
+
+# Natural image power spectrum (1/f²)
+natural_power <- 1 / freq^2
+natural_power <- natural_power / max(natural_power)
+
+plot(freq, natural_power, type = "l", log = "xy", lwd = 2, col = "blue",
+     xlab = "Spatial Frequency", ylab = "Power",
+     main = "Natural Image Statistics\n(1/f² power spectrum)")
+text(10, 0.1, "Most power at\nlow frequencies", col = "blue", cex = 0.8)
+
+# Derivative filter boosts high frequencies
+# d/dx in frequency domain = multiplication by frequency
+derivative_response <- freq
+derivative_response <- derivative_response / max(derivative_response)
+
+# Combined: what derivatives "see" in natural images
+combined <- natural_power * derivative_response^2
+
+plot(freq, derivative_response, type = "l", log = "xy", lwd = 2, col = "red",
+     xlab = "Spatial Frequency", ylab = "Response",
+     main = "Derivative Filter\n(edge detector)")
+text(5, 0.05, "Boosts high\nfrequencies", col = "red", cex = 0.8)
+
+# The result is roughly flat - uniform information across frequencies!
+plot(freq, combined, type = "l", log = "xy", lwd = 2, col = "purple",
+     xlab = "Spatial Frequency", ylab = "Power × Response²",
+     main = "Natural Images × Derivative\n= roughly uniform!",
+     ylim = c(0.001, 1))
+abline(h = 0.01, lty = 2, col = "gray")
+text(5, 0.02, "Whitened!\nUniform information", col = "purple", cex = 0.8)
+
+cat("Natural images: most power at low frequencies (1/f²)\n")
+cat("Derivative filters: boost high frequencies\n")
+cat("Combined: roughly uniform information across frequencies!\n")
+cat("\nThis is called 'whitening' - it's efficient coding.\n")
+```
+
+::: {.callout-tip title="Why Derivatives Are Optimal"}
+**The Bayesian optimization framework asks:** 1. What is the prior distribution of scenes? → Natural images (1/f² spectrum) 2. What measurements are feasible? → Local filters at each location 3. What is the cost of errors? → Reconstruction error 4. What are the energetic costs? → Metabolic limits on neurons
+
+**Answer:** Local derivatives (edges, gradients) are close to optimal because they: - "Whiten" the natural image statistics - Extract maximum information per neuron - Explain why neurons are edge-selective, orientation-selective, motion-selective
+:::
+
+------------------------------------------------------------------------
+
+## 1.6 Summary
+
+::: {.callout-important title="Key Takeaways"}
+**The Forward Calculation (§1.2-1.4):** $$\text{Scene} \xrightarrow{\text{optics}} \text{Retinal Image} \xrightarrow{\text{cones}} \text{Excitations} \xrightarrow{\text{noise}} \text{Neural Signal}$$
+
+**The Inverse Problem (§1.5):** $$p(\text{scene}|\text{signal}) \propto p(\text{signal}|\text{scene}) \times p(\text{scene})$$
+
+**Core insight:** Perception is Bayesian inference - we perceive the most likely scene given our noisy sensory signals.
+:::
+
+```{r summary-forward}
+#| fig-cap: "Summary: The forward calculation pipeline"
+#| fig-width: 10
+#| fig-height: 3
+
+par(mar = c(1, 1, 2, 1))
+plot(NULL, xlim = c(0, 12), ylim = c(0, 4), axes = FALSE, xlab = "", ylab = "",
+     main = "Forward Calculation: Scene → Cone Excitations")
+
+# Boxes
+box_y <- 2
+box_h <- 1.5
+colors <- c("lightyellow", "lightblue", "lightgreen", "lavender")
+labels <- c("Light Field\nLF(x,y,z,α,β,λ)", "Retinal Image\nE(rx,ry,λ)",
+            "Cone Excitations\nρk = ∫ E(λ)Sk(λ)dλ", "Neural Signal\n+ Poisson noise")
+x_positions <- c(0.5, 3.5, 6.5, 9.5)
+
+for (i in 1:4) {
+  rect(x_positions[i], box_y - box_h/2, x_positions[i] + 2, box_y + box_h/2,
+       col = colors[i], border = "gray40", lwd = 2)
+  text(x_positions[i] + 1, box_y, labels[i], cex = 0.75)
+}
+
+# Arrows with labels
+arrows(2.5, box_y, 3.5, box_y, lwd = 2)
+arrows(5.5, box_y, 6.5, box_y, lwd = 2)
+arrows(8.5, box_y, 9.5, box_y, lwd = 2)
+
+text(3, box_y + 0.9, "Optics\n(PSF)", cex = 0.7, col = "blue")
+text(6, box_y + 0.9, "Cones\n(Linear)", cex = 0.7, col = "blue")
+text(9, box_y + 0.9, "Noise\n(Poisson)", cex = 0.7, col = "blue")
+
+# Section references
+text(3, box_y - 1.1, "§1.2", col = "gray50", cex = 0.8)
+text(6, box_y - 1.1, "§1.3", col = "gray50", cex = 0.8)
+text(9, box_y - 1.1, "§1.4", col = "gray50", cex = 0.8)
+```
+
+| Principle          | Application                          |
+|--------------------|--------------------------------------|
+| **Linear algebra** | Spectral radiance → cone excitations |
+| **Convolution**    | Optical blur (PSF)                   |
+| **Poisson noise**  | Photon counting variability          |
+| **Bayes' rule**    | Prior × Likelihood = Posterior       |
+
+**PRINCIPLES + DATA + COMPUTATION = UNDERSTANDING**
+
+------------------------------------------------------------------------
 
 ## References
 
 Wandell, B. & Brainard, D. (2024). Principles and consequences of the initial visual encoding. In J. Batchelder et al. (Eds.), *New handbook of mathematical psychology* (Vol. 3). Cambridge University Press.
-
-Adelson, E. H., & Bergen, J. (1991). The plenoptic function and the elements of early vision. In M. Landy & J. Movshon (Eds.), *Computational models of visual processing* (pp. 3-20). MIT Press.
-
-Gershun, A. (1939). The light field. *Journal of Mathematical Physics, 18*(1-4), 51-151.

@@ -12,6 +12,7 @@
   {
     "listing": "/demos/index.html",
     "items": [
+      "/demos/handbook_ch01_visual_encoding.html",
       "/demos/handbook_ch00_preface.html"
     ]
   }
