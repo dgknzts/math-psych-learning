@@ -2,6 +2,8 @@
 
 A personal learning project for studying mathematical psychology and cognitive modeling. Content is shared publicly for anyone interested in these topics.
 
+Browse the materials at https://dgknzts.github.io/math-psych-learning/
+
 ## What's Here
 
 - **Lectures** - Slide presentations with key concepts
@@ -18,7 +20,3 @@ A personal learning project for studying mathematical psychology and cognitive m
 ### Articles
 
 *To be added as studied.*
-
-## License
-
-Educational content created here is shared freely. Original source materials (PDFs) are not included due to copyright.
