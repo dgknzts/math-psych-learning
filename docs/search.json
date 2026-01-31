@@ -4,7 +4,7 @@
     "href": "lectures/index.html",
     "title": "Lectures",
     "section": "",
-    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nCategories\n\n\n\n\n\n\n\n\nHandbook Preface: Why Math in Psychology?\n\n\n \n\n\n\n\n\n\nNo matching items"
+    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nCategories\n\n\n\n\n\n\n\n\nChapter 1: Initial Visual Encoding (Part 1)\n\n\n \n\n\n\n\n\n\nHandbook Preface: Why Math in Psychology?\n\n\n \n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -32,7 +32,7 @@
     "href": "index.html#updates",
     "title": "Mathematical Psychology Learning Hub",
     "section": "Updates",
-    "text": "Updates\n\n\n\nSection\nType\nDate\n\n\n\n\nCh.1 Initial Visual Encoding\nDemo\n2026-01-31\n\n\nCh.0 Preface\nDemo\n2026-01-22\n\n\nCh.0 Preface\nLecture\n2026-01-22\n\n\nCh.0 Preface\nExercise\n2026-01-22"
+    "text": "Updates\n\n\n\nSection\nType\nDate\n\n\n\n\nCh.1 Visual Encoding (Part 1)\nLecture\n2026-01-31\n\n\nCh.1 Initial Visual Encoding\nDemo\n2026-01-31\n\n\nCh.0 Preface\nDemo\n2026-01-22\n\n\nCh.0 Preface\nLecture\n2026-01-22\n\n\nCh.0 Preface\nExercise\n2026-01-22"
   },
   {
     "objectID": "exercises/index.html",
@@ -376,5 +376,383 @@
     "title": "Handbook Preface: Why Math in Psychology?",
     "section": "References",
     "text": "References\nAshby, F. G., Colonius, H., & Dzhafarov, E. N. (2023). Preface. In F. G. Ashby, H. Colonius, & E. N. Dzhafarov (Eds.), New handbook of mathematical psychology: Volume 3 (pp. vii-xvi). Cambridge University Press.\nLuce, R. D. (1959). On the possible psychophysical laws. Psychological Review, 66(2), 81-95.\nLuce, R. D. (1962). Comments on Rozeboom’s criticism. Psychological Review, 69(6), 548-551.\nRozeboom, W. W. (1962). The untenability of Luce’s principle. Psychological Review, 69(6), 542-547."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#why-study-vision-mathematically",
+    "href": "lectures/handbook_ch01_visual_encoding.html#why-study-vision-mathematically",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Why Study Vision Mathematically?",
+    "text": "Why Study Vision Mathematically?\nVision research serves many purposes:\n\nMedical: Diagnose and repair visual disorders\nPsychological: Quantify rules of perception\nNeuroscience: Relate experience to neural signals\nComputational: Seek principles of perceptual processes\nEngineering: Design artificial vision systems\n\n\nMathematics is the common language across all these fields."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#core-mathematical-methods",
+    "href": "lectures/handbook_ch01_visual_encoding.html#core-mathematical-methods",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Core Mathematical Methods",
+    "text": "Core Mathematical Methods\nThree pillars of mathematical vision science:\n\n\n\nMethod\nPurpose\n\n\n\n\nLinear algebra\nDescribe transformations\n\n\nNoise distributions\nQuantify uncertainty\n\n\nBayesian inference\nProbabilistic reasoning\n\n\n\n\nThis chapter focuses on these three, leaving out: Fourier analysis, neural networks, information theory."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#von-kries-on-math-in-biology-1902",
+    "href": "lectures/handbook_ch01_visual_encoding.html#von-kries-on-math-in-biology-1902",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "von Kries on Math in Biology (1902)",
+    "text": "von Kries on Math in Biology (1902)\n\n“Only infrequently is it possible to subject the manifold phenomena of life to simple and strict forms of mathematical treatment without forcing the data…”\n\n\n\n“Nevertheless, it has often proved to be possible and useful to establish comparatively simple mathematical formulas which, though they are probably not applicable with absolute accuracy, nevertheless simulate to a certain approximation a large number of phenomena.”"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#principles-vs.-computation",
+    "href": "lectures/handbook_ch01_visual_encoding.html#principles-vs.-computation",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Principles vs. Computation",
+    "text": "Principles vs. Computation\nMathematical principles are important, but computation is essential for realistic modeling.\n\nExample: Predicting Tides\n\nNewton’s laws of gravity are simple\nBut predicting tides at a specific harbor requires detailed computation\n\n\n\nExample: Color Vision\n\n“Three cone types” is a profound principle\nBut predicting color matches across the retina requires accounting for:\n\nPigment density variations\nChromatic aberration"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#color-matching-math-meets-biology",
+    "href": "lectures/handbook_ch01_visual_encoding.html#color-matching-math-meets-biology",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Color Matching: Math Meets Biology",
+    "text": "Color Matching: Math Meets Biology\nThe most famous use of math in vision: laws of color matching\n\n\nThomas Young (1802): Only three types of cone photopigment\nLow-dimensional encoding of high-dimensional spectral light\n\n\n\n\nHermann Grassmann (1853): Developed vector spaces partly for color matching\nStill central to modern color imaging"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#chapter-structure",
+    "href": "lectures/handbook_ch01_visual_encoding.html#chapter-structure",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Chapter Structure",
+    "text": "Chapter Structure\nPart 1: Forward Calculation (§1.2-1.4)\n\nRepresentation of visual stimulus\nLight rays passing through optics\nPhotoreceptor excitations and spatial sampling\n\nPart 2: Computational Modeling\n\nISETBio software for realistic modeling\n\nPart 3: Perceptual Inference (§1.5)\n\nHow the brain interprets retinal signals"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#helmholtz-on-unconscious-inference-1866",
+    "href": "lectures/handbook_ch01_visual_encoding.html#helmholtz-on-unconscious-inference-1866",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Helmholtz on Unconscious Inference (1866)",
+    "text": "Helmholtz on Unconscious Inference (1866)\n\n“The general rule determining the ideas of vision… is that such objects are always imagined as being present in the field of vision as would have to be there in order to produce the same impression on the nervous mechanism.”\n\n\nKey insight: We perceive what would cause our sensory input:\n\nDepth\nReflectance\nShape\nMotion"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#why-probabilistic-reasoning",
+    "href": "lectures/handbook_ch01_visual_encoding.html#why-probabilistic-reasoning",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Why Probabilistic Reasoning?",
+    "text": "Why Probabilistic Reasoning?\nScene properties are not uniquely determined by sensory measurements.\n\nExample: Three cone types sample the full spectrum\n\nMany different spectra can produce identical cone responses\n“Metamerism”\n\n\n\nWhen sensory data is ambiguous, probabilistic inference is inevitable."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#section-1.1-summary",
+    "href": "lectures/handbook_ch01_visual_encoding.html#section-1.1-summary",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Section 1.1 Summary",
+    "text": "Section 1.1 Summary\n\nVision science spans medicine, psychology, neuroscience, computing, engineering\nCore mathematical tools: linear algebra, noise, Bayesian inference\nPrinciples guide, computation predicts\nThe visual system performs “unconscious inference”\nAmbiguous sensory data requires probabilistic reasoning"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#vision-science-and-mathematics",
+    "href": "lectures/handbook_ch01_visual_encoding.html#vision-science-and-mathematics",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Vision Science and Mathematics",
+    "text": "Vision Science and Mathematics\nVision research spans: physics, psychology, neuroscience, computation, engineering.\nMathematics is the common language.\n\n\n\n\nCore Method\nPurpose\n\n\n\n\nLinear algebra\nDescribe transformations\n\n\nNoise distributions\nQuantify uncertainty\n\n\nBayesian inference\nProbabilistic reasoning"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#chapter-roadmap",
+    "href": "lectures/handbook_ch01_visual_encoding.html#chapter-roadmap",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Chapter Roadmap",
+    "text": "Chapter Roadmap\nPart 1: Forward Calculation (§1.2-1.4)\nScene → Optics → Retinal image → Cone excitations\n\nPart 2: Perceptual Inference (§1.5)\nHow does the brain interpret cone signals to see objects, depth, color?\n\n\nHelmholtz’s Unconscious Inference (1867): Perception is not passive recording — the brain infers the most likely cause of sensory signals, using prior experience, without conscious awareness."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#the-compression-problem",
+    "href": "lectures/handbook_ch01_visual_encoding.html#the-compression-problem",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "The Compression Problem",
+    "text": "The Compression Problem\nLight has infinite wavelengths (400-700nm continuous spectrum).\nBut we have only 3 cone types → compressed to 3 numbers!\n\n∞ dimensions → 3 dimensions = information loss = ambiguity"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#metamerism-ambiguity-in-action",
+    "href": "lectures/handbook_ch01_visual_encoding.html#metamerism-ambiguity-in-action",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Metamerism: Ambiguity in Action",
+    "text": "Metamerism: Ambiguity in Action\nDifferent spectra → same cone response!\n\n\n\n\nPossible Cause\nCone Response\n\n\n\n\nYellow banana\nL=0.7, M=0.5, S=0.1\n\n\nRed+Green mixture\nL=0.7, M=0.5, S=0.1\n\n\nOrange sunset\nL=0.7, M=0.5, S=0.1\n\n\n\nThe brain must guess: Which scene is most likely?"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#bayesian-inference-the-brains-solution",
+    "href": "lectures/handbook_ch01_visual_encoding.html#bayesian-inference-the-brains-solution",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Bayesian Inference: The Brain’s Solution",
+    "text": "Bayesian Inference: The Brain’s Solution\nCombine sensory evidence with prior knowledge:\n\\[P(\\text{scene} | \\text{cones}) \\propto \\underbrace{P(\\text{cones} | \\text{scene})}_{\\text{likelihood}} \\times \\underbrace{P(\\text{scene})}_{\\text{prior}}\\]\n\n\n\n\nTerm\nQuestion it Answers\n\n\n\n\nLikelihood\n“How well does this scene explain my cone signals?”\n\n\nPrior\n“How common is this scene in my experience?”\n\n\nPosterior\n“What scene should I perceive?”\n\n\n\n\n\nResult: Brain picks the scene that best explains the data AND is plausible given past experience."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#the-light-field",
+    "href": "lectures/handbook_ch01_visual_encoding.html#the-light-field",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "The Light Field",
+    "text": "The Light Field\nLeonardo da Vinci (1509): A pinhole camera forms an image wherever you place it.\n→ Light rays must fill all of space, traveling in all directions!\n\nGershun (1939) formalized this as the light field:\n\\[LF(x, y, z, \\alpha, \\beta, \\lambda, \\rho)\\]\n\n\n\nParameter\nMeaning\n\n\n\n\nx, y, z\nPosition in space\n\n\nα, β\nDirection of ray\n\n\nλ\nWavelength\n\n\nρ\nPolarization"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#visualizing-the-light-field",
+    "href": "lectures/handbook_ch01_visual_encoding.html#visualizing-the-light-field",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "Visualizing the Light Field",
+    "text": "Visualizing the Light Field\n\nLight field query: “At position (x,y), looking in direction α, what wavelength λ do I see?”"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#from-light-field-to-retinal-image",
+    "href": "lectures/handbook_ch01_visual_encoding.html#from-light-field-to-retinal-image",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "From Light Field to Retinal Image",
+    "text": "From Light Field to Retinal Image\nThe eye captures only rays entering the pupil → Incident Light Field\n\\[ILF(u, v, \\alpha, \\beta, \\lambda, t)\\]\n\nThe lens focuses rays onto retina → Retinal Spectral Irradiance\n\\[E(r_x, r_y, \\lambda, t)\\]\n\n\n\n\n\n\n\nStage\nDimensions\nParameters\n\n\n\n\nLight Field\n7D\nx,y,z,α,β,λ,ρ\n\n\nIncident Light Field\n7D\nu,v,α,β,λ,ρ,t\n\n\nRetinal Image\n4D\nrx,ry,λ,t\n\n\nCone Response\n3 numbers!\nL, M, S\n\n\n\n\n\nMassive dimensionality reduction!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#the-transformation-chain",
+    "href": "lectures/handbook_ch01_visual_encoding.html#the-transformation-chain",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "The Transformation Chain",
+    "text": "The Transformation Chain\n\n\n\n\n\nStage\nWhat happens\nInformation change\n\n\n\n\nScene → Optics\nLight enters pupil\nSpatial filtering\n\n\nOptics → Mosaic\nRetinal image formed\nBlur + absorption\n\n\nMosaic → Excitations\nCones integrate light\nλ → 3 values"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding.html#what-gets-lost",
+    "href": "lectures/handbook_ch01_visual_encoding.html#what-gets-lost",
+    "title": "Chapter 1: Initial Visual Encoding",
+    "section": "What Gets Lost?",
+    "text": "What Gets Lost?\nOptics stage:\n\nDiffraction and aberrations → blur\nLens absorbs some wavelengths\nMacular pigment (yellow filter in central vision)\n\n\nCone mosaic stage:\n\nOnly 3 cone types → spectral information lost\nDiscrete sampling → spatial resolution limited\nNo S-cones in very center of fovea\n\n\n\nThe brain never sees the original scene — only the compressed, noisy cone signals!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#vision-science-and-mathematics",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#vision-science-and-mathematics",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Vision Science and Mathematics",
+    "text": "Vision Science and Mathematics\nVision research spans: physics, psychology, neuroscience, computation, engineering.\nMathematics is the common language.\n\n\n\n\nCore Method\nPurpose\n\n\n\n\nLinear algebra\nDescribe transformations\n\n\nNoise distributions\nQuantify uncertainty\n\n\nBayesian inference\nProbabilistic reasoning"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#chapter-roadmap",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#chapter-roadmap",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Chapter Roadmap",
+    "text": "Chapter Roadmap\nPart 1: Forward Calculation (§1.2-1.4)\nScene → Optics → Retinal image → Cone excitations\n\nPart 2: Perceptual Inference (§1.5)\nHow does the brain interpret cone signals to see objects, depth, color?\n\n\nHelmholtz’s Unconscious Inference (1867): Perception is not passive recording — the brain infers the most likely cause of sensory signals, using prior experience, without conscious awareness."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#the-compression-problem",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#the-compression-problem",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "The Compression Problem",
+    "text": "The Compression Problem\nLight has infinite wavelengths (400-700nm continuous spectrum).\nBut we have only 3 cone types → compressed to 3 numbers!\n\n∞ dimensions → 3 dimensions = information loss = ambiguity"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#metamerism-ambiguity-in-action",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#metamerism-ambiguity-in-action",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Metamerism: Ambiguity in Action",
+    "text": "Metamerism: Ambiguity in Action\nDifferent spectra → same cone response!\n\n\n\n\nPossible Cause\nCone Response\n\n\n\n\nYellow banana\nL=0.7, M=0.5, S=0.1\n\n\nRed+Green mixture\nL=0.7, M=0.5, S=0.1\n\n\nOrange sunset\nL=0.7, M=0.5, S=0.1\n\n\n\nThe brain must guess: Which scene is most likely?"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#bayesian-inference-the-brains-solution",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#bayesian-inference-the-brains-solution",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Bayesian Inference: The Brain’s Solution",
+    "text": "Bayesian Inference: The Brain’s Solution\nCombine sensory evidence with prior knowledge:\n\\[P(\\text{scene} | \\text{cones}) \\propto \\underbrace{P(\\text{cones} | \\text{scene})}_{\\text{likelihood}} \\times \\underbrace{P(\\text{scene})}_{\\text{prior}}\\]\n\n\n\n\nTerm\nQuestion it Answers\n\n\n\n\nLikelihood\n“How well does this scene explain my cone signals?”\n\n\nPrior\n“How common is this scene in my experience?”\n\n\nPosterior\n“What scene should I perceive?”\n\n\n\n\n\nResult: Brain picks the scene that best explains the data AND is plausible given past experience."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#the-light-field",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#the-light-field",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "The Light Field",
+    "text": "The Light Field\nLeonardo da Vinci (1509): A pinhole camera forms an image wherever you place it.\n→ Light rays must fill all of space, traveling in all directions!\n\nGershun (1939) formalized this as the light field:\n\\[LF(x, y, z, \\alpha, \\beta, \\lambda, \\rho)\\]\n\n\n\nParameter\nMeaning\n\n\n\n\nx, y, z\nPosition in space\n\n\nα, β\nDirection of ray\n\n\nλ\nWavelength\n\n\nρ\nPolarization"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#visualizing-the-light-field",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#visualizing-the-light-field",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Visualizing the Light Field",
+    "text": "Visualizing the Light Field\n\nLight field query: “At position (x,y), looking in direction α, what wavelength λ do I see?”"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#from-light-field-to-retinal-image",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#from-light-field-to-retinal-image",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "From Light Field to Retinal Image",
+    "text": "From Light Field to Retinal Image\nThe eye captures only rays entering the pupil → Incident Light Field\n\\[ILF(u, v, \\alpha, \\beta, \\lambda, t)\\]\n\nThe lens focuses rays onto retina → Retinal Spectral Irradiance\n\\[E(r_x, r_y, \\lambda, t)\\]\n\n\n\n\n\n\n\nStage\nDimensions\nParameters\n\n\n\n\nLight Field\n7D\nx,y,z,α,β,λ,ρ\n\n\nIncident Light Field\n7D\nu,v,α,β,λ,ρ,t\n\n\nRetinal Image\n4D\nrx,ry,λ,t\n\n\nCone Response\n3 numbers!\nL, M, S\n\n\n\n\n\nMassive dimensionality reduction!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#the-transformation-chain",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#the-transformation-chain",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "The Transformation Chain",
+    "text": "The Transformation Chain\n\n\n\n\n\nStage\nWhat happens\nInformation change\n\n\n\n\nScene → Optics\nLight enters pupil\nSpatial filtering\n\n\nOptics → Mosaic\nRetinal image formed\nBlur + absorption\n\n\nMosaic → Excitations\nCones integrate light\nλ → 3 values"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-1-optical-blur",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-1-optical-blur",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "What Gets Lost? (1) Optical Blur",
+    "text": "What Gets Lost? (1) Optical Blur\nThe lens + diffraction blur the image before it reaches the retina:\n\nFine details are lost — the eye has limited spatial resolution!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-2-cone-sampling",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-2-cone-sampling",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "What Gets Lost? (2) Cone Sampling",
+    "text": "What Gets Lost? (2) Cone Sampling\nContinuous retinal image → discrete cone mosaic samples:\n\nSpatial information between cones is lost forever!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-3-metamers",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-3-metamers",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "What Gets Lost? (3) Metamers",
+    "text": "What Gets Lost? (3) Metamers\nMetamers = physically different spectra that produce identical cone responses.\n\nCan we tell them apart? NO! Same L, M, S → identical perception.\n→ This is why the brain must use Bayesian inference to guess the scene!\nDifferent physics → identical perception! This is why TV/phone screens work with just RGB pixels."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#linear-systems-the-key-tool",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#linear-systems-the-key-tool",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Linear Systems: The Key Tool",
+    "text": "Linear Systems: The Key Tool\nA system \\(L\\) is linear if it follows the superposition rule:\n\\[L(x + y) = L(x) + L(y)\\]\n\nThis implies homogeneity: \\(L(mx) = mL(x)\\)\n\n\nWhy is this powerful?\nIf we know how a system responds to basis inputs, we can predict its response to any input (as a weighted sum)!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#how-cones-compute-their-response",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#how-cones-compute-their-response",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "How Cones Compute Their Response",
+    "text": "How Cones Compute Their Response\n\\[N = \\int C(\\lambda) \\cdot E(\\lambda) \\, d\\lambda = \\text{weighted sum of light}\\]\n\nResult: One number N = how strongly this cone responds to this light!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-form-n-c-e",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-form-n-c-e",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Matrix Form: n = C · e",
+    "text": "Matrix Form: n = C · e\nSimplified example with 5 wavelengths (450, 500, 550, 600, 650 nm):\n\\[\\underbrace{\\begin{bmatrix} n_L \\\\ n_M \\\\ n_S \\end{bmatrix}}_{\\mathbf{n}\\,(3 \\times 1)} = \\underbrace{\\begin{bmatrix} 0.1 & 0.3 & 0.7 & 1.0 & 0.8 \\\\ 0.2 & 0.6 & 1.0 & 0.6 & 0.2 \\\\ 1.0 & 0.3 & 0.0 & 0.0 & 0.0 \\end{bmatrix}}_{\\mathbf{C}\\,(3 \\times 5)} \\cdot \\underbrace{\\begin{bmatrix} 0.0 \\\\ 0.2 \\\\ 0.8 \\\\ 1.0 \\\\ 0.4 \\end{bmatrix}}_{\\mathbf{e}\\,(5 \\times 1)}\\]\n\n\n\n\nMatrix\nMeaning\n\n\n\n\nC\nCone sensitivities (brighter = more sensitive)\n\n\ne\nSpectrum (yellow-ish light: peaks at 550-600nm)\n\n\nn\nResult: L responds most, S responds least"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-multiplication-step-by-step",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-multiplication-step-by-step",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Matrix Multiplication: Step by Step",
+    "text": "Matrix Multiplication: Step by Step\nRow × Column = one number:\n\\[n_L = [0.1, 0.3, 0.7, 1.0, 0.8] \\cdot \\begin{bmatrix} 0.0 \\\\ 0.2 \\\\ 0.8 \\\\ 1.0 \\\\ 0.4 \\end{bmatrix}\\]\n\n\\[n_L = (0.1 \\times 0.0) + (0.3 \\times 0.2) + (0.7 \\times 0.8) + (1.0 \\times 1.0) + (0.8 \\times 0.4)\\]\n\\[n_L = 0 + 0.06 + 0.56 + 1.0 + 0.32 = \\mathbf{1.94}\\]\n\n\nSame for M and S → final result: \\(\\mathbf{n} = [1.94, 1.24, 0.06]^T\\)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#why-matrix-form-is-powerful",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#why-matrix-form-is-powerful",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Why Matrix Form is Powerful",
+    "text": "Why Matrix Form is Powerful\nMeasure C once → predict response to ANY spectrum!\n\n\n\n\nYou have\nYou can predict\n\n\n\n\nC matrix (cone sensitivities)\nResponse to sunlight\n\n\n+ any spectrum e\nResponse to LED screen\n\n\n\nResponse to laser\n\n\n\nResponse to ANY light!\n\n\n\n\n\nThis is why color science works: measure 3 cone curves, predict perception of infinite possible spectra!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#principle-of-univariance",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#principle-of-univariance",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Principle of Univariance",
+    "text": "Principle of Univariance\n\n“The output of a receptor depends upon its quantum catch, but not upon what quanta are caught.” — Rushton (1972)\n\nTranslation: A cone reports HOW MANY photons, not WHAT COLOR they were.\n\nSame response! Once absorbed, wavelength information is lost forever."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#why-univariance-matters",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#why-univariance-matters",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Why Univariance Matters",
+    "text": "Why Univariance Matters\nA single cone is color-blind. To see color, compare L, M, S:\n\nColor = pattern of L, M, S responses, not any single cone’s output!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#why-are-cone-responses-noisy",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#why-are-cone-responses-noisy",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Why Are Cone Responses Noisy?",
+    "text": "Why Are Cone Responses Noisy?\nPhotons arrive randomly — like raindrops falling on a bucket.\n\nSame light source (mean = 100), but each measurement is different!\nThis randomness follows a Poisson distribution."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#poisson-distribution-shape-depends-on-mean",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#poisson-distribution-shape-depends-on-mean",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Poisson Distribution: Shape Depends on Mean",
+    "text": "Poisson Distribution: Shape Depends on Mean\n\nKey insight: Variance = Mean\n\n\n\nMean (μ)\nVariance (σ²)\nSD (σ)\nSpread\n\n\n\n\n10\n10\n√10 ≈ 3.2\nNarrow\n\n\n100\n100\n√100 = 10\nWider\n\n\n\nMore photons → wider distribution → but relative noise (SD/mean) gets smaller!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#poisson-vs-gaussian",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#poisson-vs-gaussian",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Poisson vs Gaussian",
+    "text": "Poisson vs Gaussian\n\n\n\n\n\nPoisson\nGaussian\n\n\n\n\nParameters\nμ only (variance = μ)\nμ and σ² (independent)\n\n\nValues\nIntegers ≥ 0\nAny real number\n\n\nUse for\nCounting (photons!)\nContinuous measurements\n\n\nWhen similar?\nWhen μ &gt; ~30\n—"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#what-is-shift-invariance",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#what-is-shift-invariance",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "What is Shift-Invariance?",
+    "text": "What is Shift-Invariance?\nQuestion: If I move a dot across my visual field, does it stay the same shape?\n\nShift-invariant: Same blur happens everywhere → shift input = shift output (same shape)."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#point-spread-function-psf",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#point-spread-function-psf",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Point Spread Function (PSF)",
+    "text": "Point Spread Function (PSF)\nThe PSF tells us: “What does a single point of light look like after passing through the eye?”\n\nPSF = the “blur kernel” — the lens + diffraction spreads a perfect point into a blob."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#what-is-convolution",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#what-is-convolution",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "What is Convolution?",
+    "text": "What is Convolution?\nConvolution = “slide the PSF across every point in the image and add up”\nThink of it as stamping the PSF at every bright location:\n\nConvolution = sum of all the “stamps”"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#convolution-in-action-edge-blur",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#convolution-in-action-edge-blur",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Convolution in Action: Edge Blur",
+    "text": "Convolution in Action: Edge Blur\n\nSharp edge + blur kernel = soft gradient — this is why we can’t see infinitely fine detail!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#the-convolution-formula",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#the-convolution-formula",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "The Convolution Formula",
+    "text": "The Convolution Formula\n\\[\\text{Retinal image}(x) = \\int \\text{Scene}(u) \\cdot \\text{PSF}(x - u) \\, du\\]\n\nIn words:\n\n\n\nSymbol\nMeaning\n\n\n\n\nScene(u)\nIntensity at each scene position u\n\n\nPSF(x - u)\nThe blur kernel centered at u\n\n\n∫ … du\nSum over all positions\n\n\nResult\nBlurred image at position x\n\n\n\n\n\nWhy is this powerful? Measure PSF once → predict the retinal image of ANY scene!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#reality-check-the-eye-is-not-perfectly-shift-invariant",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#reality-check-the-eye-is-not-perfectly-shift-invariant",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Reality Check: The Eye is NOT Perfectly Shift-Invariant",
+    "text": "Reality Check: The Eye is NOT Perfectly Shift-Invariant\nShift-invariance assumes: Same PSF everywhere. But the real eye varies!\n\n\n\n\n\n\n\n\n\nWhere it varies\nWhy\n\n\n\n\nEccentricity\nFewer cones, more aberrations in periphery\n\n\nWavelength\nLens bends blue more than red (chromatic aberration)\n\n\nPupil size\nLarger pupil → more blur from aberrations\n\n\n\nConsequence: Simple convolution works locally, but computational models (ISETBio) needed for full accuracy."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#why-we-need-computational-models",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#why-we-need-computational-models",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Why We Need Computational Models",
+    "text": "Why We Need Computational Models\nMath formulas work for one location. But the real eye varies everywhere!\n\n\n\nParameter\nFovea (0°)\nPeriphery (10°+)\n\n\n\n\nPSF (blur)\nSmall, sharp\nLarge, blurry\n\n\nCone density\n~200,000/mm²\n~10,000/mm²\n\n\nCone aperture\nSmall\nLarge\n\n\nS-cones\nNone!\nPresent\n\n\n\n\n\n“There is little value in expressing the full complexity of these calculations in pure mathematical form.” — Wandell & Brainard\n\nSolution: Computational modeling with ISETBio (free, open-source)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#figure-1.5-psf-varies-with-eccentricity-and-wavelength",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#figure-1.5-psf-varies-with-eccentricity-and-wavelength",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Figure 1.5: PSF Varies with Eccentricity and Wavelength",
+    "text": "Figure 1.5: PSF Varies with Eccentricity and Wavelength\n\nTop row (550nm): PSF increases with eccentricity.\nBottom row (450nm): Even blurrier! Eye can’t focus both wavelengths — chromatic aberration is the largest aberration."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#figure-1.6-cone-mosaic-changes-across-retina",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#figure-1.6-cone-mosaic-changes-across-retina",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Figure 1.6: Cone Mosaic Changes Across Retina",
+    "text": "Figure 1.6: Cone Mosaic Changes Across Retina\n\nFovea → Periphery: Cone density ↓, aperture size ↑, rods appear (gray dots).\nSurprise: Central fovea has no S-cones — it’s dichromatic! (Optimizes spatial resolution by omitting blurry short-wavelength channel)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#figure-1.7-fovea-vs-periphery-the-trade-off",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#figure-1.7-fovea-vs-periphery-the-trade-off",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Figure 1.7: Fovea vs Periphery — The Trade-off",
+    "text": "Figure 1.7: Fovea vs Periphery — The Trade-off\n\nFovea: Dense sampling → fine patterns preserved.\nPeriphery: Sparse sampling → high-frequency patterns look “wobbly” (aliased)."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#the-fovea-periphery-trade-off",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#the-fovea-periphery-trade-off",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "The Fovea-Periphery Trade-off",
+    "text": "The Fovea-Periphery Trade-off\n\n\n\n\nFovea\nPeriphery\n\n\n\n\nCone density\nHigh (~200k/mm²)\nLow (~10k/mm²)\n\n\nCone aperture\nSmall\nLarge\n\n\nExcitations/cone\nFewer\nMore (larger apertures!)\n\n\nSpatial resolution\nHigh\nLow\n\n\nColor vision\nDichromatic (L, M only)\nTrichromatic (L, M, S)\n\n\n\n\nWhy?\n\nFovea: Optimized for fine detail, reading, recognition\nPeriphery: Optimized for detecting motion, threats (sensitivity over resolution)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#spatial-derivatives-what-neurons-compute",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#spatial-derivatives-what-neurons-compute",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Spatial Derivatives: What Neurons Compute",
+    "text": "Spatial Derivatives: What Neurons Compute\nNeurons don’t report absolute light — they compute local changes (derivatives):\n\nWhy derivatives? Local contrast matters more than absolute brightness. Also highly compressible (most derivatives ≈ 0 in natural scenes)."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#part-1-summary-forward-calculation-complete",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#part-1-summary-forward-calculation-complete",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Part 1 Summary: Forward Calculation Complete",
+    "text": "Part 1 Summary: Forward Calculation Complete\nScene → Optics → Cone Mosaic → Cone Excitations\n\n\n\nStage\nWhat happens\nKey math\n\n\n\n\nOptics\nLight blurred by PSF\nConvolution (locally)\n\n\nCone sampling\nContinuous → discrete\nMatrix multiplication\n\n\nCone response\nPhotons counted\nLinear + Poisson noise\n\n\nNeural coding\nLocal differences\nDerivatives\n\n\n\n\nKey insight: Massive information loss at every stage!\n\n∞ wavelengths → 3 cone types\nContinuous image → discrete samples\nExact photon count → noisy estimate\n\nThe brain receives ambiguous, noisy signals. How does it perceive the world?\n→ Part 2: Perceptual Inference (Bayesian approach)"
   }
 ]

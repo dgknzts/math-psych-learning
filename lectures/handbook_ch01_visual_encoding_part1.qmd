@@ -1,0 +1,1169 @@
+---
+title: "Chapter 1: Initial Visual Encoding (Part 1)"
+subtitle: "Forward Calculation: Scene to Cone Excitations"
+author: "Wandell & Brainard - New Handbook of Mathematical Psychology Vol.3"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    smaller: true
+---
+
+# Section 1.1: Introduction
+
+## Vision Science and Mathematics
+
+Vision research spans: physics, psychology, neuroscience, computation, engineering.
+
+**Mathematics is the common language.**
+
+. . .
+
+| Core Method         | Purpose                  |
+|---------------------|--------------------------|
+| Linear algebra      | Describe transformations |
+| Noise distributions | Quantify uncertainty     |
+| Bayesian inference  | Probabilistic reasoning  |
+
+## Chapter Roadmap
+
+**Part 1: Forward Calculation (§1.2-1.4)**
+
+Scene → Optics → Retinal image → Cone excitations
+
+. . .
+
+**Part 2: Perceptual Inference (§1.5)**
+
+How does the brain interpret cone signals to see objects, depth, color?
+
+. . .
+
+**Helmholtz's Unconscious Inference (1867):** Perception is not passive recording — the brain *infers* the most likely cause of sensory signals, using prior experience, without conscious awareness.
+
+## The Compression Problem
+
+Light has **infinite wavelengths** (400-700nm continuous spectrum).
+
+But we have only **3 cone types** → compressed to 3 numbers!
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 2.5
+library(ggplot2)
+wavelengths <- seq(400, 700, by = 5)
+L_cone <- exp(-0.5 * ((wavelengths - 565) / 50)^2)
+M_cone <- exp(-0.5 * ((wavelengths - 535) / 45)^2)
+S_cone <- exp(-0.5 * ((wavelengths - 445) / 35)^2)
+
+cone_data <- data.frame(
+  wavelength = rep(wavelengths, 3),
+  sensitivity = c(L_cone, M_cone, S_cone),
+  cone = rep(c("L (long)", "M (medium)", "S (short)"), each = length(wavelengths))
+)
+
+ggplot(cone_data, aes(x = wavelength, y = sensitivity, color = cone)) +
+  geom_line(linewidth = 1) +
+  scale_color_manual(values = c("L (long)" = "red", "M (medium)" = "green", "S (short)" = "blue")) +
+  labs(x = "Wavelength (nm)", y = "Sensitivity", color = NULL) +
+  theme_minimal() + theme(legend.position = "top")
+```
+
+**∞ dimensions → 3 dimensions = information loss = ambiguity**
+
+## Metamerism: Ambiguity in Action
+
+**Different spectra → same cone response!**
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 2.2
+e_yellow <- exp(-0.5 * ((wavelengths - 580) / 20)^2)
+e_red <- exp(-0.5 * ((wavelengths - 620) / 25)^2)
+e_green <- exp(-0.5 * ((wavelengths - 540) / 25)^2)
+e_mixture <- 0.6 * e_red + 0.5 * e_green
+
+metamer_data <- data.frame(
+  wavelength = rep(wavelengths, 2),
+  intensity = c(e_yellow / max(e_yellow), e_mixture / max(e_mixture)),
+  spectrum = rep(c("Yellow light", "Red+Green mix"), each = length(wavelengths))
+)
+
+ggplot(metamer_data, aes(x = wavelength, y = intensity, color = spectrum)) +
+  geom_line(linewidth = 1) +
+  labs(x = "Wavelength (nm)", y = "Intensity", color = NULL) +
+  theme_minimal() + theme(legend.position = "top")
+```
+
+| Possible Cause    | Cone Response       |
+|-------------------|---------------------|
+| Yellow banana     | L=0.7, M=0.5, S=0.1 |
+| Red+Green mixture | L=0.7, M=0.5, S=0.1 |
+| Orange sunset     | L=0.7, M=0.5, S=0.1 |
+
+**The brain must guess:** Which scene is most likely?
+
+## Bayesian Inference: The Brain's Solution
+
+**Combine sensory evidence with prior knowledge:**
+
+$$P(\text{scene} | \text{cones}) \propto \underbrace{P(\text{cones} | \text{scene})}_{\text{likelihood}} \times \underbrace{P(\text{scene})}_{\text{prior}}$$
+
+. . .
+
+| Term       | Question it Answers                                 |
+|------------|-----------------------------------------------------|
+| Likelihood | "How well does this scene explain my cone signals?" |
+| Prior      | "How common is this scene in my experience?"        |
+| Posterior  | "What scene should I perceive?"                     |
+
+. . .
+
+**Result:** Brain picks the scene that best explains the data AND is plausible given past experience.
+
+# Section 1.2: Scene to Retinal Image
+
+## The Light Field
+
+**Leonardo da Vinci (1509):** A pinhole camera forms an image *wherever* you place it.
+
+→ Light rays must fill all of space, traveling in all directions!
+
+. . .
+
+**Gershun (1939)** formalized this as the **light field:**
+
+$$LF(x, y, z, \alpha, \beta, \lambda, \rho)$$
+
+| Parameter | Meaning           |
+|-----------|-------------------|
+| x, y, z   | Position in space |
+| α, β      | Direction of ray  |
+| λ         | Wavelength        |
+| ρ         | Polarization      |
+
+## Visualizing the Light Field
+
+```{r}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 4
+library(ggplot2)
+
+wall_y <- 10
+
+ggplot() +
+  # Draw the wall
+  geom_segment(aes(x = -5, xend = 9, y = wall_y, yend = wall_y),
+               color = "gray50", linewidth = 1) +
+  # Draw colored objects on the wall
+  geom_segment(aes(x = -3, xend = -1, y = wall_y, yend = wall_y),
+               color = "red", linewidth = 6) +
+  geom_segment(aes(x = 1, xend = 3, y = wall_y, yend = wall_y),
+               color = "green3", linewidth = 6) +
+  geom_segment(aes(x = 5, xend = 7, y = wall_y, yend = wall_y),
+               color = "blue", linewidth = 6) +
+  # Draw the observer (eye)
+  geom_point(aes(x = 0, y = 0), size = 5, color = "black") +
+  annotate("text", x = 0, y = -1, label = "Eye", size = 4) +
+  # Draw rays from eye to objects
+  geom_segment(aes(x = 0, xend = -2, y = 0, yend = wall_y),
+               color = "red", linetype = "dashed", alpha = 0.7,
+               arrow = arrow(length = unit(0.2, "cm"))) +
+  geom_segment(aes(x = 0, xend = 2, y = 0, yend = wall_y),
+               color = "green3", linetype = "dashed", alpha = 0.7,
+               arrow = arrow(length = unit(0.2, "cm"))) +
+  geom_segment(aes(x = 0, xend = 6, y = 0, yend = wall_y),
+               color = "blue", linetype = "dashed", alpha = 0.7,
+               arrow = arrow(length = unit(0.2, "cm"))) +
+  # Labels
+  annotate("text", x = -2, y = wall_y + 0.8, label = "α = -11°", color = "red", size = 3.5) +
+  annotate("text", x = 2, y = wall_y + 0.8, label = "α = +11°", color = "green4", size = 3.5) +
+  annotate("text", x = 6, y = wall_y + 0.8, label = "α = +31°", color = "blue", size = 3.5) +
+  coord_fixed(ratio = 1) +
+  xlim(-6, 10) + ylim(-2, 12) +
+  labs(title = "Light Field: Rays from scene to eye",
+       subtitle = "Each direction α sees a different object",
+       x = "Position", y = "") +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.ticks = element_blank())
+```
+
+**Light field query:** "At position (x,y), looking in direction α, what wavelength λ do I see?"
+
+## From Light Field to Retinal Image
+
+The eye captures only rays entering the pupil → **Incident Light Field**
+
+$$ILF(u, v, \alpha, \beta, \lambda, t)$$
+
+. . .
+
+The lens focuses rays onto retina → **Retinal Spectral Irradiance**
+
+$$E(r_x, r_y, \lambda, t)$$
+
+. . .
+
+```{r}
+#| echo: false
+dimensions <- data.frame(
+  Stage = c("Light Field", "Incident Light Field", "Retinal Image", "Cone Response"),
+  Dimensions = c("7D", "7D", "4D", "3 numbers!"),
+  Parameters = c("x,y,z,α,β,λ,ρ", "u,v,α,β,λ,ρ,t", "rx,ry,λ,t", "L, M, S")
+)
+knitr::kable(dimensions, align = "lcc")
+```
+
+**Massive dimensionality reduction!**
+
+## The Transformation Chain
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+library(ggplot2)
+
+# Create boxes for each stage
+boxes <- data.frame(
+  x = c(1, 3, 5, 7),
+  label = c("Scene", "Optics", "Cone\nMosaic", "Cone\nExcitations"),
+  desc = c("Light sources\n+ objects", "Lens focuses\n+ blurs", "L, M, S\nsampling", "3 numbers\nper location")
+)
+
+ggplot(boxes) +
+  # Boxes
+  geom_tile(aes(x = x, y = 0), width = 1.6, height = 1.8, fill = "lightblue", color = "navy") +
+  geom_text(aes(x = x, y = 0.3, label = label), fontface = "bold", size = 4) +
+  geom_text(aes(x = x, y = -0.4, label = desc), size = 2.8, color = "gray30") +
+  # Arrows
+  annotate("segment", x = 1.85, xend = 2.15, y = 0, yend = 0,
+           arrow = arrow(length = unit(0.3, "cm")), linewidth = 1) +
+  annotate("segment", x = 3.85, xend = 4.15, y = 0, yend = 0,
+           arrow = arrow(length = unit(0.3, "cm")), linewidth = 1) +
+  annotate("segment", x = 5.85, xend = 6.15, y = 0, yend = 0,
+           arrow = arrow(length = unit(0.3, "cm")), linewidth = 1) +
+  xlim(0, 8) + ylim(-1.5, 1.5) +
+  theme_void() +
+  labs(title = "The Initial Visual Encoding Pipeline")
+```
+
+. . .
+
+| Stage                | What happens          | Information change |
+|----------------------|-----------------------|--------------------|
+| Scene → Optics       | Light enters pupil    | Spatial filtering  |
+| Optics → Mosaic      | Retinal image formed  | Blur + absorption  |
+| Mosaic → Excitations | Cones integrate light | λ → 3 values       |
+
+## What Gets Lost? (1) Optical Blur
+
+The lens + diffraction blur the image before it reaches the retina:
+
+```{r}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 3
+
+# Create a simple "scene" - sharp stripes
+x <- seq(-2, 2, length.out = 200)
+sharp <- sin(10 * x)^2  # Sharp stripes
+
+# Blur by convolution with Gaussian kernel
+blur_kernel <- dnorm(seq(-1, 1, length.out = 50), sd = 0.15)
+blur_kernel <- blur_kernel / sum(blur_kernel)
+blurred <- stats::filter(sharp, blur_kernel, sides = 2)
+blurred[is.na(blurred)] <- sharp[is.na(blurred)]
+
+par(mfrow = c(1, 2), mar = c(3, 2, 3, 1))
+image(matrix(sharp, nrow = 1), col = gray.colors(100), axes = FALSE, main = "Scene (sharp)")
+image(matrix(blurred, nrow = 1), col = gray.colors(100), axes = FALSE, main = "Retinal image (blurred)")
+```
+
+Fine details are lost — the eye has limited spatial resolution!
+
+## What Gets Lost? (2) Cone Sampling
+
+Continuous retinal image → discrete cone mosaic samples:
+
+```{r}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 3
+
+set.seed(42)
+# Create continuous "retinal image"
+x_cont <- seq(0, 10, length.out = 200)
+image_cont <- 0.5 + 0.3*sin(2*x_cont) + 0.2*sin(5*x_cont)
+
+# Sample at discrete cone positions (irregularly spaced like real mosaic)
+n_cones <- 25
+cone_positions <- sort(runif(n_cones, 0.5, 9.5))
+cone_samples <- approx(x_cont, image_cont, cone_positions)$y
+
+par(mfrow = c(1, 2), mar = c(3, 3, 3, 1))
+plot(x_cont, image_cont, type = "l", lwd = 2, col = "gray30",
+     main = "Continuous retinal image", xlab = "", ylab = "Intensity")
+plot(cone_positions, cone_samples, pch = 19, col = "darkred", cex = 1.2,
+     main = "Discrete cone samples", xlab = "Position", ylab = "Intensity",
+     xlim = c(0, 10), ylim = range(image_cont))
+segments(cone_positions, 0, cone_positions, cone_samples, col = "darkred", lwd = 1)
+```
+
+Spatial information between cones is lost forever!
+
+## What Gets Lost? (3) Metamers
+
+**Metamers** = physically different spectra that produce **identical cone responses**.
+
+```{r}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 3
+
+wavelengths <- seq(400, 700, by = 5)
+
+# Cone sensitivities
+L <- exp(-0.5 * ((wavelengths - 565) / 50)^2)
+M <- exp(-0.5 * ((wavelengths - 535) / 45)^2)
+S <- exp(-0.5 * ((wavelengths - 445) / 35)^2)
+
+# Spectrum A: Monochromatic yellow (580nm)
+spectrum1 <- exp(-0.5 * ((wavelengths - 580) / 15)^2)
+
+# Spectrum B: Red + Green mixture - SOLVE for exact match!
+red_peak <- exp(-0.5 * ((wavelengths - 630) / 20)^2)
+green_peak <- exp(-0.5 * ((wavelengths - 530) / 20)^2)
+
+# Target cone responses from yellow
+target_L <- sum(spectrum1 * L)
+target_M <- sum(spectrum1 * M)
+
+# Solve: w_r * red_L + w_g * green_L = target_L
+#        w_r * red_M + w_g * green_M = target_M
+red_L <- sum(red_peak * L); red_M <- sum(red_peak * M)
+green_L <- sum(green_peak * L); green_M <- sum(green_peak * M)
+
+# Matrix solve: [red_L green_L; red_M green_M] * [w_r; w_g] = [target_L; target_M]
+A <- matrix(c(red_L, red_M, green_L, green_M), nrow = 2)
+b <- c(target_L, target_M)
+weights <- solve(A, b)
+
+spectrum2 <- weights[1] * red_peak + weights[2] * green_peak
+
+# Calculate cone responses (should match!)
+resp1 <- c(sum(spectrum1 * L), sum(spectrum1 * M), sum(spectrum1 * S))
+resp2 <- c(sum(spectrum2 * L), sum(spectrum2 * M), sum(spectrum2 * S))
+
+# Normalize for display
+max_resp <- max(c(resp1, resp2))
+resp1 <- resp1 / max_resp
+resp2 <- resp2 / max_resp
+
+par(mfrow = c(1, 3), mar = c(4, 3, 3, 1))
+plot(wavelengths, spectrum1/max(spectrum1), type = "l", lwd = 3, col = "goldenrod",
+     main = "Spectrum A: Yellow light", xlab = "λ (nm)", ylab = "", ylim = c(0, 1))
+plot(wavelengths, spectrum2/max(spectrum2), type = "l", lwd = 3, col = "darkgreen",
+     main = "Spectrum B: Red+Green mix", xlab = "λ (nm)", ylab = "", ylim = c(0, 1))
+barplot(rbind(resp1, resp2), beside = TRUE, col = c("goldenrod", "darkgreen"),
+        names.arg = c("L", "M", "S"), main = "Same cone response!",
+        legend = c("Yellow", "R+G"), args.legend = list(x = "topright", cex = 0.8))
+```
+
+**Can we tell them apart? NO!** Same L, M, S → identical perception.
+
+→ This is why the brain must use **Bayesian inference** to guess the scene!
+
+**Different physics → identical perception!** This is why TV/phone screens work with just RGB pixels.
+
+# Section 1.3: Mathematical Principles
+
+## Linear Systems: The Key Tool
+
+A system $L$ is **linear** if it follows the **superposition rule**:
+
+$$L(x + y) = L(x) + L(y)$$
+
+. . .
+
+This implies **homogeneity**: $L(mx) = mL(x)$
+
+. . .
+
+**Why is this powerful?**
+
+If we know how a system responds to **basis inputs**, we can predict its response to **any input** (as a weighted sum)!
+
+## How Cones Compute Their Response
+
+$$N = \int C(\lambda) \cdot E(\lambda) \, d\lambda = \text{weighted sum of light}$$
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+
+wavelengths <- seq(400, 700, by = 5)
+
+# Green light spectrum
+E <- exp(-0.5 * ((wavelengths - 530) / 25)^2)
+
+# L-cone sensitivity
+C <- exp(-0.5 * ((wavelengths - 565) / 50)^2)
+
+# Product
+product <- C * E
+
+# Response = sum (area under product)
+N <- sum(product) * 5  # multiply by delta_lambda
+
+par(mfrow = c(2, 2), mar = c(4, 4, 3, 1))
+
+# Step 1: Spectrum
+plot(wavelengths, E, type = "l", lwd = 3, col = "green4",
+     main = "Step 1: Light spectrum E(λ)", xlab = "λ (nm)", ylab = "Intensity")
+polygon(c(wavelengths, rev(wavelengths)), c(E, rep(0, length(E))),
+        col = rgb(0, 0.5, 0, 0.3), border = NA)
+
+# Step 2: Cone sensitivity
+plot(wavelengths, C, type = "l", lwd = 3, col = "red",
+     main = "Step 2: L-cone sensitivity C(λ)", xlab = "λ (nm)", ylab = "Sensitivity")
+polygon(c(wavelengths, rev(wavelengths)), c(C, rep(0, length(C))),
+        col = rgb(1, 0, 0, 0.3), border = NA)
+
+# Step 3: Product
+plot(wavelengths, product, type = "l", lwd = 3, col = "purple",
+     main = "Step 3: Multiply C(λ) × E(λ)", xlab = "λ (nm)", ylab = "Product")
+polygon(c(wavelengths, rev(wavelengths)), c(product, rep(0, length(product))),
+        col = rgb(0.5, 0, 0.5, 0.3), border = NA)
+
+# Step 4: Sum = N
+barplot(N, col = "purple", main = "Step 4: Sum all = N",
+        ylab = "Cone response", ylim = c(0, N * 1.2))
+text(0.7, N * 0.5, paste0("N = ", round(N, 1)), cex = 1.5, col = "white", font = 2)
+```
+
+**Result:** One number N = how strongly this cone responds to this light!
+
+## Matrix Form: n = C · e
+
+**Simplified example** with 5 wavelengths (450, 500, 550, 600, 650 nm):
+
+$$\underbrace{\begin{bmatrix} n_L \\ n_M \\ n_S \end{bmatrix}}_{\mathbf{n}\,(3 \times 1)} = \underbrace{\begin{bmatrix} 0.1 & 0.3 & 0.7 & 1.0 & 0.8 \\ 0.2 & 0.6 & 1.0 & 0.6 & 0.2 \\ 1.0 & 0.3 & 0.0 & 0.0 & 0.0 \end{bmatrix}}_{\mathbf{C}\,(3 \times 5)} \cdot \underbrace{\begin{bmatrix} 0.0 \\ 0.2 \\ 0.8 \\ 1.0 \\ 0.4 \end{bmatrix}}_{\mathbf{e}\,(5 \times 1)}$$
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3
+
+# Define matrices
+C <- matrix(c(0.1, 0.2, 1.0,
+              0.3, 0.6, 0.3,
+              0.7, 1.0, 0.0,
+              1.0, 0.6, 0.0,
+              0.8, 0.2, 0.0), nrow = 3, ncol = 5)
+rownames(C) <- c("L", "M", "S")
+colnames(C) <- c("450", "500", "550", "600", "650")
+
+e <- c(0.0, 0.2, 0.8, 1.0, 0.4)
+n <- C %*% e
+
+layout(matrix(c(1, 2, 3, 4, 5), nrow = 1), widths = c(3, 1, 2, 1, 2))
+par(mar = c(3, 3, 3, 1))
+
+# C matrix as heatmap
+image(t(C[3:1, ]), col = heat.colors(20), axes = FALSE, main = "C matrix (3×5)")
+axis(1, at = seq(0, 1, length.out = 5), labels = colnames(C), cex.axis = 0.8)
+axis(2, at = c(0, 0.5, 1), labels = c("S", "M", "L"), las = 2, cex.axis = 0.9)
+mtext("wavelength (nm)", side = 1, line = 2, cex = 0.7)
+
+# Multiply sign
+par(mar = c(0, 0, 0, 0))
+plot.new()
+text(0.5, 0.5, "×", cex = 4, font = 2)
+
+# e vector
+par(mar = c(3, 3, 3, 1))
+barplot(e, names.arg = c("450", "500", "550", "600", "650"),
+        col = "orange", main = "e vector (5×1)", cex.names = 0.7)
+mtext("spectrum", side = 1, line = 2, cex = 0.7)
+
+# Equals sign
+par(mar = c(0, 0, 0, 0))
+plot.new()
+text(0.5, 0.5, "=", cex = 4, font = 2)
+
+# n result
+par(mar = c(3, 3, 3, 1))
+barplot(as.vector(n), names.arg = c("L", "M", "S"),
+        col = c("red", "green", "blue"), main = "n (3×1)")
+```
+
+| Matrix | Meaning                                         |
+|--------|-------------------------------------------------|
+| **C**  | Cone sensitivities (brighter = more sensitive)  |
+| **e**  | Spectrum (yellow-ish light: peaks at 550-600nm) |
+| **n**  | Result: L responds most, S responds least       |
+
+## Matrix Multiplication: Step by Step
+
+**Row × Column = one number:**
+
+$$n_L = [0.1, 0.3, 0.7, 1.0, 0.8] \cdot \begin{bmatrix} 0.0 \\ 0.2 \\ 0.8 \\ 1.0 \\ 0.4 \end{bmatrix}$$
+
+. . .
+
+$$n_L = (0.1 \times 0.0) + (0.3 \times 0.2) + (0.7 \times 0.8) + (1.0 \times 1.0) + (0.8 \times 0.4)$$
+
+$$n_L = 0 + 0.06 + 0.56 + 1.0 + 0.32 = \mathbf{1.94}$$
+
+. . .
+
+Same for M and S → final result: $\mathbf{n} = [1.94, 1.24, 0.06]^T$
+
+## Why Matrix Form is Powerful
+
+**Measure C once → predict response to ANY spectrum!**
+
+. . .
+
+| You have                      | You can predict        |
+|-------------------------------|------------------------|
+| C matrix (cone sensitivities) | Response to sunlight   |
+| \+ any spectrum e             | Response to LED screen |
+|                               | Response to laser      |
+|                               | Response to ANY light! |
+
+. . .
+
+This is why **color science works**: measure 3 cone curves, predict perception of infinite possible spectra!
+
+## Principle of Univariance
+
+> "The output of a receptor depends upon its quantum catch, but not upon what quanta are caught." — Rushton (1972)
+
+**Translation:** A cone reports HOW MANY photons, not WHAT COLOR they were.
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 3), mar = c(2, 2, 4, 1))
+
+# Scenario 1: Red photons
+barplot(c(100), col = "red", ylim = c(0, 120), main = "100 red photons absorbed")
+text(0.7, 110, "Cone says:\n'100'", cex = 1.2, font = 2)
+
+# Scenario 2: Green photons
+barplot(c(100), col = "green", ylim = c(0, 120), main = "100 green photons absorbed")
+text(0.7, 110, "Cone says:\n'100'", cex = 1.2, font = 2)
+
+# Scenario 3: Mixed
+barplot(c(50, 50), col = c("red", "green"), ylim = c(0, 120), main = "50 red + 50 green absorbed")
+text(0.7, 110, "Cone says:\n'100'", cex = 1.2, font = 2)
+```
+
+**Same response!** Once absorbed, wavelength information is **lost forever**.
+
+## Why Univariance Matters
+
+A single cone is **color-blind**. To see color, compare L, M, S:
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 3), mar = c(3, 3, 3, 1))
+
+# Red light
+barplot(c(L = 100, M = 30, S = 5), col = c("red", "green", "blue"),
+        main = "Red light → L wins", ylim = c(0, 120))
+
+# Green light
+barplot(c(L = 50, M = 90, S = 10), col = c("red", "green", "blue"),
+        main = "Green light → M wins", ylim = c(0, 120))
+
+# Blue light
+barplot(c(L = 10, M = 20, S = 80), col = c("red", "green", "blue"),
+        main = "Blue light → S wins", ylim = c(0, 120))
+```
+
+**Color = pattern of L, M, S responses**, not any single cone's output!
+
+## Why Are Cone Responses Noisy?
+
+Photons arrive **randomly** — like raindrops falling on a bucket.
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+set.seed(42)
+par(mfrow = c(1, 3), mar = c(3, 3, 3, 1))
+
+# Three trials of counting photons
+trial1 <- rpois(1, 100)
+trial2 <- rpois(1, 100)
+trial3 <- rpois(1, 100)
+
+barplot(trial1, col = "steelblue", ylim = c(0, 130), main = "Trial 1")
+text(0.7, trial1 + 10, trial1, cex = 1.5, font = 2)
+
+barplot(trial2, col = "steelblue", ylim = c(0, 130), main = "Trial 2")
+text(0.7, trial2 + 10, trial2, cex = 1.5, font = 2)
+
+barplot(trial3, col = "steelblue", ylim = c(0, 130), main = "Trial 3")
+text(0.7, trial3 + 10, trial3, cex = 1.5, font = 2)
+```
+
+**Same light source (mean = 100)**, but each measurement is different!
+
+This randomness follows a **Poisson distribution**.
+
+## Poisson Distribution: Shape Depends on Mean
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3.5
+
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+# Poisson with mean = 10
+x_dim <- 0:25
+prob_dim <- dpois(x_dim, lambda = 10)
+barplot(prob_dim, names.arg = x_dim, col = "steelblue",
+        main = "Poisson (μ = 10)", xlab = "Photon count", ylab = "Probability")
+abline(v = 10 * 1.2 + 0.5, col = "red", lwd = 2, lty = 2)
+text(15, max(prob_dim) * 0.9, "mean = 10\nSD = 3.2", col = "red", cex = 1)
+
+# Poisson with mean = 100
+x_bright <- 70:130
+prob_bright <- dpois(x_bright, lambda = 100)
+barplot(prob_bright, names.arg = x_bright, col = "gold",
+        main = "Poisson (μ = 100)", xlab = "Photon count", ylab = "Probability",
+        cex.names = 0.6)
+text(40, max(prob_bright) * 0.9, "mean = 100\nSD = 10", col = "red", cex = 1)
+```
+
+**Key insight: Variance = Mean**
+
+| Mean (μ) | Variance (σ²) | SD (σ)    | Spread |
+|----------|---------------|-----------|--------|
+| 10       | 10            | √10 ≈ 3.2 | Narrow |
+| 100      | 100           | √100 = 10 | Wider  |
+
+More photons → wider distribution → but **relative** noise (SD/mean) gets smaller!
+
+## Poisson vs Gaussian
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+# Small mean: Poisson ≠ Gaussian
+x_small <- 0:20
+pois_small <- dpois(x_small, 5)
+gaus_small <- dnorm(x_small, 5, sqrt(5))
+
+plot(x_small, pois_small, type = "h", lwd = 3, col = "steelblue",
+     main = "μ = 5: Poisson ≠ Gaussian", xlab = "Count", ylab = "Probability",
+     ylim = c(0, max(pois_small) * 1.1))
+lines(x_small, gaus_small, col = "red", lwd = 2)
+legend("topright", c("Poisson", "Gaussian"), col = c("steelblue", "red"), lwd = c(3, 2), cex = 0.8)
+
+# Large mean: Poisson ≈ Gaussian
+x_large <- 70:130
+pois_large <- dpois(x_large, 100)
+gaus_large <- dnorm(x_large, 100, sqrt(100))
+
+plot(x_large, pois_large, type = "h", lwd = 3, col = "steelblue",
+     main = "μ = 100: Poisson ≈ Gaussian", xlab = "Count", ylab = "Probability",
+     ylim = c(0, max(pois_large) * 1.1))
+lines(x_large, gaus_large, col = "red", lwd = 2)
+legend("topright", c("Poisson", "Gaussian"), col = c("steelblue", "red"), lwd = c(3, 2), cex = 0.8)
+```
+
+|                   | Poisson               | Gaussian                |
+|-------------------|-----------------------|-------------------------|
+| **Parameters**    | μ only (variance = μ) | μ and σ² (independent)  |
+| **Values**        | Integers ≥ 0          | Any real number         |
+| **Use for**       | Counting (photons!)   | Continuous measurements |
+| **When similar?** | When μ \> \~30        | —                       |
+
+## What is Shift-Invariance?
+
+**Question:** If I move a dot across my visual field, does it stay the same shape?
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 3), mar = c(2, 2, 3, 1))
+
+# Create a simple "retinal image" with a dot at different positions
+x <- seq(-5, 5, length.out = 100)
+
+# Dot in the center
+dot_center <- exp(-x^2 / 0.2)
+plot(x, dot_center, type = "l", lwd = 3, col = "blue",
+     main = "Dot at center", xlab = "", ylab = "", ylim = c(0, 1.2))
+polygon(c(x, rev(x)), c(dot_center, rep(0, length(x))), col = rgb(0, 0, 1, 0.3), border = NA)
+
+# Dot shifted left
+dot_left <- exp(-(x + 3)^2 / 0.2)
+plot(x, dot_left, type = "l", lwd = 3, col = "blue",
+     main = "Dot shifted left", xlab = "", ylab = "", ylim = c(0, 1.2))
+polygon(c(x, rev(x)), c(dot_left, rep(0, length(x))), col = rgb(0, 0, 1, 0.3), border = NA)
+
+# Dot shifted right
+dot_right <- exp(-(x - 3)^2 / 0.2)
+plot(x, dot_right, type = "l", lwd = 3, col = "blue",
+     main = "Dot shifted right", xlab = "", ylab = "", ylim = c(0, 1.2))
+polygon(c(x, rev(x)), c(dot_right, rep(0, length(x))), col = rgb(0, 0, 1, 0.3), border = NA)
+```
+
+**Shift-invariant:** Same blur happens everywhere → shift input = shift output (same shape).
+
+## Point Spread Function (PSF)
+
+**The PSF tells us: "What does a single point of light look like after passing through the eye?"**
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3.5
+
+par(mfrow = c(1, 3), mar = c(3, 3, 3, 1))
+
+# Perfect point (scene)
+x <- seq(-3, 3, length.out = 100)
+perfect <- ifelse(abs(x) < 0.1, 1, 0)
+plot(x, perfect, type = "h", lwd = 3, col = "black",
+     main = "Scene: Perfect point", xlab = "Position", ylab = "Intensity", ylim = c(0, 1.2))
+
+# Arrow
+plot.new()
+arrows(0.1, 0.5, 0.9, 0.5, lwd = 4, col = "gray40")
+text(0.5, 0.7, "Through\nthe eye", cex = 1.2, font = 2)
+
+# Blurred PSF (retinal image)
+psf <- exp(-x^2 / 0.5)
+plot(x, psf, type = "l", lwd = 3, col = "red",
+     main = "Retinal image: Blurred blob", xlab = "Position", ylab = "Intensity", ylim = c(0, 1.2))
+polygon(c(x, rev(x)), c(psf, rep(0, length(x))), col = rgb(1, 0, 0, 0.3), border = NA)
+```
+
+**PSF = the "blur kernel"** — the lens + diffraction spreads a perfect point into a blob.
+
+## What is Convolution?
+
+**Convolution = "slide the PSF across every point in the image and add up"**
+
+Think of it as **stamping** the PSF at every bright location:
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+
+par(mfrow = c(2, 2), mar = c(3, 3, 3, 1))
+
+x <- seq(-5, 5, length.out = 200)
+
+# Scene: Two points
+scene <- ifelse(abs(x + 2) < 0.1 | abs(x - 2) < 0.1, 1, 0)
+plot(x, scene, type = "h", lwd = 3, col = "black",
+     main = "Step 1: Scene (two points)", xlab = "x", ylab = "")
+
+# PSF
+psf_x <- seq(-2, 2, length.out = 50)
+psf_y <- exp(-psf_x^2 / 0.3)
+psf_y <- psf_y / max(psf_y)
+plot(psf_x, psf_y, type = "l", lwd = 3, col = "red",
+     main = "Step 2: PSF (blur kernel)", xlab = "x", ylab = "")
+polygon(c(psf_x, rev(psf_x)), c(psf_y, rep(0, length(psf_x))), col = rgb(1, 0, 0, 0.3), border = NA)
+
+# Stamp PSF at each point
+blob1 <- exp(-(x + 2)^2 / 0.3)
+blob2 <- exp(-(x - 2)^2 / 0.3)
+plot(x, blob1, type = "l", lwd = 2, col = "blue", ylim = c(0, 1.2),
+     main = "Step 3: Stamp PSF at each point", xlab = "x", ylab = "")
+lines(x, blob2, lwd = 2, col = "green4")
+legend("topright", c("Left point", "Right point"), col = c("blue", "green4"), lwd = 2, cex = 0.8)
+
+# Sum = convolution result
+result <- blob1 + blob2
+plot(x, result, type = "l", lwd = 3, col = "purple",
+     main = "Step 4: Add up = Output", xlab = "x", ylab = "")
+polygon(c(x, rev(x)), c(result, rep(0, length(x))), col = rgb(0.5, 0, 0.5, 0.2), border = NA)
+```
+
+**Convolution = sum of all the "stamps"**
+
+## Convolution in Action: Edge Blur
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+# 1D demonstration: sharp edge blurred by PSF
+x <- 1:100
+sharp_edge <- c(rep(0, 50), rep(1, 50))
+
+# PSF: Gaussian blur
+psf <- dnorm(seq(-3, 3, length.out = 21), sd = 1)
+psf <- psf / sum(psf)
+
+# Convolve
+blurred <- stats::filter(sharp_edge, psf, sides = 2)
+blurred[is.na(blurred)] <- sharp_edge[is.na(blurred)]
+
+par(mfrow = c(1, 3), mar = c(4, 3, 3, 1))
+plot(x, sharp_edge, type = "l", lwd = 3, main = "Sharp edge (scene)", xlab = "x", ylab = "")
+plot(seq(-10, 10, length.out = 21), psf, type = "l", lwd = 3, col = "red",
+     main = "PSF (blur kernel)", xlab = "x", ylab = "")
+polygon(c(seq(-10, 10, length.out = 21), rev(seq(-10, 10, length.out = 21))),
+        c(psf, rep(0, 21)), col = rgb(1, 0, 0, 0.3), border = NA)
+plot(x, blurred, type = "l", lwd = 3, col = "purple",
+     main = "Blurred edge (retina)", xlab = "x", ylab = "")
+```
+
+**Sharp edge + blur kernel = soft gradient** — this is why we can't see infinitely fine detail!
+
+## The Convolution Formula
+
+$$\text{Retinal image}(x) = \int \text{Scene}(u) \cdot \text{PSF}(x - u) \, du$$
+
+. . .
+
+**In words:**
+
+| Symbol     | Meaning                            |
+|------------|------------------------------------|
+| Scene(u)   | Intensity at each scene position u |
+| PSF(x - u) | The blur kernel centered at u      |
+| ∫ ... du   | Sum over all positions             |
+| Result     | Blurred image at position x        |
+
+. . .
+
+**Why is this powerful?** Measure PSF once → predict the retinal image of ANY scene!
+
+## Reality Check: The Eye is NOT Perfectly Shift-Invariant
+
+**Shift-invariance assumes:** Same PSF everywhere. But the real eye varies!
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 3), mar = c(3, 3, 3, 1))
+
+x <- seq(-3, 3, length.out = 100)
+
+# Center of retina (fovea): sharp PSF
+psf_center <- exp(-x^2 / 0.1)
+plot(x, psf_center, type = "l", lwd = 3, col = "darkgreen",
+     main = "Fovea (center): Sharp", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1))
+polygon(c(x, rev(x)), c(psf_center, rep(0, length(x))), col = rgb(0, 0.5, 0, 0.3), border = NA)
+text(0, 0.5, "High\nresolution", cex = 1, font = 2)
+
+# Mid-periphery: medium PSF
+psf_mid <- exp(-x^2 / 0.4)
+plot(x, psf_mid, type = "l", lwd = 3, col = "orange",
+     main = "Mid-periphery: Wider", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1))
+polygon(c(x, rev(x)), c(psf_mid, rep(0, length(x))), col = rgb(1, 0.5, 0, 0.3), border = NA)
+text(0, 0.5, "Medium\nresolution", cex = 1, font = 2)
+
+# Far periphery: blurry PSF
+psf_periph <- exp(-x^2 / 1.0)
+plot(x, psf_periph, type = "l", lwd = 3, col = "red",
+     main = "Periphery: Blurry", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1))
+polygon(c(x, rev(x)), c(psf_periph, rep(0, length(x))), col = rgb(1, 0, 0, 0.3), border = NA)
+text(0, 0.5, "Low\nresolution", cex = 1, font = 2)
+```
+
+. . .
+
+| Where it varies | Why                                                  |
+|-----------------|------------------------------------------------------|
+| Eccentricity    | Fewer cones, more aberrations in periphery           |
+| Wavelength      | Lens bends blue more than red (chromatic aberration) |
+| Pupil size      | Larger pupil → more blur from aberrations            |
+
+**Consequence:** Simple convolution works locally, but computational models (ISETBio) needed for full accuracy.
+
+# Section 1.4: Computational Model
+
+## Why We Need Computational Models
+
+**Math formulas work for one location.** But the real eye **varies everywhere!**
+
+| Parameter     | Fovea (0°)    | Periphery (10°+) |
+|---------------|---------------|------------------|
+| PSF (blur)    | Small, sharp  | Large, blurry    |
+| Cone density  | \~200,000/mm² | \~10,000/mm²     |
+| Cone aperture | Small         | Large            |
+| S-cones       | **None!**     | Present          |
+
+. . .
+
+> "There is little value in expressing the full complexity of these calculations in pure mathematical form." — Wandell & Brainard
+
+**Solution:** Computational modeling with **ISETBio** (free, open-source)
+
+## Figure 1.5: PSF Varies with Eccentricity and Wavelength
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+
+par(mfrow = c(2, 3), mar = c(3, 3, 3, 1))
+
+# Simulate PSF at different eccentricities for 550nm (top row)
+x <- seq(-5, 5, length.out = 50)
+y <- seq(-5, 5, length.out = 50)
+
+# 2 deg, 550nm - sharp
+psf_2deg <- outer(x, y, function(x, y) exp(-(x^2 + y^2) / 1))
+image(x, y, psf_2deg, col = heat.colors(20), main = "2° eccentricity (550nm)",
+      xlab = "μm", ylab = "μm", axes = FALSE)
+box()
+
+# 8 deg, 550nm - medium
+psf_8deg <- outer(x, y, function(x, y) exp(-(x^2 + y^2) / 3))
+image(x, y, psf_8deg, col = heat.colors(20), main = "8° eccentricity (550nm)",
+      xlab = "μm", ylab = "μm", axes = FALSE)
+box()
+
+# 20 deg, 550nm - blurry
+psf_20deg <- outer(x, y, function(x, y) exp(-(x^2 + y^2) / 8))
+image(x, y, psf_20deg, col = heat.colors(20), main = "20° eccentricity (550nm)",
+      xlab = "μm", ylab = "μm", axes = FALSE)
+box()
+
+# Same for 450nm (bottom row) - even blurrier due to chromatic aberration
+psf_2deg_450 <- outer(x, y, function(x, y) exp(-(x^2 + y^2) / 2))
+image(x, y, psf_2deg_450, col = heat.colors(20), main = "2° eccentricity (450nm)",
+      xlab = "μm", ylab = "μm", axes = FALSE)
+box()
+
+psf_8deg_450 <- outer(x, y, function(x, y) exp(-(x^2 + y^2) / 5))
+image(x, y, psf_8deg_450, col = heat.colors(20), main = "8° eccentricity (450nm)",
+      xlab = "μm", ylab = "μm", axes = FALSE)
+box()
+
+psf_20deg_450 <- outer(x, y, function(x, y) exp(-(x^2 + y^2) / 12))
+image(x, y, psf_20deg_450, col = heat.colors(20), main = "20° eccentricity (450nm)",
+      xlab = "μm", ylab = "μm", axes = FALSE)
+box()
+```
+
+**Top row (550nm):** PSF increases with eccentricity.
+
+**Bottom row (450nm):** Even blurrier! Eye can't focus both wavelengths — **chromatic aberration** is the largest aberration.
+
+## Figure 1.6: Cone Mosaic Changes Across Retina
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 4), mar = c(2, 2, 3, 1))
+
+set.seed(42)
+
+# 0 degrees - very dense, small cones, NO S-cones
+n0 <- 400
+x0 <- runif(n0, 0, 10); y0 <- runif(n0, 0, 10)
+# Only L and M cones in central fovea!
+cols0 <- sample(c("red", "green3"), n0, replace = TRUE, prob = c(0.5, 0.5))
+plot(x0, y0, pch = 19, cex = 0.6, col = cols0, xlim = c(0, 10), ylim = c(0, 10),
+     main = "0° (fovea)", xlab = "", ylab = "", axes = FALSE, asp = 1)
+box()
+text(5, -0.5, "No S-cones!", cex = 0.9, font = 3, col = "blue")
+
+# 4 degrees - still dense, some S-cones appear
+n4 <- 250
+x4 <- runif(n4, 0, 10); y4 <- runif(n4, 0, 10)
+cols4 <- sample(c("red", "green3", "blue"), n4, replace = TRUE, prob = c(0.4, 0.4, 0.2))
+plot(x4, y4, pch = 19, cex = 0.9, col = cols4, xlim = c(0, 10), ylim = c(0, 10),
+     main = "4°", xlab = "", ylab = "", axes = FALSE, asp = 1)
+box()
+
+# 15 degrees - sparse cones, add rods (gray)
+n15_cones <- 80
+x15 <- runif(n15_cones, 0, 10); y15 <- runif(n15_cones, 0, 10)
+cols15 <- sample(c("red", "green3", "blue"), n15_cones, replace = TRUE, prob = c(0.35, 0.35, 0.3))
+plot(x15, y15, pch = 19, cex = 1.5, col = cols15, xlim = c(0, 10), ylim = c(0, 10),
+     main = "15°", xlab = "", ylab = "", axes = FALSE, asp = 1)
+# Add rods
+n_rods <- 200
+xr <- runif(n_rods, 0, 10); yr <- runif(n_rods, 0, 10)
+points(xr, yr, pch = 19, cex = 0.4, col = "gray50")
+box()
+
+# 25 degrees - very sparse large cones, many rods
+n25_cones <- 40
+x25 <- runif(n25_cones, 0, 10); y25 <- runif(n25_cones, 0, 10)
+cols25 <- sample(c("red", "green3", "blue"), n25_cones, replace = TRUE, prob = c(0.35, 0.35, 0.3))
+plot(x25, y25, pch = 19, cex = 2.2, col = cols25, xlim = c(0, 10), ylim = c(0, 10),
+     main = "25°", xlab = "", ylab = "", axes = FALSE, asp = 1)
+n_rods2 <- 300
+xr2 <- runif(n_rods2, 0, 10); yr2 <- runif(n_rods2, 0, 10)
+points(xr2, yr2, pch = 19, cex = 0.3, col = "gray50")
+box()
+```
+
+**Fovea → Periphery:** Cone density ↓, aperture size ↑, rods appear (gray dots).
+
+**Surprise:** Central fovea has **no S-cones** — it's dichromatic! (Optimizes spatial resolution by omitting blurry short-wavelength channel)
+
+## Figure 1.7: Fovea vs Periphery — The Trade-off
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+
+par(mfrow = c(2, 2), mar = c(3, 3, 3, 1))
+
+# Simulate grating responses
+x <- seq(0, 2*pi, length.out = 100)
+
+# 6 c/deg grating - both can resolve
+grating_6 <- sin(6 * x)
+
+# Fovea sampling (dense)
+fov_pos <- seq(0, 2*pi, length.out = 60)
+fov_samples <- sin(6 * fov_pos) + rnorm(60, 0, 0.1)
+
+plot(x, grating_6, type = "l", lwd = 2, col = "gray70", main = "Fovea: 6 c/deg grating",
+     xlab = "Position", ylab = "Response", ylim = c(-1.5, 1.5))
+points(fov_pos, fov_samples, pch = 19, cex = 0.8, col = "darkred")
+text(pi, 1.3, "Pattern preserved!", cex = 1, font = 2)
+
+# Periphery sampling (sparse) for 6 c/deg
+per_pos <- seq(0, 2*pi, length.out = 15)
+per_samples <- sin(6 * per_pos) + rnorm(15, 0, 0.15)
+
+plot(x, grating_6, type = "l", lwd = 2, col = "gray70", main = "10° Periphery: 6 c/deg",
+     xlab = "Position", ylab = "Response", ylim = c(-1.5, 1.5))
+points(per_pos, per_samples, pch = 19, cex = 1.5, col = "darkblue")
+text(pi, 1.3, "Still OK", cex = 1, font = 2)
+
+# 12 c/deg grating - fovea can resolve, periphery can't
+grating_12 <- sin(12 * x)
+
+fov_samples_12 <- sin(12 * fov_pos) + rnorm(60, 0, 0.1)
+plot(x, grating_12, type = "l", lwd = 2, col = "gray70", main = "Fovea: 12 c/deg grating",
+     xlab = "Position", ylab = "Response", ylim = c(-1.5, 1.5))
+points(fov_pos, fov_samples_12, pch = 19, cex = 0.8, col = "darkred")
+text(pi, 1.3, "Pattern preserved!", cex = 1, font = 2)
+
+# Periphery can't resolve 12 c/deg - aliasing!
+per_samples_12 <- sin(12 * per_pos) + rnorm(15, 0, 0.2)
+plot(x, grating_12, type = "l", lwd = 2, col = "gray70", main = "10° Periphery: 12 c/deg",
+     xlab = "Position", ylab = "Response", ylim = c(-1.5, 1.5))
+points(per_pos, per_samples_12, pch = 19, cex = 1.5, col = "darkblue")
+text(pi, 1.3, "Wobbly! Pattern lost", cex = 1, font = 2, col = "red")
+```
+
+**Fovea:** Dense sampling → fine patterns preserved.
+
+**Periphery:** Sparse sampling → high-frequency patterns look "wobbly" (aliased).
+
+## The Fovea-Periphery Trade-off
+
+|   | Fovea | Periphery |
+|----|----|----|
+| **Cone density** | High (\~200k/mm²) | Low (\~10k/mm²) |
+| **Cone aperture** | Small | Large |
+| **Excitations/cone** | Fewer | **More** (larger apertures!) |
+| **Spatial resolution** | High | Low |
+| **Color vision** | Dichromatic (L, M only) | Trichromatic (L, M, S) |
+
+. . .
+
+**Why?**
+
+-   **Fovea:** Optimized for fine detail, reading, recognition
+-   **Periphery:** Optimized for detecting motion, threats (sensitivity over resolution)
+
+## Spatial Derivatives: What Neurons Compute
+
+**Neurons don't report absolute light — they compute local changes (derivatives):**
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# Image intensity (smooth gradient with edge)
+x <- seq(0, 10, length.out = 100)
+intensity <- 0.3 + 0.5 * pnorm(x, 5, 0.8)
+
+plot(x, intensity, type = "l", lwd = 3, col = "gray30",
+     main = "Light intensity", xlab = "Position", ylab = "Intensity", ylim = c(0, 1))
+
+# Spatial derivative → edge detection
+deriv <- c(0, diff(intensity)) * 15
+plot(x, deriv, type = "l", lwd = 3, col = "purple",
+     main = "Spatial derivative → Edge", xlab = "Position", ylab = "Change")
+abline(h = 0, lty = 2, col = "gray")
+polygon(c(x, rev(x)), c(pmax(deriv, 0), rep(0, length(x))), col = rgb(0.5, 0, 0.5, 0.3), border = NA)
+
+# Summary as visual
+plot.new()
+text(0.5, 0.95, "Neurons detect:", cex = 1.3, font = 2)
+text(0.1, 0.75, "Spatial Δ", adj = 0, cex = 1.1)
+text(0.65, 0.75, "→ Edges", adj = 0, col = "purple", cex = 1.1, font = 2)
+text(0.1, 0.55, "Wavelength Δ", adj = 0, cex = 1.1)
+text(0.65, 0.55, "→ Color", adj = 0, col = "orange", cex = 1.1, font = 2)
+text(0.1, 0.35, "Time Δ", adj = 0, cex = 1.1)
+text(0.65, 0.35, "→ Motion", adj = 0, col = "blue", cex = 1.1, font = 2)
+text(0.1, 0.15, "Left-Right Δ", adj = 0, cex = 1.1)
+text(0.65, 0.15, "→ Depth", adj = 0, col = "darkgreen", cex = 1.1, font = 2)
+```
+
+**Why derivatives?** Local contrast matters more than absolute brightness. Also highly compressible (most derivatives ≈ 0 in natural scenes).
+
+## Part 1 Summary: Forward Calculation Complete
+
+**Scene → Optics → Cone Mosaic → Cone Excitations**
+
+| Stage             | What happens          | Key math               |
+|-------------------|-----------------------|------------------------|
+| **Optics**        | Light blurred by PSF  | Convolution (locally)  |
+| **Cone sampling** | Continuous → discrete | Matrix multiplication  |
+| **Cone response** | Photons counted       | Linear + Poisson noise |
+| **Neural coding** | Local differences     | Derivatives            |
+
+. . .
+
+**Key insight:** Massive information loss at every stage!
+
+-   ∞ wavelengths → 3 cone types
+-   Continuous image → discrete samples
+-   Exact photon count → noisy estimate
+
+**The brain receives ambiguous, noisy signals. How does it perceive the world?**
+
+→ **Part 2: Perceptual Inference** (Bayesian approach)
