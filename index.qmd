@@ -15,3 +15,12 @@ A learning resource for mathematical psychology, covering textbook chapters, res
 | [Demos](demos/) | R code demonstrations showing models in action |
 | [Exercises](exercises/) | Practice problems (conceptual, math, coding, applied) with solutions |
 
+## Updates
+
+| Section | Type | Date |
+|---------|------|------|
+| [Ch.1 Initial Visual Encoding](demos/handbook_ch01_visual_encoding.html) | Demo | 2026-01-31 |
+| [Ch.0 Preface](demos/handbook_ch00_preface.html) | Demo | 2026-01-22 |
+| [Ch.0 Preface](lectures/handbook_ch00_preface.html) | Lecture | 2026-01-22 |
+| [Ch.0 Preface](exercises/handbook_ch00_preface.html) | Exercise | 2026-01-22 |
+

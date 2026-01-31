@@ -61,21 +61,10 @@ For each β, show that K(k) = ψ(kx)/ψ(x) gives the same value for different x 
 # Starter code
 k <- 3
 x_values <- c(2, 4, 8)
-
+beta_values <- c(0.5, 1, 2, 3)
 
 # Your code here: compute K(k) for different beta values
-beta_values <- c(0.5, 1.2, 3)
 
-
-K <- function(x, beta, k) (k*x)^beta / x^beta
-answer_matrix <- matrix(nrow = length(x_values), ncol = length(beta_values))
-for (i in 1:length(x_values)) {
-  for (j in 1:length(beta_values)) {
-    answer_matrix[i,j] <- K(x_values[i], beta_values[j], k)
-  }
-}
-
-answer_matrix # Each row (x) in the same columnn (beta) is the same
 ```
 
 **Q11.** Write R code to demonstrate that ψ(x) = log(x) fails Luce's principle.
@@ -88,10 +77,7 @@ k <- 3
 x_values <- c(2, 4, 8)
 
 # Your code here
-for (x in x_values) {
-  K_value <-log(k * x) / log(x)
-  cat("x =", x, ": K(k) =", K_value, "\n")
-}
+
 ```
 
 **Q12.** Write R code to demonstrate that dimensional constants make the ratio x/x₀ scale-invariant.
@@ -103,7 +89,7 @@ x0 <- 2
 k <- 5
 
 # Your code here: show (k*x)/(k*x0) == x/x0
-(k*x) / (k*x0) == x / x0
+
 ```
 
 ## Applied Problems

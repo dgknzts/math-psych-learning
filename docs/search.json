@@ -28,6 +28,13 @@
     "text": "Content\n\n\n\nSection\nDescription\n\n\n\n\nLectures\nSlide presentations with key concepts and derivations\n\n\nDemos\nR code demonstrations showing models in action\n\n\nExercises\nPractice problems (conceptual, math, coding, applied) with solutions"
   },
   {
+    "objectID": "index.html#updates",
+    "href": "index.html#updates",
+    "title": "Mathematical Psychology Learning Hub",
+    "section": "Updates",
+    "text": "Updates\n\n\n\nSection\nType\nDate\n\n\n\n\nCh.1 Initial Visual Encoding\nDemo\n2026-01-31\n\n\nCh.0 Preface\nDemo\n2026-01-22\n\n\nCh.0 Preface\nLecture\n2026-01-22\n\n\nCh.0 Preface\nExercise\n2026-01-22"
+  },
+  {
     "objectID": "exercises/index.html",
     "href": "exercises/index.html",
     "title": "Exercises",
@@ -39,14 +46,7 @@
     "href": "demos/index.html",
     "title": "Demos",
     "section": "",
-    "text": "R code demonstrations showing mathematical models in action."
-  },
-  {
-    "objectID": "demos/index.html#updates",
-    "href": "demos/index.html#updates",
-    "title": "Demos",
-    "section": "Updates",
-    "text": "Updates\n\n\n\nSection\nType\nDate\n\n\n\n\nCh.1 Initial Visual Encoding\nDemo\n2026-01-31\n\n\nCh.0 Preface\nDemo\n2026-01-22\n\n\nCh.0 Preface\nLecture\n2026-01-22\n\n\nCh.0 Preface\nExercise\n2026-01-22"
+    "text": "R code demonstrations showing mathematical models in action.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDate\n\n\n\n\n\n\n\n\nInitial Visual Encoding\n\n\nJan 23, 2026\n\n\n\n\n\n\nMathematical Psychology Handbook Preface\n\n\nJan 21, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "demos/handbook_ch00_preface.html",
@@ -172,7 +172,7 @@
     "href": "exercises/handbook_ch00_preface.html#coding-exercises",
     "title": "Exercises: Why Math in Psychology?",
     "section": "Coding Exercises",
-    "text": "Coding Exercises\nQ10. Write R code to verify that ψ(x) = x^β satisfies Luce’s principle for β = 0.5, 1, 2, and 3.\nFor each β, show that K(k) = ψ(kx)/ψ(x) gives the same value for different x values.\n\n\nCode\n# Starter code\nk &lt;- 3\nx_values &lt;- c(2, 4, 8)\n\n\n# Your code here: compute K(k) for different beta values\nbeta_values &lt;- c(0.5, 1.2, 3)\n\n\nK &lt;- function(x, beta, k) (k*x)^beta / x^beta\nanswer_matrix &lt;- matrix(nrow = length(x_values), ncol = length(beta_values))\nfor (i in 1:length(x_values)) {\n  for (j in 1:length(beta_values)) {\n    answer_matrix[i,j] &lt;- K(x_values[i], beta_values[j], k)\n  }\n}\n\nanswer_matrix # Each row (x) in the same columnn (beta) is the same\n\n\n         [,1]     [,2] [,3]\n[1,] 1.732051 3.737193   27\n[2,] 1.732051 3.737193   27\n[3,] 1.732051 3.737193   27\n\n\nQ11. Write R code to demonstrate that ψ(x) = log(x) fails Luce’s principle.\nCompute K(k) = log(kx)/log(x) for k = 3 and x = 2, 4, 8. Show that K(k) depends on x.\n\n\nCode\n# Starter code\nk &lt;- 3\nx_values &lt;- c(2, 4, 8)\n\n# Your code here\nfor (x in x_values) {\n  K_value &lt;-log(k * x) / log(x)\n  cat(\"x =\", x, \": K(k) =\", K_value, \"\\n\")\n}\n\n\nx = 2 : K(k) = 2.584963 \nx = 4 : K(k) = 1.792481 \nx = 8 : K(k) = 1.528321 \n\n\nQ12. Write R code to demonstrate that dimensional constants make the ratio x/x₀ scale-invariant.\n\n\nCode\n# Starter code\nx &lt;- 10\nx0 &lt;- 2\nk &lt;- 5\n\n# Your code here: show (k*x)/(k*x0) == x/x0\n(k*x) / (k*x0) == x / x0\n\n\n[1] TRUE"
+    "text": "Coding Exercises\nQ10. Write R code to verify that ψ(x) = x^β satisfies Luce’s principle for β = 0.5, 1, 2, and 3.\nFor each β, show that K(k) = ψ(kx)/ψ(x) gives the same value for different x values.\n\n\nCode\n# Starter code\nk &lt;- 3\nx_values &lt;- c(2, 4, 8)\nbeta_values &lt;- c(0.5, 1, 2, 3)\n\n# Your code here: compute K(k) for different beta values\n\n\nQ11. Write R code to demonstrate that ψ(x) = log(x) fails Luce’s principle.\nCompute K(k) = log(kx)/log(x) for k = 3 and x = 2, 4, 8. Show that K(k) depends on x.\n\n\nCode\n# Starter code\nk &lt;- 3\nx_values &lt;- c(2, 4, 8)\n\n# Your code here\n\n\nQ12. Write R code to demonstrate that dimensional constants make the ratio x/x₀ scale-invariant.\n\n\nCode\n# Starter code\nx &lt;- 10\nx0 &lt;- 2\nk &lt;- 5\n\n# Your code here: show (k*x)/(k*x0) == x/x0"
   },
   {
     "objectID": "exercises/handbook_ch00_preface.html#applied-problems",
