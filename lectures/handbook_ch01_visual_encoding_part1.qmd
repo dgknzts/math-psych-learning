@@ -41,88 +41,6 @@ How does the brain interpret cone signals to see objects, depth, color?
 
 **Helmholtz's Unconscious Inference (1867):** Perception is not passive recording — the brain *infers* the most likely cause of sensory signals, using prior experience, without conscious awareness.
 
-## The Compression Problem
-
-Light has **infinite wavelengths** (400-700nm continuous spectrum).
-
-But we have only **3 cone types** → compressed to 3 numbers!
-
-```{r}
-#| echo: false
-#| fig-width: 5
-#| fig-height: 2.5
-library(ggplot2)
-wavelengths <- seq(400, 700, by = 5)
-L_cone <- exp(-0.5 * ((wavelengths - 565) / 50)^2)
-M_cone <- exp(-0.5 * ((wavelengths - 535) / 45)^2)
-S_cone <- exp(-0.5 * ((wavelengths - 445) / 35)^2)
-
-cone_data <- data.frame(
-  wavelength = rep(wavelengths, 3),
-  sensitivity = c(L_cone, M_cone, S_cone),
-  cone = rep(c("L (long)", "M (medium)", "S (short)"), each = length(wavelengths))
-)
-
-ggplot(cone_data, aes(x = wavelength, y = sensitivity, color = cone)) +
-  geom_line(linewidth = 1) +
-  scale_color_manual(values = c("L (long)" = "red", "M (medium)" = "green", "S (short)" = "blue")) +
-  labs(x = "Wavelength (nm)", y = "Sensitivity", color = NULL) +
-  theme_minimal() + theme(legend.position = "top")
-```
-
-**∞ dimensions → 3 dimensions = information loss = ambiguity**
-
-## Metamerism: Ambiguity in Action
-
-**Different spectra → same cone response!**
-
-```{r}
-#| echo: false
-#| fig-width: 6
-#| fig-height: 2.2
-e_yellow <- exp(-0.5 * ((wavelengths - 580) / 20)^2)
-e_red <- exp(-0.5 * ((wavelengths - 620) / 25)^2)
-e_green <- exp(-0.5 * ((wavelengths - 540) / 25)^2)
-e_mixture <- 0.6 * e_red + 0.5 * e_green
-
-metamer_data <- data.frame(
-  wavelength = rep(wavelengths, 2),
-  intensity = c(e_yellow / max(e_yellow), e_mixture / max(e_mixture)),
-  spectrum = rep(c("Yellow light", "Red+Green mix"), each = length(wavelengths))
-)
-
-ggplot(metamer_data, aes(x = wavelength, y = intensity, color = spectrum)) +
-  geom_line(linewidth = 1) +
-  labs(x = "Wavelength (nm)", y = "Intensity", color = NULL) +
-  theme_minimal() + theme(legend.position = "top")
-```
-
-| Possible Cause    | Cone Response       |
-|-------------------|---------------------|
-| Yellow banana     | L=0.7, M=0.5, S=0.1 |
-| Red+Green mixture | L=0.7, M=0.5, S=0.1 |
-| Orange sunset     | L=0.7, M=0.5, S=0.1 |
-
-**The brain must guess:** Which scene is most likely?
-
-## Bayesian Inference: The Brain's Solution
-
-**Combine sensory evidence with prior knowledge:**
-
-$$P(\text{scene} | \text{cones}) \propto \underbrace{P(\text{cones} | \text{scene})}_{\text{likelihood}} \times \underbrace{P(\text{scene})}_{\text{prior}}$$
-
-. . .
-
-| Term       | Question it Answers                                 |
-|------------|-----------------------------------------------------|
-| Likelihood | "How well does this scene explain my cone signals?" |
-| Prior      | "How common is this scene in my experience?"        |
-| Posterior  | "What scene should I perceive?"                     |
-
-. . .
-
-**Result:** Brain picks the scene that best explains the data AND is plausible given past experience.
-
 # Section 1.2: Scene to Retinal Image
 
 ## The Light Field
@@ -315,7 +233,38 @@ segments(cone_positions, 0, cone_positions, cone_samples, col = "darkred", lwd =
 
 Spatial information between cones is lost forever!
 
-## What Gets Lost? (3) Metamers
+## What Gets Lost? (3) Spectral Compression
+
+Light has **infinite wavelengths** (400-700nm continuous spectrum).
+
+But we have only **3 cone types** → compressed to 3 numbers!
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 2.5
+library(ggplot2)
+wavelengths <- seq(400, 700, by = 5)
+L_cone <- exp(-0.5 * ((wavelengths - 565) / 50)^2)
+M_cone <- exp(-0.5 * ((wavelengths - 535) / 45)^2)
+S_cone <- exp(-0.5 * ((wavelengths - 445) / 35)^2)
+
+cone_data <- data.frame(
+  wavelength = rep(wavelengths, 3),
+  sensitivity = c(L_cone, M_cone, S_cone),
+  cone = rep(c("L (long)", "M (medium)", "S (short)"), each = length(wavelengths))
+)
+
+ggplot(cone_data, aes(x = wavelength, y = sensitivity, color = cone)) +
+  geom_line(linewidth = 1) +
+  scale_color_manual(values = c("L (long)" = "red", "M (medium)" = "green", "S (short)" = "blue")) +
+  labs(x = "Wavelength (nm)", y = "Sensitivity", color = NULL) +
+  theme_minimal() + theme(legend.position = "top")
+```
+
+**∞ dimensions → 3 dimensions = information loss = ambiguity**
+
+## What Gets Lost? (4) Metamers
 
 **Metamers** = physically different spectra that produce **identical cone responses**.
 
@@ -378,6 +327,26 @@ barplot(rbind(resp1, resp2), beside = TRUE, col = c("goldenrod", "darkgreen"),
 → This is why the brain must use **Bayesian inference** to guess the scene!
 
 **Different physics → identical perception!** This is why TV/phone screens work with just RGB pixels.
+
+## Bayesian Inference: The Brain's Solution
+
+**Problem:** Same cone response can come from many different scenes!
+
+**Solution:** Combine sensory evidence with prior knowledge:
+
+$$P(\text{scene} | \text{cones}) \propto \underbrace{P(\text{cones} | \text{scene})}_{\text{likelihood}} \times \underbrace{P(\text{scene})}_{\text{prior}}$$
+
+. . .
+
+| Term       | Question it Answers                                 |
+|------------|-----------------------------------------------------|
+| Likelihood | "How well does this scene explain my cone signals?" |
+| Prior      | "How common is this scene in my experience?"        |
+| Posterior  | "What scene should I perceive?"                     |
+
+. . .
+
+**Result:** Brain picks the scene that best explains the data AND is plausible given past experience.
 
 # Section 1.3: Mathematical Principles
 
@@ -454,10 +423,18 @@ text(0.7, N * 0.5, paste0("N = ", round(N, 1)), cex = 1.5, col = "white", font =
 
 $$\underbrace{\begin{bmatrix} n_L \\ n_M \\ n_S \end{bmatrix}}_{\mathbf{n}\,(3 \times 1)} = \underbrace{\begin{bmatrix} 0.1 & 0.3 & 0.7 & 1.0 & 0.8 \\ 0.2 & 0.6 & 1.0 & 0.6 & 0.2 \\ 1.0 & 0.3 & 0.0 & 0.0 & 0.0 \end{bmatrix}}_{\mathbf{C}\,(3 \times 5)} \cdot \underbrace{\begin{bmatrix} 0.0 \\ 0.2 \\ 0.8 \\ 1.0 \\ 0.4 \end{bmatrix}}_{\mathbf{e}\,(5 \times 1)}$$
 
+| Matrix | Meaning                                         |
+|--------|-------------------------------------------------|
+| **C**  | Cone sensitivities (3 cones × 5 wavelengths)    |
+| **e**  | Spectrum (yellow-ish light: peaks at 550-600nm) |
+| **n**  | Result: 3 cone responses (L, M, S)              |
+
+## Matrix Form: Visualized
+
 ```{r}
 #| echo: false
-#| fig-width: 9
-#| fig-height: 3
+#| fig-width: 10
+#| fig-height: 4.5
 
 # Define matrices
 C <- matrix(c(0.1, 0.2, 1.0,
@@ -472,41 +449,37 @@ e <- c(0.0, 0.2, 0.8, 1.0, 0.4)
 n <- C %*% e
 
 layout(matrix(c(1, 2, 3, 4, 5), nrow = 1), widths = c(3, 1, 2, 1, 2))
-par(mar = c(3, 3, 3, 1))
+par(mar = c(4, 4, 4, 1))
 
 # C matrix as heatmap
 image(t(C[3:1, ]), col = heat.colors(20), axes = FALSE, main = "C matrix (3×5)")
-axis(1, at = seq(0, 1, length.out = 5), labels = colnames(C), cex.axis = 0.8)
-axis(2, at = c(0, 0.5, 1), labels = c("S", "M", "L"), las = 2, cex.axis = 0.9)
-mtext("wavelength (nm)", side = 1, line = 2, cex = 0.7)
+axis(1, at = seq(0, 1, length.out = 5), labels = colnames(C), cex.axis = 1)
+axis(2, at = c(0, 0.5, 1), labels = c("S", "M", "L"), las = 2, cex.axis = 1.1)
+mtext("wavelength (nm)", side = 1, line = 2.5, cex = 0.9)
 
 # Multiply sign
 par(mar = c(0, 0, 0, 0))
 plot.new()
-text(0.5, 0.5, "×", cex = 4, font = 2)
+text(0.5, 0.5, "×", cex = 5, font = 2)
 
 # e vector
-par(mar = c(3, 3, 3, 1))
+par(mar = c(4, 3, 4, 1))
 barplot(e, names.arg = c("450", "500", "550", "600", "650"),
-        col = "orange", main = "e vector (5×1)", cex.names = 0.7)
-mtext("spectrum", side = 1, line = 2, cex = 0.7)
+        col = "orange", main = "e vector (5×1)", cex.names = 0.9)
+mtext("spectrum", side = 1, line = 2.5, cex = 0.9)
 
 # Equals sign
 par(mar = c(0, 0, 0, 0))
 plot.new()
-text(0.5, 0.5, "=", cex = 4, font = 2)
+text(0.5, 0.5, "=", cex = 5, font = 2)
 
 # n result
-par(mar = c(3, 3, 3, 1))
+par(mar = c(4, 3, 4, 1))
 barplot(as.vector(n), names.arg = c("L", "M", "S"),
-        col = c("red", "green", "blue"), main = "n (3×1)")
+        col = c("red", "green", "blue"), main = "n result (3×1)")
 ```
 
-| Matrix | Meaning                                         |
-|--------|-------------------------------------------------|
-| **C**  | Cone sensitivities (brighter = more sensitive)  |
-| **e**  | Spectrum (yellow-ish light: peaks at 550-600nm) |
-| **n**  | Result: L responds most, S responds least       |
+**C** (brighter = more sensitive) **×** **e** (spectrum) **=** **n** (L responds most, S least)
 
 ## Matrix Multiplication: Step by Step
 
@@ -863,48 +836,37 @@ $$\text{Retinal image}(x) = \int \text{Scene}(u) \cdot \text{PSF}(x - u) \, du$$
 
 ## Reality Check: The Eye is NOT Perfectly Shift-Invariant
 
-**Shift-invariance assumes:** Same PSF everywhere. But the real eye varies!
-
 ```{r}
 #| echo: false
-#| fig-width: 8
-#| fig-height: 3
+#| fig-width: 10
+#| fig-height: 4
 
-par(mfrow = c(1, 3), mar = c(3, 3, 3, 1))
+par(mfrow = c(1, 3), mar = c(4, 4, 4, 1))
 
 x <- seq(-3, 3, length.out = 100)
 
 # Center of retina (fovea): sharp PSF
 psf_center <- exp(-x^2 / 0.1)
-plot(x, psf_center, type = "l", lwd = 3, col = "darkgreen",
-     main = "Fovea (center): Sharp", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1))
+plot(x, psf_center, type = "l", lwd = 4, col = "darkgreen",
+     main = "Fovea: Sharp", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1), cex.main = 1.3)
 polygon(c(x, rev(x)), c(psf_center, rep(0, length(x))), col = rgb(0, 0.5, 0, 0.3), border = NA)
-text(0, 0.5, "High\nresolution", cex = 1, font = 2)
 
 # Mid-periphery: medium PSF
 psf_mid <- exp(-x^2 / 0.4)
-plot(x, psf_mid, type = "l", lwd = 3, col = "orange",
-     main = "Mid-periphery: Wider", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1))
+plot(x, psf_mid, type = "l", lwd = 4, col = "orange",
+     main = "Mid-periphery: Wider", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1), cex.main = 1.3)
 polygon(c(x, rev(x)), c(psf_mid, rep(0, length(x))), col = rgb(1, 0.5, 0, 0.3), border = NA)
-text(0, 0.5, "Medium\nresolution", cex = 1, font = 2)
 
 # Far periphery: blurry PSF
 psf_periph <- exp(-x^2 / 1.0)
-plot(x, psf_periph, type = "l", lwd = 3, col = "red",
-     main = "Periphery: Blurry", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1))
+plot(x, psf_periph, type = "l", lwd = 4, col = "red",
+     main = "Periphery: Blurry", xlab = "Position", ylab = "PSF", ylim = c(0, 1.1), cex.main = 1.3)
 polygon(c(x, rev(x)), c(psf_periph, rep(0, length(x))), col = rgb(1, 0, 0, 0.3), border = NA)
-text(0, 0.5, "Low\nresolution", cex = 1, font = 2)
 ```
 
-. . .
+**Varies with:** eccentricity, wavelength (chromatic aberration), pupil size
 
-| Where it varies | Why                                                  |
-|-----------------|------------------------------------------------------|
-| Eccentricity    | Fewer cones, more aberrations in periphery           |
-| Wavelength      | Lens bends blue more than red (chromatic aberration) |
-| Pupil size      | Larger pupil → more blur from aberrations            |
-
-**Consequence:** Simple convolution works locally, but computational models (ISETBio) needed for full accuracy.
+**Consequence:** Convolution works locally → need computational models (ISETBio) for full accuracy.
 
 # Section 1.4: Computational Model
 

@@ -543,7 +543,7 @@
     "href": "lectures/handbook_ch01_visual_encoding_part1.html#bayesian-inference-the-brains-solution",
     "title": "Chapter 1: Initial Visual Encoding (Part 1)",
     "section": "Bayesian Inference: The Brain’s Solution",
-    "text": "Bayesian Inference: The Brain’s Solution\nCombine sensory evidence with prior knowledge:\n\\[P(\\text{scene} | \\text{cones}) \\propto \\underbrace{P(\\text{cones} | \\text{scene})}_{\\text{likelihood}} \\times \\underbrace{P(\\text{scene})}_{\\text{prior}}\\]\n\n\n\n\nTerm\nQuestion it Answers\n\n\n\n\nLikelihood\n“How well does this scene explain my cone signals?”\n\n\nPrior\n“How common is this scene in my experience?”\n\n\nPosterior\n“What scene should I perceive?”\n\n\n\n\n\nResult: Brain picks the scene that best explains the data AND is plausible given past experience."
+    "text": "Bayesian Inference: The Brain’s Solution\nProblem: Same cone response can come from many different scenes!\nSolution: Combine sensory evidence with prior knowledge:\n\\[P(\\text{scene} | \\text{cones}) \\propto \\underbrace{P(\\text{cones} | \\text{scene})}_{\\text{likelihood}} \\times \\underbrace{P(\\text{scene})}_{\\text{prior}}\\]\n\n\n\n\nTerm\nQuestion it Answers\n\n\n\n\nLikelihood\n“How well does this scene explain my cone signals?”\n\n\nPrior\n“How common is this scene in my experience?”\n\n\nPosterior\n“What scene should I perceive?”\n\n\n\n\n\nResult: Brain picks the scene that best explains the data AND is plausible given past experience."
   },
   {
     "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#the-light-field",
@@ -613,7 +613,7 @@
     "href": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-form-n-c-e",
     "title": "Chapter 1: Initial Visual Encoding (Part 1)",
     "section": "Matrix Form: n = C · e",
-    "text": "Matrix Form: n = C · e\nSimplified example with 5 wavelengths (450, 500, 550, 600, 650 nm):\n\\[\\underbrace{\\begin{bmatrix} n_L \\\\ n_M \\\\ n_S \\end{bmatrix}}_{\\mathbf{n}\\,(3 \\times 1)} = \\underbrace{\\begin{bmatrix} 0.1 & 0.3 & 0.7 & 1.0 & 0.8 \\\\ 0.2 & 0.6 & 1.0 & 0.6 & 0.2 \\\\ 1.0 & 0.3 & 0.0 & 0.0 & 0.0 \\end{bmatrix}}_{\\mathbf{C}\\,(3 \\times 5)} \\cdot \\underbrace{\\begin{bmatrix} 0.0 \\\\ 0.2 \\\\ 0.8 \\\\ 1.0 \\\\ 0.4 \\end{bmatrix}}_{\\mathbf{e}\\,(5 \\times 1)}\\]\n\n\n\n\nMatrix\nMeaning\n\n\n\n\nC\nCone sensitivities (brighter = more sensitive)\n\n\ne\nSpectrum (yellow-ish light: peaks at 550-600nm)\n\n\nn\nResult: L responds most, S responds least"
+    "text": "Matrix Form: n = C · e\nSimplified example with 5 wavelengths (450, 500, 550, 600, 650 nm):\n\\[\\underbrace{\\begin{bmatrix} n_L \\\\ n_M \\\\ n_S \\end{bmatrix}}_{\\mathbf{n}\\,(3 \\times 1)} = \\underbrace{\\begin{bmatrix} 0.1 & 0.3 & 0.7 & 1.0 & 0.8 \\\\ 0.2 & 0.6 & 1.0 & 0.6 & 0.2 \\\\ 1.0 & 0.3 & 0.0 & 0.0 & 0.0 \\end{bmatrix}}_{\\mathbf{C}\\,(3 \\times 5)} \\cdot \\underbrace{\\begin{bmatrix} 0.0 \\\\ 0.2 \\\\ 0.8 \\\\ 1.0 \\\\ 0.4 \\end{bmatrix}}_{\\mathbf{e}\\,(5 \\times 1)}\\]\n\n\n\nMatrix\nMeaning\n\n\n\n\nC\nCone sensitivities (3 cones × 5 wavelengths)\n\n\ne\nSpectrum (yellow-ish light: peaks at 550-600nm)\n\n\nn\nResult: 3 cone responses (L, M, S)"
   },
   {
     "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-multiplication-step-by-step",
@@ -704,7 +704,7 @@
     "href": "lectures/handbook_ch01_visual_encoding_part1.html#reality-check-the-eye-is-not-perfectly-shift-invariant",
     "title": "Chapter 1: Initial Visual Encoding (Part 1)",
     "section": "Reality Check: The Eye is NOT Perfectly Shift-Invariant",
-    "text": "Reality Check: The Eye is NOT Perfectly Shift-Invariant\nShift-invariance assumes: Same PSF everywhere. But the real eye varies!\n\n\n\n\n\n\n\n\n\nWhere it varies\nWhy\n\n\n\n\nEccentricity\nFewer cones, more aberrations in periphery\n\n\nWavelength\nLens bends blue more than red (chromatic aberration)\n\n\nPupil size\nLarger pupil → more blur from aberrations\n\n\n\nConsequence: Simple convolution works locally, but computational models (ISETBio) needed for full accuracy."
+    "text": "Reality Check: The Eye is NOT Perfectly Shift-Invariant\n\nVaries with: eccentricity, wavelength (chromatic aberration), pupil size\nConsequence: Convolution works locally → need computational models (ISETBio) for full accuracy."
   },
   {
     "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#why-we-need-computational-models",
@@ -754,5 +754,26 @@
     "title": "Chapter 1: Initial Visual Encoding (Part 1)",
     "section": "Part 1 Summary: Forward Calculation Complete",
     "text": "Part 1 Summary: Forward Calculation Complete\nScene → Optics → Cone Mosaic → Cone Excitations\n\n\n\nStage\nWhat happens\nKey math\n\n\n\n\nOptics\nLight blurred by PSF\nConvolution (locally)\n\n\nCone sampling\nContinuous → discrete\nMatrix multiplication\n\n\nCone response\nPhotons counted\nLinear + Poisson noise\n\n\nNeural coding\nLocal differences\nDerivatives\n\n\n\n\nKey insight: Massive information loss at every stage!\n\n∞ wavelengths → 3 cone types\nContinuous image → discrete samples\nExact photon count → noisy estimate\n\nThe brain receives ambiguous, noisy signals. How does it perceive the world?\n→ Part 2: Perceptual Inference (Bayesian approach)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-3-spectral-compression",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-3-spectral-compression",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "What Gets Lost? (3) Spectral Compression",
+    "text": "What Gets Lost? (3) Spectral Compression\nLight has infinite wavelengths (400-700nm continuous spectrum).\nBut we have only 3 cone types → compressed to 3 numbers!\n\n∞ dimensions → 3 dimensions = information loss = ambiguity"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-4-metamers",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#what-gets-lost-4-metamers",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "What Gets Lost? (4) Metamers",
+    "text": "What Gets Lost? (4) Metamers\nMetamers = physically different spectra that produce identical cone responses.\n\nCan we tell them apart? NO! Same L, M, S → identical perception.\n→ This is why the brain must use Bayesian inference to guess the scene!\nDifferent physics → identical perception! This is why TV/phone screens work with just RGB pixels."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-form-visualized",
+    "href": "lectures/handbook_ch01_visual_encoding_part1.html#matrix-form-visualized",
+    "title": "Chapter 1: Initial Visual Encoding (Part 1)",
+    "section": "Matrix Form: Visualized",
+    "text": "Matrix Form: Visualized\n\nC (brighter = more sensitive) × e (spectrum) = n (L responds most, S least)"
   }
 ]

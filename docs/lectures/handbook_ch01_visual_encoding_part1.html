@@ -184,73 +184,6 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <div class="fragment">
 <p><strong>Helmholtz’s Unconscious Inference (1867):</strong> Perception is not passive recording — the brain <em>infers</em> the most likely cause of sensory signals, using prior experience, without conscious awareness.</p>
 </div>
-</section>
-<section id="the-compression-problem" class="slide level2">
-<h2>The Compression Problem</h2>
-<p>Light has <strong>infinite wavelengths</strong> (400-700nm continuous spectrum).</p>
-<p>But we have only <strong>3 cone types</strong> → compressed to 3 numbers!</p>
-
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-1-1.png" width="480" class="r-stretch"><p><strong>∞ dimensions → 3 dimensions = information loss = ambiguity</strong></p>
-</section>
-<section id="metamerism-ambiguity-in-action" class="slide level2">
-<h2>Metamerism: Ambiguity in Action</h2>
-<p><strong>Different spectra → same cone response!</strong></p>
-
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-2-1.png" width="576" class="r-stretch"><table class="caption-top">
-<thead>
-<tr class="header">
-<th>Possible Cause</th>
-<th>Cone Response</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Yellow banana</td>
-<td>L=0.7, M=0.5, S=0.1</td>
-</tr>
-<tr class="even">
-<td>Red+Green mixture</td>
-<td>L=0.7, M=0.5, S=0.1</td>
-</tr>
-<tr class="odd">
-<td>Orange sunset</td>
-<td>L=0.7, M=0.5, S=0.1</td>
-</tr>
-</tbody>
-</table>
-<p><strong>The brain must guess:</strong> Which scene is most likely?</p>
-</section>
-<section id="bayesian-inference-the-brains-solution" class="slide level2">
-<h2>Bayesian Inference: The Brain’s Solution</h2>
-<p><strong>Combine sensory evidence with prior knowledge:</strong></p>
-<p><span class="math display">\[P(\text{scene} | \text{cones}) \propto \underbrace{P(\text{cones} | \text{scene})}_{\text{likelihood}} \times \underbrace{P(\text{scene})}_{\text{prior}}\]</span></p>
-<div class="fragment">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Term</th>
-<th>Question it Answers</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Likelihood</td>
-<td>“How well does this scene explain my cone signals?”</td>
-</tr>
-<tr class="even">
-<td>Prior</td>
-<td>“How common is this scene in my experience?”</td>
-</tr>
-<tr class="odd">
-<td>Posterior</td>
-<td>“What scene should I perceive?”</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<p><strong>Result:</strong> Brain picks the scene that best explains the data AND is plausible given past experience.</p>
-</div>
 </section></section>
 <section>
 <section id="section-1.2-scene-to-retinal-image" class="title-slide slide level1 center">
@@ -295,7 +228,7 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <section id="visualizing-the-light-field" class="slide level2">
 <h2>Visualizing the Light Field</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-3-1.png" width="672" class="r-stretch"><p><strong>Light field query:</strong> “At position (x,y), looking in direction α, what wavelength λ do I see?”</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-1-1.png" width="672" class="r-stretch"><p><strong>Light field query:</strong> “At position (x,y), looking in direction α, what wavelength λ do I see?”</p>
 </section>
 <section id="from-light-field-to-retinal-image" class="slide level2">
 <h2>From Light Field to Retinal Image</h2>
@@ -347,7 +280,7 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <section id="the-transformation-chain" class="slide level2">
 <h2>The Transformation Chain</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-5-1.png" width="768" class="r-stretch"><div class="fragment">
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-3-1.png" width="768" class="r-stretch"><div class="fragment">
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -380,21 +313,61 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <h2>What Gets Lost? (1) Optical Blur</h2>
 <p>The lens + diffraction blur the image before it reaches the retina:</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-6-1.png" width="672" class="r-stretch"><p>Fine details are lost — the eye has limited spatial resolution!</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-4-1.png" width="672" class="r-stretch"><p>Fine details are lost — the eye has limited spatial resolution!</p>
 </section>
 <section id="what-gets-lost-2-cone-sampling" class="slide level2">
 <h2>What Gets Lost? (2) Cone Sampling</h2>
 <p>Continuous retinal image → discrete cone mosaic samples:</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-7-1.png" width="672" class="r-stretch"><p>Spatial information between cones is lost forever!</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-5-1.png" width="672" class="r-stretch"><p>Spatial information between cones is lost forever!</p>
 </section>
-<section id="what-gets-lost-3-metamers" class="slide level2">
-<h2>What Gets Lost? (3) Metamers</h2>
+<section id="what-gets-lost-3-spectral-compression" class="slide level2">
+<h2>What Gets Lost? (3) Spectral Compression</h2>
+<p>Light has <strong>infinite wavelengths</strong> (400-700nm continuous spectrum).</p>
+<p>But we have only <strong>3 cone types</strong> → compressed to 3 numbers!</p>
+
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-6-1.png" width="576" class="r-stretch"><p><strong>∞ dimensions → 3 dimensions = information loss = ambiguity</strong></p>
+</section>
+<section id="what-gets-lost-4-metamers" class="slide level2">
+<h2>What Gets Lost? (4) Metamers</h2>
 <p><strong>Metamers</strong> = physically different spectra that produce <strong>identical cone responses</strong>.</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-8-1.png" width="672" class="r-stretch"><p><strong>Can we tell them apart? NO!</strong> Same L, M, S → identical perception.</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-7-1.png" width="672" class="r-stretch"><p><strong>Can we tell them apart? NO!</strong> Same L, M, S → identical perception.</p>
 <p>→ This is why the brain must use <strong>Bayesian inference</strong> to guess the scene!</p>
 <p><strong>Different physics → identical perception!</strong> This is why TV/phone screens work with just RGB pixels.</p>
+</section>
+<section id="bayesian-inference-the-brains-solution" class="slide level2">
+<h2>Bayesian Inference: The Brain’s Solution</h2>
+<p><strong>Problem:</strong> Same cone response can come from many different scenes!</p>
+<p><strong>Solution:</strong> Combine sensory evidence with prior knowledge:</p>
+<p><span class="math display">\[P(\text{scene} | \text{cones}) \propto \underbrace{P(\text{cones} | \text{scene})}_{\text{likelihood}} \times \underbrace{P(\text{scene})}_{\text{prior}}\]</span></p>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Question it Answers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Likelihood</td>
+<td>“How well does this scene explain my cone signals?”</td>
+</tr>
+<tr class="even">
+<td>Prior</td>
+<td>“How common is this scene in my experience?”</td>
+</tr>
+<tr class="odd">
+<td>Posterior</td>
+<td>“What scene should I perceive?”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<p><strong>Result:</strong> Brain picks the scene that best explains the data AND is plausible given past experience.</p>
+</div>
 </section></section>
 <section>
 <section id="section-1.3-mathematical-principles" class="title-slide slide level1 center">
@@ -417,14 +390,13 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <h2>How Cones Compute Their Response</h2>
 <p><span class="math display">\[N = \int C(\lambda) \cdot E(\lambda) \, d\lambda = \text{weighted sum of light}\]</span></p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-9-1.png" width="768" class="r-stretch"><p><strong>Result:</strong> One number N = how strongly this cone responds to this light!</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-8-1.png" width="768" class="r-stretch"><p><strong>Result:</strong> One number N = how strongly this cone responds to this light!</p>
 </section>
 <section id="matrix-form-n-c-e" class="slide level2">
 <h2>Matrix Form: n = C · e</h2>
 <p><strong>Simplified example</strong> with 5 wavelengths (450, 500, 550, 600, 650 nm):</p>
 <p><span class="math display">\[\underbrace{\begin{bmatrix} n_L \\ n_M \\ n_S \end{bmatrix}}_{\mathbf{n}\,(3 \times 1)} = \underbrace{\begin{bmatrix} 0.1 &amp; 0.3 &amp; 0.7 &amp; 1.0 &amp; 0.8 \\ 0.2 &amp; 0.6 &amp; 1.0 &amp; 0.6 &amp; 0.2 \\ 1.0 &amp; 0.3 &amp; 0.0 &amp; 0.0 &amp; 0.0 \end{bmatrix}}_{\mathbf{C}\,(3 \times 5)} \cdot \underbrace{\begin{bmatrix} 0.0 \\ 0.2 \\ 0.8 \\ 1.0 \\ 0.4 \end{bmatrix}}_{\mathbf{e}\,(5 \times 1)}\]</span></p>
-
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-10-1.png" width="864" class="r-stretch"><table class="caption-top">
+<table class="caption-top">
 <thead>
 <tr class="header">
 <th>Matrix</th>
@@ -434,7 +406,7 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <tbody>
 <tr class="odd">
 <td><strong>C</strong></td>
-<td>Cone sensitivities (brighter = more sensitive)</td>
+<td>Cone sensitivities (3 cones × 5 wavelengths)</td>
 </tr>
 <tr class="even">
 <td><strong>e</strong></td>
@@ -442,10 +414,15 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 </tr>
 <tr class="odd">
 <td><strong>n</strong></td>
-<td>Result: L responds most, S responds least</td>
+<td>Result: 3 cone responses (L, M, S)</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="matrix-form-visualized" class="slide level2">
+<h2>Matrix Form: Visualized</h2>
+
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"><p><strong>C</strong> (brighter = more sensitive) <strong>×</strong> <strong>e</strong> (spectrum) <strong>=</strong> <strong>n</strong> (L responds most, S least)</p>
 </section>
 <section id="matrix-multiplication-step-by-step" class="slide level2">
 <h2>Matrix Multiplication: Step by Step</h2>
@@ -501,25 +478,25 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 </blockquote>
 <p><strong>Translation:</strong> A cone reports HOW MANY photons, not WHAT COLOR they were.</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-11-1.png" width="768" class="r-stretch"><p><strong>Same response!</strong> Once absorbed, wavelength information is <strong>lost forever</strong>.</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-10-1.png" width="768" class="r-stretch"><p><strong>Same response!</strong> Once absorbed, wavelength information is <strong>lost forever</strong>.</p>
 </section>
 <section id="why-univariance-matters" class="slide level2">
 <h2>Why Univariance Matters</h2>
 <p>A single cone is <strong>color-blind</strong>. To see color, compare L, M, S:</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-12-1.png" width="768" class="r-stretch"><p><strong>Color = pattern of L, M, S responses</strong>, not any single cone’s output!</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-11-1.png" width="768" class="r-stretch"><p><strong>Color = pattern of L, M, S responses</strong>, not any single cone’s output!</p>
 </section>
 <section id="why-are-cone-responses-noisy" class="slide level2">
 <h2>Why Are Cone Responses Noisy?</h2>
 <p>Photons arrive <strong>randomly</strong> — like raindrops falling on a bucket.</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-13-1.png" width="768" class="r-stretch"><p><strong>Same light source (mean = 100)</strong>, but each measurement is different!</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-12-1.png" width="768" class="r-stretch"><p><strong>Same light source (mean = 100)</strong>, but each measurement is different!</p>
 <p>This randomness follows a <strong>Poisson distribution</strong>.</p>
 </section>
 <section id="poisson-distribution-shape-depends-on-mean" class="slide level2">
 <h2>Poisson Distribution: Shape Depends on Mean</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-14-1.png" width="768" class="r-stretch"><p><strong>Key insight: Variance = Mean</strong></p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-13-1.png" width="768" class="r-stretch"><p><strong>Key insight: Variance = Mean</strong></p>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -549,7 +526,7 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <section id="poisson-vs-gaussian" class="slide level2">
 <h2>Poisson vs Gaussian</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-15-1.png" width="768" class="r-stretch"><table class="caption-top">
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-14-1.png" width="768" class="r-stretch"><table class="caption-top">
 <thead>
 <tr class="header">
 <th></th>
@@ -585,25 +562,25 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <h2>What is Shift-Invariance?</h2>
 <p><strong>Question:</strong> If I move a dot across my visual field, does it stay the same shape?</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-16-1.png" width="768" class="r-stretch"><p><strong>Shift-invariant:</strong> Same blur happens everywhere → shift input = shift output (same shape).</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-15-1.png" width="768" class="r-stretch"><p><strong>Shift-invariant:</strong> Same blur happens everywhere → shift input = shift output (same shape).</p>
 </section>
 <section id="point-spread-function-psf" class="slide level2">
 <h2>Point Spread Function (PSF)</h2>
 <p><strong>The PSF tells us: “What does a single point of light look like after passing through the eye?”</strong></p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-17-1.png" width="768" class="r-stretch"><p><strong>PSF = the “blur kernel”</strong> — the lens + diffraction spreads a perfect point into a blob.</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-16-1.png" width="768" class="r-stretch"><p><strong>PSF = the “blur kernel”</strong> — the lens + diffraction spreads a perfect point into a blob.</p>
 </section>
 <section id="what-is-convolution" class="slide level2">
 <h2>What is Convolution?</h2>
 <p><strong>Convolution = “slide the PSF across every point in the image and add up”</strong></p>
 <p>Think of it as <strong>stamping</strong> the PSF at every bright location:</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-18-1.png" width="768" class="r-stretch"><p><strong>Convolution = sum of all the “stamps”</strong></p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-17-1.png" width="768" class="r-stretch"><p><strong>Convolution = sum of all the “stamps”</strong></p>
 </section>
 <section id="convolution-in-action-edge-blur" class="slide level2">
 <h2>Convolution in Action: Edge Blur</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-19-1.png" width="768" class="r-stretch"><p><strong>Sharp edge + blur kernel = soft gradient</strong> — this is why we can’t see infinitely fine detail!</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-18-1.png" width="768" class="r-stretch"><p><strong>Sharp edge + blur kernel = soft gradient</strong> — this is why we can’t see infinitely fine detail!</p>
 </section>
 <section id="the-convolution-formula" class="slide level2">
 <h2>The Convolution Formula</h2>
@@ -643,37 +620,9 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 </section>
 <section id="reality-check-the-eye-is-not-perfectly-shift-invariant" class="slide level2">
 <h2>Reality Check: The Eye is NOT Perfectly Shift-Invariant</h2>
-<p><strong>Shift-invariance assumes:</strong> Same PSF everywhere. But the real eye varies!</p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-20-1.png" width="768" class="r-stretch"><div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 23%">
-<col style="width: 76%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Where it varies</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Eccentricity</td>
-<td>Fewer cones, more aberrations in periphery</td>
-</tr>
-<tr class="even">
-<td>Wavelength</td>
-<td>Lens bends blue more than red (chromatic aberration)</td>
-</tr>
-<tr class="odd">
-<td>Pupil size</td>
-<td>Larger pupil → more blur from aberrations</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Consequence:</strong> Simple convolution works locally, but computational models (ISETBio) needed for full accuracy.</p>
-</div>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"><p><strong>Varies with:</strong> eccentricity, wavelength (chromatic aberration), pupil size</p>
+<p><strong>Consequence:</strong> Convolution works locally → need computational models (ISETBio) for full accuracy.</p>
 </section></section>
 <section>
 <section id="section-1.4-computational-model" class="title-slide slide level1 center">
@@ -724,19 +673,19 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <section id="figure-1.5-psf-varies-with-eccentricity-and-wavelength" class="slide level2">
 <h2>Figure 1.5: PSF Varies with Eccentricity and Wavelength</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-21-1.png" width="768" class="r-stretch"><p><strong>Top row (550nm):</strong> PSF increases with eccentricity.</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-20-1.png" width="768" class="r-stretch"><p><strong>Top row (550nm):</strong> PSF increases with eccentricity.</p>
 <p><strong>Bottom row (450nm):</strong> Even blurrier! Eye can’t focus both wavelengths — <strong>chromatic aberration</strong> is the largest aberration.</p>
 </section>
 <section id="figure-1.6-cone-mosaic-changes-across-retina" class="slide level2">
 <h2>Figure 1.6: Cone Mosaic Changes Across Retina</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-22-1.png" width="768" class="r-stretch"><p><strong>Fovea → Periphery:</strong> Cone density ↓, aperture size ↑, rods appear (gray dots).</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-21-1.png" width="768" class="r-stretch"><p><strong>Fovea → Periphery:</strong> Cone density ↓, aperture size ↑, rods appear (gray dots).</p>
 <p><strong>Surprise:</strong> Central fovea has <strong>no S-cones</strong> — it’s dichromatic! (Optimizes spatial resolution by omitting blurry short-wavelength channel)</p>
 </section>
 <section id="figure-1.7-fovea-vs-periphery-the-trade-off" class="slide level2">
 <h2>Figure 1.7: Fovea vs Periphery — The Trade-off</h2>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-23-1.png" width="768" class="r-stretch"><p><strong>Fovea:</strong> Dense sampling → fine patterns preserved.</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-22-1.png" width="768" class="r-stretch"><p><strong>Fovea:</strong> Dense sampling → fine patterns preserved.</p>
 <p><strong>Periphery:</strong> Sparse sampling → high-frequency patterns look “wobbly” (aliased).</p>
 </section>
 <section id="the-fovea-periphery-trade-off" class="slide level2">
@@ -789,7 +738,7 @@ Wandell &amp; Brainard - New Handbook of Mathematical Psychology Vol.3
 <h2>Spatial Derivatives: What Neurons Compute</h2>
 <p><strong>Neurons don’t report absolute light — they compute local changes (derivatives):</strong></p>
 
-<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-24-1.png" width="768" class="r-stretch"><p><strong>Why derivatives?</strong> Local contrast matters more than absolute brightness. Also highly compressible (most derivatives ≈ 0 in natural scenes).</p>
+<img data-src="handbook_ch01_visual_encoding_part1_files/figure-revealjs/unnamed-chunk-23-1.png" width="768" class="r-stretch"><p><strong>Why derivatives?</strong> Local contrast matters more than absolute brightness. Also highly compressible (most derivatives ≈ 0 in natural scenes).</p>
 </section>
 <section id="part-1-summary-forward-calculation-complete" class="slide level2">
 <h2>Part 1 Summary: Forward Calculation Complete</h2>
