@@ -7,7 +7,10 @@
   },
   {
     "listing": "/exercises/index.html",
-    "items": []
+    "items": [
+      "/exercises/handbook_ch00_preface.html",
+      "/exercises/solutions/handbook_ch00_preface.html"
+    ]
   },
   {
     "listing": "/demos/index.html",
