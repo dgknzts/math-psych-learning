@@ -4,7 +4,7 @@
     "href": "lectures/index.html",
     "title": "Lectures",
     "section": "",
-    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nCategories\n\n\n\n\n\n\n\n\nChapter 1: Initial Visual Encoding (Part 1)\n\n\n \n\n\n\n\n\n\nHandbook Preface: Why Math in Psychology?\n\n\n \n\n\n\n\n\n\nNo matching items"
+    "text": "Slide presentations covering key concepts and mathematical derivations.\nLectures will be added as sources are studied.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nCategories\n\n\n\n\n\n\n\n\nChapter 1: Initial Visual Encoding (Part 1)\n\n\n \n\n\n\n\n\n\nChapter 1: Initial Visual Encoding (Part 2)\n\n\n \n\n\n\n\n\n\nHandbook Preface: Why Math in Psychology?\n\n\n \n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -32,7 +32,7 @@
     "href": "index.html#updates",
     "title": "Mathematical Psychology Learning Hub",
     "section": "Updates",
-    "text": "Updates\n\n\n\nSection\nType\nDate\n\n\n\n\nCh.1 Visual Encoding (Part 1)\nLecture\n2026-01-31\n\n\nCh.1 Initial Visual Encoding\nDemo\n2026-01-31\n\n\nCh.0 Preface\nDemo\n2026-01-22\n\n\nCh.0 Preface\nLecture\n2026-01-22\n\n\nCh.0 Preface\nExercise\n2026-01-22"
+    "text": "Updates\n\n\n\nSection\nType\nDate\n\n\n\n\nCh.1 Visual Encoding (Part 2)\nLecture\n2026-02-01\n\n\nCh.1 Visual Encoding (Part 1)\nLecture\n2026-01-31\n\n\nCh.1 Initial Visual Encoding\nDemo\n2026-01-31\n\n\nCh.0 Preface\nDemo\n2026-01-22\n\n\nCh.0 Preface\nLecture\n2026-01-22\n\n\nCh.0 Preface\nExercise\n2026-01-22"
   },
   {
     "objectID": "exercises/index.html",
@@ -775,5 +775,278 @@
     "title": "Chapter 1: Initial Visual Encoding (Part 1)",
     "section": "Matrix Form: Visualized",
     "text": "Matrix Form: Visualized\n\nC (brighter = more sensitive) × e (spectrum) = n (L responds most, S least)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#the-problem-ambiguity",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#the-problem-ambiguity",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "The Problem: Ambiguity",
+    "text": "The Problem: Ambiguity\nPart 1 showed: Cone signals are ambiguous — many scenes produce the same response.\n\nSame L, M, S response! Which scene is it?\n\n\n“The brain decodes the sensory representation to produce perceptions that are a likely guess about the state of the external world. Perception is an unconscious inference.” — Helmholtz"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#the-bayesian-solution",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#the-bayesian-solution",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "The Bayesian Solution",
+    "text": "The Bayesian Solution\nx = scene (what we want to know)\ny = cone excitations (what we measure)\n\\[p(\\mathbf{x}|\\mathbf{y}) = K \\cdot p(\\mathbf{y}|\\mathbf{x}) \\cdot p(\\mathbf{x})\\]\n\n\n\n\n\n\n\n\n\nTerm\nName\nMeaning\n\n\n\n\np(y|x)\nLikelihood\n“If scene is x, how likely is cone response y?”\n\n\np(x)\nPrior\n“How common is scene x in the world?”\n\n\np(x|y)\nPosterior\n“Given cones say y, what scene x is most likely?”\n\n\n\n\n\nKey insight: The prior resolves ambiguity — it tells us which of the many possible scenes is most plausible!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#figure-1.9-prior-likelihood-posterior",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#figure-1.9-prior-likelihood-posterior",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Figure 1.9: Prior × Likelihood = Posterior",
+    "text": "Figure 1.9: Prior × Likelihood = Posterior\n\n\n\n\n\n\n\n\n\n\n\nPrior\nLikelihood\nPosterior\n\n\n\n\nShape\nDiagonal blob\nRidge (x1+x2=1)\nNarrow peak\n\n\nSays\n“Pixels are correlated”\n“Many scenes fit y”\n“Best guess: (0.5, 0.5)”"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#what-does-the-prior-encode",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#what-does-the-prior-encode",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "What Does the Prior Encode?",
+    "text": "What Does the Prior Encode?\nThe prior p(x) captures statistical regularities of natural scenes.\nBut where do these come from?\n\nTwo sources:\n\nLow-level statistics — measurable patterns in natural images\n\nSpatial correlations (nearby pixels similar)\nSpectral correlations (smooth reflectances)\n\nHigh-level knowledge — learned from experience\n\nObjects have typical colors\nLight usually comes from above\nSurfaces are usually smooth\n\n\nLet’s look at each…"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#ideal-observer-theory",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#ideal-observer-theory",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Ideal Observer Theory",
+    "text": "Ideal Observer Theory\nQuestion: How well COULD we perform, given the information in cone signals?\nIdeal observer = optimal Bayesian observer with perfect knowledge of:\n\nThe likelihood (forward model)\nThe prior (scene statistics)\nThe noise (Poisson)\n\n\nWhy is this useful?\n\n\n\nComparison\nWhat it tells us\n\n\n\n\nIdeal = Human\nPerformance limited by early encoding\n\n\nIdeal &gt; Human\nAdditional factors limit human performance\n\n\nIdeal &lt; Human\nImpossible! (or model is wrong)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#contrast-sensitivity-function-csf",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#contrast-sensitivity-function-csf",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Contrast Sensitivity Function (CSF)",
+    "text": "Contrast Sensitivity Function (CSF)\nThreshold = minimum contrast to detect a grating\nSensitivity = 1 / threshold\n\nKey finding: Ideal observer is MORE sensitive than humans → additional factors limit human vision!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#computational-observers-closing-the-gap",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#computational-observers-closing-the-gap",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Computational Observers: Closing the Gap",
+    "text": "Computational Observers: Closing the Gap"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-from-cone-excitations",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-from-cone-excitations",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Image Reconstruction from Cone Excitations",
+    "text": "Image Reconstruction from Cone Excitations\nCan we reconstruct images from cone signals using Bayesian inference?\n\nFovea: High-quality reconstruction (dense cones, sharp optics)\nPeriphery: Blurry, but still recognizable (prior helps fill in missing info!)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#why-reconstruction-matters",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#why-reconstruction-matters",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Why Reconstruction Matters",
+    "text": "Why Reconstruction Matters\nThe prior compensates for information loss:\n\n\n\n\n\n\n\n\n\nEccentricity\nCone density\nPSF\nReconstruction\n\n\n\n\n1° (fovea)\nHigh\nSharp\nExcellent\n\n\n10°\nMedium\nMedium\nGood (prior helps)\n\n\n18°\nLow\nBlurry\nRecognizable (prior helps more!)\n\n\n\n\nKey insight: Even with massive information loss in periphery, the brain can still “guess” reasonable images because:\n\nNatural images have structure (prior)\nUnlikely scenes are downweighted\nAmbiguity is resolved by experience"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#the-forward-calculation-part-1",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#the-forward-calculation-part-1",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "The Forward Calculation (Part 1)",
+    "text": "The Forward Calculation (Part 1)\n\nKey math: n = C · e (matrix multiplication), Poisson noise, convolution\nKey insight: Massive information loss at every stage!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#the-inverse-problem-part-2",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#the-inverse-problem-part-2",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "The Inverse Problem (Part 2)",
+    "text": "The Inverse Problem (Part 2)\n\nKey math: p(x|y) ∝ p(y|x) · p(x)\nKey insight: Prior knowledge resolves ambiguity!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#key-takeaways",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#key-takeaways",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n1. Vision is a forward + inverse problem:\n\nForward: Scene → Optics → Cones → Signals (physics, linear algebra)\nInverse: Signals → Perception (Bayesian inference)\n\n\n2. Information is lost at every stage:\n\n∞ wavelengths → 3 cone types (metamerism)\nContinuous → discrete (sampling)\nExact → noisy (Poisson)\n\n\n\n3. The brain solves ambiguity using priors:\n\nPrior = learned statistics of the natural world\nPerception = “best guess” given evidence + experience\n\n\n\n4. Computational models are essential:\n\nMath principles guide, but reality is complex\nISETBio: optics + mosaic + noise + eccentricity"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#final-thought",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#final-thought",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Final Thought",
+    "text": "Final Thought\n\n“When you come to a fork in the road, take it.” — Yogi Berra\n\n\nMultiple approaches to vision science:\n\n\n\nApproach\nFocus\n\n\n\n\nMathematical\nForward models, linear algebra\n\n\nBehavioral\nThresholds, matching, scaling\n\n\nNeurobiological\nAnatomy, physiology\n\n\nEngineering\nBuild systems that see\n\n\n\nAll valid. All complementary. The field is large enough for everyone!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#figure-1.9-setup-a-tiny-2-pixel-world",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#figure-1.9-setup-a-tiny-2-pixel-world",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Figure 1.9: Setup — A Tiny 2-Pixel World",
+    "text": "Figure 1.9: Setup — A Tiny 2-Pixel World\nSimplify to understand: Imagine a scene with only 2 pixels\n\nx₁ = intensity of pixel 1 (0 to 1)\nx₂ = intensity of pixel 2 (0 to 1)\ny = what the cone measures (a weighted sum)\n\n\n# Create a grid of all possible (x1, x2) combinations\nx1 &lt;- seq(0, 1, length.out = 60)  # 60 values from 0 to 1\nx2 &lt;- seq(0, 1, length.out = 60)  # 60 values from 0 to 1\n\n# expand.grid creates all combinations: 60 × 60 = 3600 points\ngrid &lt;- expand.grid(x1 = x1, x2 = x2)\n\nEach row = one possible scene (x₁, x₂)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-1-the-prior-px-what-scenes-are-likely",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-1-the-prior-px-what-scenes-are-likely",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 1: The Prior p(x) — What Scenes Are Likely?",
+    "text": "Step 1: The Prior p(x) — What Scenes Are Likely?\nPrior belief: Neighboring pixels tend to be similar (natural images are smooth)\nWe model this with a 2D Gaussian with positive correlation:\n\nlibrary(mvtnorm)  # for multivariate normal\n\n# Mean: expect both pixels around 0.5 (middle gray)\nmu_prior &lt;- c(0.5, 0.5)\n\n# Covariance matrix: pixels are correlated!\nsigma_prior &lt;- matrix(c(0.025, 0.020,   # variance of x1, covariance\n                        0.020, 0.025),  # covariance, variance of x2\n                      nrow = 2, ncol = 2)\nsigma_prior\n\n      [,1]  [,2]\n[1,] 0.025 0.020\n[2,] 0.020 0.025\n\n\nPositive covariance (0.020) means: if x₁ is high, x₂ is probably high too!\n\n\n\n\n\n\nWe Choose These Parameters!\n\n\nThe prior parameters (μ, Σ) encode our beliefs about natural scenes:\n\nLearned from datasets of natural images\nBased on domain knowledge (e.g., “surfaces are smooth”)\nCan be refined with more data"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-1a-understanding-the-multivariate-gaussian",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-1a-understanding-the-multivariate-gaussian",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 1a: Understanding the Multivariate Gaussian",
+    "text": "Step 1a: Understanding the Multivariate Gaussian\nThe formula: For a 2D Gaussian, the probability density at point x = (x₁, x₂) is:\n\\[p(\\mathbf{x}) = \\frac{1}{2\\pi|\\Sigma|^{1/2}} \\exp\\left(-\\frac{1}{2}(\\mathbf{x}-\\boldsymbol{\\mu})^T \\Sigma^{-1} (\\mathbf{x}-\\boldsymbol{\\mu})\\right)\\]\n\nOur parameters:\n\n\n\n\n\n\n\n\nParameter\nValue\nMeaning\n\n\n\n\nμ (mean)\n(0.5, 0.5)\nMost likely pixel values = middle gray\n\n\nσ₁² (variance of x₁)\n0.025\nHow much pixel 1 varies\n\n\nσ₂² (variance of x₂)\n0.025\nHow much pixel 2 varies\n\n\nσ₁₂ (covariance)\n0.020\nHow pixels vary together\n\n\n\n\n\nThe covariance matrix Σ:\n\\[\\Sigma = \\begin{pmatrix} \\sigma_1^2 & \\sigma_{12} \\\\ \\sigma_{12} & \\sigma_2^2 \\end{pmatrix} = \\begin{pmatrix} 0.025 & 0.020 \\\\ 0.020 & 0.025 \\end{pmatrix}\\]\nPositive σ₁₂ → pixels are positively correlated → the Gaussian is stretched along the diagonal!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-1a-cont.-the-dmvnorm-function-in-r",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-1a-cont.-the-dmvnorm-function-in-r",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 1a (cont.): The dmvnorm() Function in R",
+    "text": "Step 1a (cont.): The dmvnorm() Function in R\nPackage: mvtnorm (multivariate normal)\ndmvnorm(x, mean, sigma)\n\n\n\n\n\n\n\n\nArgument\nType\nDescription\n\n\n\n\nx\nvector or matrix\nPoint(s) to evaluate, e.g., c(0.3, 0.7)\n\n\nmean\nvector\nMean vector μ, e.g., c(0.5, 0.5)\n\n\nsigma\nmatrix\nCovariance matrix Σ (2×2 for 2D)\n\n\n\n\nExample:\n\nlibrary(mvtnorm)\n\n# What is the probability density at point (0.5, 0.5)?\ndmvnorm(x = c(0.5, 0.5), mean = c(0.5, 0.5),\n        sigma = matrix(c(0.025, 0.020, 0.020, 0.025), 2, 2))\n\n[1] 10.61033\n\n# What about at (0.9, 0.1)? (very different pixels - unlikely!)\ndmvnorm(x = c(0.9, 0.1), mean = c(0.5, 0.5),\n        sigma = matrix(c(0.025, 0.020, 0.020, 0.025), 2, 2))\n\n[1] 1.34371e-13\n\n\nThe smooth scene (0.5, 0.5) is much more likely than the jagged scene (0.9, 0.1)!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-1b-calculate-prior-for-each-scene",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-1b-calculate-prior-for-each-scene",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 1b: Calculate Prior for Each Scene",
+    "text": "Step 1b: Calculate Prior for Each Scene\n\n# dmvnorm() = density of multivariate normal\n# For each (x1, x2) pair, how likely is that scene?\n\n# Calculate prior probability for EACH of the 3600 grid points\nprior_values &lt;- numeric(nrow(grid))  # empty vector\n\nfor (i in 1:nrow(grid)) {\n  point &lt;- c(grid$x1[i], grid$x2[i])  # one (x1, x2) pair\n  prior_values[i] &lt;- dmvnorm(point, mean = mu_prior, sigma = sigma_prior)\n}\n\n# Reshape into 60×60 matrix for plotting\nprior &lt;- matrix(prior_values, nrow = length(x1), ncol = length(x2))"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-2-the-likelihood-pyx-what-did-the-cone-see",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-2-the-likelihood-pyx-what-did-the-cone-see",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 2: The Likelihood p(y|x) — What Did the Cone See?",
+    "text": "Step 2: The Likelihood p(y|x) — What Did the Cone See?\nThe cone measures a weighted sum of the two pixels:\n\\[y = 0.5 \\cdot x_1 + 0.5 \\cdot x_2 + \\text{noise}\\]\nSuppose the cone measured y = 0.25. Which scenes could produce this?\n\n# Any (x1, x2) where 0.5*x1 + 0.5*x2 ≈ 0.25 is consistent!\n# That means: x1 + x2 ≈ 0.5\n\n# Likelihood = probability of observing y=0.25 given scene (x1, x2)\ny_observed &lt;- 0.25\nnoise_sd &lt;- 0.025  # measurement noise\n\nlikelihood_values &lt;- numeric(nrow(grid))\n\nfor (i in 1:nrow(grid)) {\n  # What would cone measure for this scene?\n  y_predicted &lt;- 0.5 * grid$x1[i] + 0.5 * grid$x2[i]\n\n  # How likely is y_observed given y_predicted?\n  likelihood_values[i] &lt;- dnorm(y_observed, mean = y_predicted, sd = noise_sd)\n}\n\nlikelihood &lt;- matrix(likelihood_values, nrow = length(x1), ncol = length(x2))"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-2b-visualize-the-likelihood",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-2b-visualize-the-likelihood",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 2b: Visualize the Likelihood",
+    "text": "Step 2b: Visualize the Likelihood\n\nThe ridge: All scenes where x₁ + x₂ = 0.5 are equally likely given the cone response!\n\n(0, 0.5), (0.25, 0.25), (0.5, 0) all produce y = 0.25"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-3-posterior-prior-likelihood",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-3-posterior-prior-likelihood",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 3: Posterior = Prior × Likelihood",
+    "text": "Step 3: Posterior = Prior × Likelihood\nBayes’ rule: Multiply prior and likelihood, then normalize\n\n# Element-wise multiplication!\nposterior &lt;- prior * likelihood\n\n# Normalize so it sums to 1 (optional, for proper probability)\nposterior &lt;- posterior / sum(posterior)\n\nWhat happens geometrically?\n\nPrior says: “x₁ ≈ x₂” (diagonal blob centered at 0.5, 0.5)\nLikelihood says: “x₁ + x₂ = 0.5” (ridge)\nIntersection: Where both are satisfied → (0.25, 0.25)!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#step-3b-the-full-picture",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#step-3b-the-full-picture",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Step 3b: The Full Picture",
+    "text": "Step 3b: The Full Picture\n\n\n\n\n\n\n\n\n\n\n\nPrior\nLikelihood\nPosterior\n\n\n\n\nShape\nDiagonal blob\nRidge (x₁+x₂=0.5)\nNarrow peak\n\n\nSays\n“Pixels are similar”\n“Many scenes fit y”\n“Best guess: (0.25, 0.25)”"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#prior-knowledge-spatial-correlations",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#prior-knowledge-spatial-correlations",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Prior Knowledge: Spatial Correlations",
+    "text": "Prior Knowledge: Spatial Correlations\nObservation: In natural images, nearby pixels tend to have similar intensities.\n\nLeft: Smooth transitions — this is what real scenes look like!\nRight: Random jumps — extremely unlikely in nature.\n→ The prior assigns high probability to smooth images, low probability to noisy ones."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#prior-knowledge-spectral-correlations",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#prior-knowledge-spectral-correlations",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Prior Knowledge: Spectral Correlations",
+    "text": "Prior Knowledge: Spectral Correlations\nObservation: Natural surface reflectances are spectrally smooth.\n\nLeft: Smooth curve — typical of natural materials (leaves, skin, wood).\nRight: Jagged spectrum — almost never occurs in nature.\n→ The prior says: “Reflectances that jump wildly between wavelengths are unlikely.”"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#prior-knowledge-high-level-beliefs",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#prior-knowledge-high-level-beliefs",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Prior Knowledge: High-Level Beliefs",
+    "text": "Prior Knowledge: High-Level Beliefs\nBeyond statistics, we have learned knowledge about the world:\n\n\n\n\n\n\n\nPrior belief\nWhy it helps\n\n\n\n\nBananas are usually yellow\nResolve color ambiguity under different lighting\n\n\nLight comes from above\nInterpret shading as 3D shape\n\n\nSurfaces are smooth, not spiky\nFill in missing texture information\n\n\nObjects are solid, continuous\nGroup fragments into whole objects\n\n\n\n\n\n\n\n\n\n\nThe Brain as a Bayesian Machine\n\n\nThe brain learns these priors through experience — millions of visual scenes over a lifetime.\nWhen cone signals are ambiguous, the prior “votes” for the most plausible interpretation!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#ideal-observer-theory-the-key-question",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#ideal-observer-theory-the-key-question",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Ideal Observer Theory: The Key Question",
+    "text": "Ideal Observer Theory: The Key Question\nWe’ve built a forward model: Scene → Optics → Cones → Signals\nNow the big question:\n\n\nHow well COULD a visual system perform, given only the information in cone signals?\n\n\n\nThis is important because:\n\nIt sets an upper bound on performance\nIt tells us what’s physically possible\nIt helps us understand where limitations come from"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#what-is-an-ideal-observer",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#what-is-an-ideal-observer",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "What is an Ideal Observer?",
+    "text": "What is an Ideal Observer?\nAn ideal observer is a hypothetical system that:\n\nKnows the forward model perfectly — exactly how scenes become cone signals\nKnows the prior perfectly — the true statistics of natural scenes\nUses optimal Bayesian inference — combines likelihood and prior perfectly\nHas no additional limitations — no neural noise, no memory limits, no attention lapses\n\n\nIn other words: the best possible performance given the information available.\n\n\n\n\n\n\nThink of it as…\n\n\nThe ideal observer is like a “perfect brain” attached to real eyes. It extracts ALL the information that the cones provide — nothing more, nothing less."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#why-compare-humans-to-ideal-observers",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#why-compare-humans-to-ideal-observers",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Why Compare Humans to Ideal Observers?",
+    "text": "Why Compare Humans to Ideal Observers?\n\nThe gap between human and ideal tells us where to look for limitations!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#example-contrast-detection-task",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#example-contrast-detection-task",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Example: Contrast Detection Task",
+    "text": "Example: Contrast Detection Task\nTask: Detect a faint striped pattern (grating) on a gray background.\n\nCan you see the stripes in all three? The rightmost is near human detection threshold!\nThreshold = minimum contrast to discriminate grating from uniform field (e.g., 80% correct)\nSensitivity = 1 / threshold (higher = better)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#what-is-spatial-frequency",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#what-is-spatial-frequency",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "What is Spatial Frequency?",
+    "text": "What is Spatial Frequency?\nSpatial frequency = how many stripe cycles fit in one degree of visual angle.\n\n\n\n\nSpatial frequency\nStripe width\nWhat it represents\n\n\n\n\nLow (1-2 c/deg)\nWide stripes\nCoarse details, large objects\n\n\nMedium (4-8 c/deg)\nMedium stripes\nTypical object features\n\n\nHigh (16-32 c/deg)\nNarrow stripes\nFine details, textures\n\n\n\nQuestion: Are we equally sensitive to all spatial frequencies?"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#the-contrast-sensitivity-function-csf",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#the-contrast-sensitivity-function-csf",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "The Contrast Sensitivity Function (CSF)",
+    "text": "The Contrast Sensitivity Function (CSF)\nWe measure threshold (minimum detectable contrast) at each spatial frequency.\nThen compute sensitivity = 1 / threshold."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#human-vs-ideal-observer-the-gap",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#human-vs-ideal-observer-the-gap",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Human vs Ideal Observer: The Gap",
+    "text": "Human vs Ideal Observer: The Gap\nNow compare human CSF to the ideal observer (optimal Bayesian with perfect knowledge):\n\nKey finding: Ideal observer is much more sensitive than humans!\n→ Something beyond optics and cones is limiting human performance.\n\n\n\n\n\n\nNote\n\n\nValues shown are schematic/illustrative. See Banks, Geisler, & Bennett (1987) and Figure 1.10B in the chapter for actual data."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#computational-observers-the-problem",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#computational-observers-the-problem",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Computational Observers: The Problem",
+    "text": "Computational Observers: The Problem\nThe ideal observer is too good — much more sensitive than humans.\nWhy the gap?\nThe ideal observer has “perfect knowledge”:\n\nKnows exactly how stimuli map to cone excitations\nKnows the exact noise statistics\nUses the mathematically optimal decision rule\n\n\nBut real humans:\n\nDon’t have perfect templates\nMust learn the decision rule from experience\nHave additional sources of noise and variability\nEyes move during stimulus presentation\n\n→ We need a more realistic model!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#what-is-a-computational-observer",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#what-is-a-computational-observer",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "What is a Computational Observer?",
+    "text": "What is a Computational Observer?\nA computational observer relaxes the ideal observer assumptions one at a time:\n\n\n\n\n\n\n\n\nFactor\nIdeal observer\nComputational observer\n\n\n\n\nOptics\nSimplified PSF\nRealistic wavefront aberrations\n\n\nDecision rule\nOptimal (known templates)\nLearned from noisy examples\n\n\nEye position\nFixed\nFixational drift during stimulus\n\n\nCone response\nExcitations only\nFull photocurrent model with gain control\n\n\n\n\nKey idea: Each added realism brings the model closer to human performance.\nIf we can match human CSF with realistic factors → we understand what limits vision!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#what-each-factor-does",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#what-each-factor-does",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "What Each Factor Does",
+    "text": "What Each Factor Does\n\n\n\n\n\n\n\n\nFactor added\nWhat it models\nEffect on sensitivity\n\n\n\n\nRealistic optics\nWavefront aberrations (Thibos et al., 2002)\nSmall reduction\n\n\nLearned decision rule\nTemplate matching trained on noisy examples\nModerate reduction\n\n\nFixational eye movements\nDrift during stimulus — adds blur\nFurther reduction\n\n\nPhotocurrent model\nGain control + additional noise in cones\nBrings close to human\n\n\n\n\n\n\n\n\n\n\nTip\n\n\nBy the time we account for realistic optics, learned decisions, eye movements, and photocurrent dynamics, the computational observer matches human performance at high spatial frequencies!\nThis tells us these factors — not mysterious “neural inefficiency” — explain the gap."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-the-setup",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-the-setup",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Image Reconstruction: The Setup",
+    "text": "Image Reconstruction: The Setup\nBeyond threshold tasks, can we use Bayesian inference to reconstruct what we’re looking at?\nWhat we have: Cone excitations y (noisy measurements)\nWhat we want: The original image x (pixel values)\n\nThe forward model:\n\\[\\bar{\\mathbf{y}} = \\mathbf{R}\\mathbf{x}\\]\n\n\n\nSymbol\nMeaning\n\n\n\n\nx\nImage pixel values (what we want to find)\n\n\nR\nMatrix that maps pixels → cone excitations\n\n\nȳ\nMean cone excitations\n\n\ny\nActual cone excitations (ȳ + Poisson noise)\n\n\n\nThe matrix R encodes optics, cone positions, and spectral sensitivities."
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-the-method",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-the-method",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Image Reconstruction: The Method",
+    "text": "Image Reconstruction: The Method\nGiven: Noisy cone excitations y\nFind: Most likely image x\n\nUse Bayes’ rule:\n\\[p(\\mathbf{x}|\\mathbf{y}) \\propto p(\\mathbf{y}|\\mathbf{x}) \\cdot p(\\mathbf{x})\\]\n\n\n\n\n\n\n\nComponent\nWhat we use\n\n\n\n\nLikelihood p(y|x)\nPoisson noise model: y ~ Poisson(Rx)\n\n\nPrior p(x)\nGaussian prior encoding natural image statistics\n\n\nEstimate x̂\nFind x that maximizes the posterior\n\n\n\n\n\nKey insight: The prior “fills in” information lost by sparse cone sampling!"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-results-at-different-eccentricities",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#image-reconstruction-results-at-different-eccentricities",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Image Reconstruction: Results at Different Eccentricities",
+    "text": "Image Reconstruction: Results at Different Eccentricities\n\n\n\n\n\n\n\n\n\n\nEccentricity\nCone density\nPSF blur\nReconstruction quality\n\n\n\n\n1° (fovea)\nHigh\nSharp\nExcellent\n\n\n10°\nMedium\nMedium\nGood (prior helps)\n\n\n18°\nLow\nBlurry\nRecognizable (prior helps more!)"
+  },
+  {
+    "objectID": "lectures/handbook_ch01_visual_encoding_part2.html#why-does-reconstruction-work-in-the-periphery",
+    "href": "lectures/handbook_ch01_visual_encoding_part2.html#why-does-reconstruction-work-in-the-periphery",
+    "title": "Chapter 1: Initial Visual Encoding (Part 2)",
+    "section": "Why Does Reconstruction Work in the Periphery?",
+    "text": "Why Does Reconstruction Work in the Periphery?\nThe problem: Fewer cones + blurrier optics → less information\nThe solution: The prior compensates!\n\n\n\n\n\n\n\n\n\n\nEven with massive information loss, the brain can “guess” reasonable images because unlikely scenes (random noise, jagged edges) are downweighted by the prior!"
   }
 ]

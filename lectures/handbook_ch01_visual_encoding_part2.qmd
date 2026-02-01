@@ -1,0 +1,1021 @@
+---
+title: "Chapter 1: Initial Visual Encoding (Part 2)"
+subtitle: "Perceptual Inference: From Cones to Perception"
+author: "Wandell & Brainard - New Handbook of Mathematical Psychology Vol.3"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    smaller: true
+---
+
+# Section 1.5: Perceptual Inference
+
+## The Problem: Ambiguity
+
+**Part 1 showed:** Cone signals are ambiguous — many scenes produce the same response.
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# Many scenes -> same cone response
+set.seed(42)
+scenes <- c("Yellow\nbanana", "Red+Green\nmix", "Orange\nsunset")
+response <- c(0.7, 0.5, 0.1)
+
+# Scene 1
+barplot(c(0.7, 0.5, 0.1), names.arg = c("L", "M", "S"), col = c("red", "green", "blue"),
+        main = scenes[1], ylim = c(0, 1))
+
+# Scene 2
+barplot(c(0.7, 0.5, 0.1), names.arg = c("L", "M", "S"), col = c("red", "green", "blue"),
+        main = scenes[2], ylim = c(0, 1))
+
+# Scene 3
+barplot(c(0.7, 0.5, 0.1), names.arg = c("L", "M", "S"), col = c("red", "green", "blue"),
+        main = scenes[3], ylim = c(0, 1))
+```
+
+**Same L, M, S response!** Which scene is it?
+
+. . .
+
+> "The brain decodes the sensory representation to produce perceptions that are a likely guess about the state of the external world. Perception is an unconscious inference." — Helmholtz
+
+## The Bayesian Solution
+
+**x** = scene (what we want to know)
+
+**y** = cone excitations (what we measure)
+
+$$p(\mathbf{x}|\mathbf{y}) = K \cdot p(\mathbf{y}|\mathbf{x}) \cdot p(\mathbf{x})$$
+
+. . .
+
+| Term    | Name           | Meaning                                           |
+|---------|----------------|---------------------------------------------------|
+| p(y\|x) | **Likelihood** | "If scene is x, how likely is cone response y?"   |
+| p(x)    | **Prior**      | "How common is scene x in the world?"             |
+| p(x\|y) | **Posterior**  | "Given cones say y, what scene x is most likely?" |
+
+. . .
+
+**Key insight:** The prior resolves ambiguity — it tells us which of the many possible scenes is most plausible!
+
+## Figure 1.9: Setup — A Tiny 2-Pixel World
+
+**Simplify to understand:** Imagine a scene with only 2 pixels
+
+-   **x₁** = intensity of pixel 1 (0 to 1)
+-   **x₂** = intensity of pixel 2 (0 to 1)
+-   **y** = what the cone measures (a weighted sum)
+
+```{r}
+#| echo: true
+# Create a grid of all possible (x1, x2) combinations
+x1 <- seq(0, 1, length.out = 60)  # 60 values from 0 to 1
+x2 <- seq(0, 1, length.out = 60)  # 60 values from 0 to 1
+
+# expand.grid creates all combinations: 60 × 60 = 3600 points
+grid <- expand.grid(x1 = x1, x2 = x2)
+```
+
+Each row = one possible scene (x₁, x₂)
+
+## Step 1: The Prior p(x) — What Scenes Are Likely?
+
+**Prior belief:** Neighboring pixels tend to be similar (natural images are smooth)
+
+We model this with a **2D Gaussian** with positive correlation:
+
+```{r}
+#| echo: true
+library(mvtnorm)  # for multivariate normal
+
+# Mean: expect both pixels around 0.5 (middle gray)
+mu_prior <- c(0.5, 0.5)
+
+# Covariance matrix: pixels are correlated!
+sigma_prior <- matrix(c(0.025, 0.020,   # variance of x1, covariance
+                        0.020, 0.025),  # covariance, variance of x2
+                      nrow = 2, ncol = 2)
+sigma_prior
+```
+
+**Positive covariance (0.020)** means: if x₁ is high, x₂ is probably high too!
+
+::: callout-note
+## We Choose These Parameters!
+
+The prior parameters (μ, Σ) encode our **beliefs about natural scenes**:
+
+-   Learned from datasets of natural images
+-   Based on domain knowledge (e.g., "surfaces are smooth")
+-   Can be refined with more data
+:::
+
+## Step 1a: Understanding the Multivariate Gaussian
+
+**The formula:** For a 2D Gaussian, the probability density at point **x** = (x₁, x₂) is:
+
+$$p(\mathbf{x}) = \frac{1}{2\pi|\Sigma|^{1/2}} \exp\left(-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x}-\boldsymbol{\mu})\right)$$
+
+. . .
+
+**Our parameters:**
+
+| Parameter                | Value      | Meaning                                |
+|--------------------------|------------|----------------------------------------|
+| **μ** (mean)             | (0.5, 0.5) | Most likely pixel values = middle gray |
+| **σ₁²** (variance of x₁) | 0.025      | How much pixel 1 varies                |
+| **σ₂²** (variance of x₂) | 0.025      | How much pixel 2 varies                |
+| **σ₁₂** (covariance)     | 0.020      | How pixels vary *together*             |
+
+. . .
+
+**The covariance matrix Σ:**
+
+$$\Sigma = \begin{pmatrix} \sigma_1^2 & \sigma_{12} \\ \sigma_{12} & \sigma_2^2 \end{pmatrix} = \begin{pmatrix} 0.025 & 0.020 \\ 0.020 & 0.025 \end{pmatrix}$$
+
+**Positive σ₁₂** → pixels are **positively correlated** → the Gaussian is stretched along the diagonal!
+
+## Step 1a (cont.): The `dmvnorm()` Function in R
+
+**Package:** `mvtnorm` (multivariate normal)
+
+``` r
+dmvnorm(x, mean, sigma)
+```
+
+| Argument | Type             | Description                               |
+|----------|------------------|-------------------------------------------|
+| `x`      | vector or matrix | Point(s) to evaluate, e.g., `c(0.3, 0.7)` |
+| `mean`   | vector           | Mean vector **μ**, e.g., `c(0.5, 0.5)`    |
+| `sigma`  | matrix           | Covariance matrix **Σ** (2×2 for 2D)      |
+
+. . .
+
+**Example:**
+
+```{r}
+#| echo: true
+library(mvtnorm)
+
+# What is the probability density at point (0.5, 0.5)?
+dmvnorm(x = c(0.5, 0.5), mean = c(0.5, 0.5),
+        sigma = matrix(c(0.025, 0.020, 0.020, 0.025), 2, 2))
+
+# What about at (0.9, 0.1)? (very different pixels - unlikely!)
+dmvnorm(x = c(0.9, 0.1), mean = c(0.5, 0.5),
+        sigma = matrix(c(0.025, 0.020, 0.020, 0.025), 2, 2))
+```
+
+The smooth scene (0.5, 0.5) is **much more likely** than the jagged scene (0.9, 0.1)!
+
+## Step 1b: Calculate Prior for Each Scene
+
+```{r}
+#| echo: true
+# dmvnorm() = density of multivariate normal
+# For each (x1, x2) pair, how likely is that scene?
+
+# Calculate prior probability for EACH of the 3600 grid points
+prior_values <- numeric(nrow(grid))  # empty vector
+
+for (i in 1:nrow(grid)) {
+  point <- c(grid$x1[i], grid$x2[i])  # one (x1, x2) pair
+  prior_values[i] <- dmvnorm(point, mean = mu_prior, sigma = sigma_prior)
+}
+
+# Reshape into 60×60 matrix for plotting
+prior <- matrix(prior_values, nrow = length(x1), ncol = length(x2))
+```
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 4.5
+blue_cols <- colorRampPalette(c("white", "lightblue", "steelblue", "navy"))(30)
+image(x1, x2, prior, col = blue_cols, xlab = "Pixel 1 (x1)", ylab = "Pixel 2 (x2)", main = "Prior p(x): Smooth scenes are likely")
+contour(x1, x2, prior, add = TRUE, col = "navy", lwd = 1.5, drawlabels = FALSE, nlevels = 8)
+abline(a = 0, b = 1, lty = 2, lwd = 2, col = "black")
+text(0.75, 0.85, "x1 ≈ x2\n(smooth)", cex = 0.9)
+```
+
+## Step 2: The Likelihood p(y\|x) — What Did the Cone See?
+
+**The cone measures a weighted sum** of the two pixels:
+
+$$y = 0.5 \cdot x_1 + 0.5 \cdot x_2 + \text{noise}$$
+
+Suppose the cone measured **y = 0.25**. Which scenes could produce this?
+
+```{r}
+#| echo: true
+# Any (x1, x2) where 0.5*x1 + 0.5*x2 ≈ 0.25 is consistent!
+# That means: x1 + x2 ≈ 0.5
+
+# Likelihood = probability of observing y=0.25 given scene (x1, x2)
+y_observed <- 0.25
+noise_sd <- 0.025  # measurement noise
+
+likelihood_values <- numeric(nrow(grid))
+
+for (i in 1:nrow(grid)) {
+  # What would cone measure for this scene?
+  y_predicted <- 0.5 * grid$x1[i] + 0.5 * grid$x2[i]
+
+  # How likely is y_observed given y_predicted?
+  likelihood_values[i] <- dnorm(y_observed, mean = y_predicted, sd = noise_sd)
+}
+
+likelihood <- matrix(likelihood_values, nrow = length(x1), ncol = length(x2))
+```
+
+## Step 2b: Visualize the Likelihood
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 5
+orange_cols <- colorRampPalette(c("white", "lightyellow", "orange", "red3"))(30)
+image(x1, x2, likelihood, col = orange_cols, xlab = "Pixel 1 (x1)", ylab = "Pixel 2 (x2)",
+      main = "Likelihood p(y|x): Which scenes explain y=0.25?")
+contour(x1, x2, likelihood, add = TRUE, col = "red4", lwd = 1.5, drawlabels = FALSE, nlevels = 8)
+abline(a = 0.5, b = -1, lty = 2, lwd = 2, col = "black")
+text(0.15, 0.25, "x1 + x2 = 0.5", cex = 1.1, srt = -45)
+
+# Show some example points on the ridge x1 + x2 = 0.5
+points(0, 0.5, pch = 19, cex = 1.5, col = "darkred")
+points(0.25, 0.25, pch = 19, cex = 1.5, col = "darkred")
+points(0.5, 0, pch = 19, cex = 1.5, col = "darkred")
+```
+
+**The ridge:** All scenes where x₁ + x₂ = 0.5 are equally likely given the cone response!
+
+-   (0, 0.5), (0.25, 0.25), (0.5, 0) all produce y = 0.25
+
+## Step 3: Posterior = Prior × Likelihood
+
+**Bayes' rule:** Multiply prior and likelihood, then normalize
+
+```{r}
+#| echo: true
+# Element-wise multiplication!
+posterior <- prior * likelihood
+
+# Normalize so it sums to 1 (optional, for proper probability)
+posterior <- posterior / sum(posterior)
+```
+
+**What happens geometrically?**
+
+-   Prior says: "x₁ ≈ x₂" (diagonal blob centered at 0.5, 0.5)
+-   Likelihood says: "x₁ + x₂ = 0.5" (ridge)
+-   **Intersection:** Where both are satisfied → (0.25, 0.25)!
+
+## Step 3b: The Full Picture
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 4
+
+# Recalculate for clean visualization
+prior <- matrix(dmvnorm(grid, mu_prior, sigma_prior), length(x1), length(x2))
+likelihood <- matrix(dnorm(0.5*grid$x1 + 0.5*grid$x2, mean = 0.25, sd = 0.025), length(x1), length(x2))
+posterior <- prior * likelihood
+
+blue_cols <- colorRampPalette(c("white", "lightblue", "steelblue", "navy"))(30)
+orange_cols <- colorRampPalette(c("white", "lightyellow", "orange", "red3"))(30)
+green_cols <- colorRampPalette(c("white", "lightgreen", "green3", "darkgreen"))(30)
+
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+
+# Prior
+image(x1, x2, prior, col = blue_cols, xlab = "Pixel 1", ylab = "Pixel 2", main = "Prior p(x)")
+contour(x1, x2, prior, add = TRUE, col = "navy", lwd = 1.5, drawlabels = FALSE, nlevels = 8)
+
+# Likelihood
+image(x1, x2, likelihood, col = orange_cols, xlab = "Pixel 1", ylab = "Pixel 2", main = "Likelihood p(y|x)")
+contour(x1, x2, likelihood, add = TRUE, col = "red4", lwd = 1.5, drawlabels = FALSE, nlevels = 8)
+abline(a = 0.5, b = -1, lty = 2, lwd = 2, col = "black")
+
+# Posterior
+image(x1, x2, posterior, col = green_cols, xlab = "Pixel 1", ylab = "Pixel 2", main = "Posterior p(x|y)")
+contour(x1, x2, posterior, add = TRUE, col = "darkgreen", lwd = 1.5, drawlabels = FALSE, nlevels = 8)
+points(0.25, 0.25, pch = 4, cex = 2, lwd = 3, col = "red")
+```
+
+|   | Prior | Likelihood | Posterior |
+|----|----|----|----|
+| **Shape** | Diagonal blob | Ridge (x₁+x₂=0.5) | Narrow peak |
+| **Says** | "Pixels are similar" | "Many scenes fit y" | "Best guess: (0.25, 0.25)" |
+
+## What Does the Prior Encode?
+
+The prior p(x) captures **statistical regularities of natural scenes**.
+
+But where do these come from?
+
+. . .
+
+**Two sources:**
+
+1.  **Low-level statistics** — measurable patterns in natural images
+    -   Spatial correlations (nearby pixels similar)
+    -   Spectral correlations (smooth reflectances)
+2.  **High-level knowledge** — learned from experience
+    -   Objects have typical colors
+    -   Light usually comes from above
+    -   Surfaces are usually smooth
+
+Let's look at each...
+
+## Prior Knowledge: Spatial Correlations
+
+**Observation:** In natural images, nearby pixels tend to have similar intensities.
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+# Spatial correlation
+set.seed(111)
+x <- 1:100
+
+# Smooth natural image (random walk)
+natural <- cumsum(rnorm(100, 0, 0.1))
+natural <- (natural - min(natural)) / (max(natural) - min(natural))
+
+# Random noise
+random <- runif(100)
+
+# Natural image
+plot(x, natural, type = "l", lwd = 3, col = "darkgreen",
+     main = "Natural image (1D slice)", xlab = "Position (pixels)", ylab = "Intensity",
+     ylim = c(0, 1))
+
+# Random noise
+plot(x, random, type = "l", lwd = 2, col = "gray40",
+     main = "Random noise", xlab = "Position (pixels)", ylab = "Intensity",
+     ylim = c(0, 1))
+```
+
+**Left:** Smooth transitions — this is what real scenes look like!
+
+**Right:** Random jumps — extremely unlikely in nature.
+
+→ The prior assigns **high probability to smooth images**, low probability to noisy ones.
+
+## Prior Knowledge: Spectral Correlations
+
+**Observation:** Natural surface reflectances are spectrally smooth.
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+wavelengths <- seq(400, 700, by = 5)
+
+# Smooth natural reflectance (like a leaf or skin)
+smooth_spectrum <- 0.3 + 0.4 * exp(-0.5 * ((wavelengths - 550) / 80)^2)
+
+# Random reflectance
+set.seed(456)
+noisy_spectrum <- runif(length(wavelengths), 0.1, 0.9)
+
+plot(wavelengths, smooth_spectrum, type = "l", lwd = 3, col = "orange",
+     main = "Natural reflectance (e.g., leaf)", xlab = "Wavelength (nm)", ylab = "Reflectance",
+     ylim = c(0, 1))
+
+plot(wavelengths, noisy_spectrum, type = "l", lwd = 2, col = "gray40",
+     main = "Random reflectance", xlab = "Wavelength (nm)", ylab = "Reflectance",
+     ylim = c(0, 1))
+```
+
+**Left:** Smooth curve — typical of natural materials (leaves, skin, wood).
+
+**Right:** Jagged spectrum — almost never occurs in nature.
+
+→ The prior says: **"Reflectances that jump wildly between wavelengths are unlikely."**
+
+## Prior Knowledge: High-Level Beliefs
+
+Beyond statistics, we have **learned knowledge** about the world:
+
+| Prior belief | Why it helps |
+|----|----|
+| Bananas are usually yellow | Resolve color ambiguity under different lighting |
+| Light comes from above | Interpret shading as 3D shape |
+| Surfaces are smooth, not spiky | Fill in missing texture information |
+| Objects are solid, continuous | Group fragments into whole objects |
+
+. . .
+
+::: callout-tip
+## The Brain as a Bayesian Machine
+
+The brain learns these priors through **experience** — millions of visual scenes over a lifetime.
+
+When cone signals are ambiguous, the prior "votes" for the most plausible interpretation!
+:::
+
+## Ideal Observer Theory: The Key Question
+
+We've built a forward model: Scene → Optics → Cones → Signals
+
+Now the big question:
+
+. . .
+
+> **How well COULD a visual system perform, given only the information in cone signals?**
+
+. . .
+
+This is important because:
+
+-   It sets an **upper bound** on performance
+-   It tells us what's **physically possible**
+-   It helps us understand **where limitations come from**
+
+## What is an Ideal Observer?
+
+An **ideal observer** is a hypothetical system that:
+
+1.  **Knows the forward model perfectly** — exactly how scenes become cone signals
+2.  **Knows the prior perfectly** — the true statistics of natural scenes
+3.  **Uses optimal Bayesian inference** — combines likelihood and prior perfectly
+4.  **Has no additional limitations** — no neural noise, no memory limits, no attention lapses
+
+. . .
+
+In other words: **the best possible performance given the information available.**
+
+::: callout-note
+## Think of it as...
+
+The ideal observer is like a "perfect brain" attached to real eyes. It extracts ALL the information that the cones provide — nothing more, nothing less.
+:::
+
+## Why Compare Humans to Ideal Observers?
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3.5
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+# Draw comparison diagram
+rect(0.05, 0.5, 0.35, 0.9, col = "lightblue", border = "navy")
+text(0.2, 0.7, "Human\nPerformance", cex = 1.2, font = 2)
+
+rect(0.65, 0.5, 0.95, 0.9, col = "lightgreen", border = "darkgreen")
+text(0.8, 0.7, "Ideal Observer\nPerformance", cex = 1.2, font = 2)
+
+arrows(0.37, 0.7, 0.63, 0.7, lwd = 3, code = 3)
+text(0.5, 0.78, "Compare", cex = 1.1, font = 2)
+
+# Outcomes
+text(0.5, 0.35, "What the comparison tells us:", cex = 1.1, font = 2)
+text(0.08, 0.18, "• Human = Ideal → Limited by early encoding (optics, cones)", adj = 0, cex = 1)
+text(0.08, 0.05, "• Human < Ideal → Additional factors limit performance", adj = 0, cex = 1)
+```
+
+**The gap between human and ideal tells us where to look for limitations!**
+
+## Example: Contrast Detection Task
+
+**Task:** Detect a faint striped pattern (grating) on a gray background.
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3.5
+
+par(mfrow = c(1, 3), mar = c(2, 2, 3, 1))
+
+# Create grayscale palette (black to white)
+gray_pal <- gray(seq(0, 1, length.out = 256))
+
+# High contrast (50%) - easy to see
+x <- seq(0, 6*pi, length.out = 100)
+y <- seq(0, 6*pi, length.out = 100)
+z_high <- outer(x, y, function(x, y) 0.5 + 0.5 * sin(x))
+image(z_high, col = gray_pal, axes = FALSE, main = "High contrast: 50%", zlim = c(0, 1))
+box()
+
+# Medium contrast (10%) - harder to see
+z_med <- outer(x, y, function(x, y) 0.5 + 0.10 * sin(x))
+image(z_med, col = gray_pal, axes = FALSE, main = "Medium contrast: 10%", zlim = c(0, 1))
+box()
+
+# Low contrast (2%) - at threshold
+z_low <- outer(x, y, function(x, y) 0.5 + 0.02 * sin(x))
+image(z_low, col = gray_pal, axes = FALSE, main = "Low contrast: 2% (threshold)", zlim = c(0, 1))
+box()
+```
+
+Can you see the stripes in all three? The rightmost is near human detection threshold!
+
+**Threshold** = minimum contrast to discriminate grating from uniform field (e.g., 80% correct)
+
+**Sensitivity** = 1 / threshold (higher = better)
+
+## What is Spatial Frequency?
+
+**Spatial frequency** = how many stripe cycles fit in one degree of visual angle.
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3
+
+par(mfrow = c(1, 4), mar = c(2, 1, 3, 1))
+
+gray_pal <- gray(seq(0, 1, length.out = 256))
+
+# Different spatial frequencies
+for (sf in c(1, 4, 8, 16)) {
+  x <- seq(0, 2*pi*sf, length.out = 200)
+  y <- seq(0, 2*pi, length.out = 50)
+  z <- outer(x, y, function(x, y) 0.5 + 0.4 * sin(x))
+  image(z, col = gray_pal, axes = FALSE, zlim = c(0, 1),
+        main = paste0(sf, " cycle/degree"))
+  box()
+}
+```
+
+| Spatial frequency  | Stripe width   | What it represents            |
+|--------------------|----------------|-------------------------------|
+| Low (1-2 c/deg)    | Wide stripes   | Coarse details, large objects |
+| Medium (4-8 c/deg) | Medium stripes | Typical object features       |
+| High (16-32 c/deg) | Narrow stripes | Fine details, textures        |
+
+**Question:** Are we equally sensitive to all spatial frequencies?
+
+## The Contrast Sensitivity Function (CSF)
+
+We measure **threshold** (minimum detectable contrast) at each spatial frequency.
+
+Then compute **sensitivity = 1 / threshold**.
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 4
+
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+# Human CSF
+sf <- c(0.5, 1, 2, 4, 8, 16, 32)
+human_csf <- c(20, 80, 200, 300, 150, 30, 5)
+
+plot(sf, human_csf, type = "b", pch = 19, lwd = 3, col = "black", log = "xy",
+     xlab = "Spatial frequency (cycles/degree)", ylab = "Contrast sensitivity",
+     main = "Human CSF", ylim = c(1, 500))
+abline(v = 4, lty = 2, col = "red")
+text(5, 400, "Peak ~4 c/deg", col = "red", cex = 0.9)
+
+# Interpret the shape
+plot.new()
+text(0.5, 0.9, "Why this shape?", cex = 1.4, font = 2)
+text(0.05, 0.72, "• Low frequencies: Limited by lateral inhibition", adj = 0, cex = 1.1)
+text(0.05, 0.55, "• Peak at ~4 c/deg: Optimal for typical viewing", adj = 0, cex = 1.1)
+text(0.05, 0.38, "• High frequencies: Limited by optics + cone spacing", adj = 0, cex = 1.1)
+text(0.05, 0.15, "The CSF describes what we CAN and CANNOT see!", adj = 0, cex = 1.1, font = 2)
+```
+
+## Human vs Ideal Observer: The Gap
+
+Now compare human CSF to the **ideal observer** (optimal Bayesian with perfect knowledge):
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 4
+
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+# Human CSF
+sf <- c(0.5, 1, 2, 4, 8, 16, 32)
+human_csf <- c(20, 80, 200, 300, 150, 30, 5)
+ideal_csf <- c(800, 900, 950, 900, 600, 200, 50)
+
+plot(sf, human_csf, type = "b", pch = 19, lwd = 2, col = "black", log = "xy",
+     xlab = "Spatial frequency (cycles/degree)", ylab = "Contrast sensitivity",
+     main = "Human vs Ideal Observer", ylim = c(1, 1000))
+lines(sf, ideal_csf, type = "b", pch = 17, lwd = 2, col = "steelblue")
+legend("topright", c("Human", "Ideal observer"), pch = c(19, 17),
+       col = c("black", "steelblue"), lwd = 2, bg = "white")
+
+# Shade the gap
+polygon(c(sf, rev(sf)), c(human_csf, rev(ideal_csf)),
+        col = rgb(1, 0, 0, 0.15), border = NA)
+
+# Show the gap ratio
+plot(sf, ideal_csf / human_csf, type = "b", pch = 15, lwd = 2, col = "red3", log = "x",
+     xlab = "Spatial frequency (cycles/degree)", ylab = "Ideal / Human ratio",
+     main = "The Gap: How much better is ideal?", ylim = c(0, 50))
+abline(h = 1, lty = 2, col = "gray")
+text(2, 5, "If ratio = 1, human is optimal", cex = 0.9, col = "gray30")
+```
+
+**Key finding:** Ideal observer is **much more sensitive** than humans!
+
+→ Something beyond optics and cones is limiting human performance.
+
+::: callout-note
+## Note
+
+Values shown are schematic/illustrative. See Banks, Geisler, & Bennett (1987) and Figure 1.10B in the chapter for actual data.
+:::
+
+## Computational Observers: The Problem
+
+The ideal observer is **too good** — much more sensitive than humans.
+
+**Why the gap?**
+
+The ideal observer has "perfect knowledge":
+
+-   Knows exactly how stimuli map to cone excitations
+-   Knows the exact noise statistics
+-   Uses the mathematically optimal decision rule
+
+. . .
+
+**But real humans:**
+
+-   Don't have perfect templates
+-   Must learn the decision rule from experience
+-   Have additional sources of noise and variability
+-   Eyes move during stimulus presentation
+
+→ We need a more **realistic** model!
+
+## What is a Computational Observer?
+
+A **computational observer** relaxes the ideal observer assumptions one at a time:
+
+| Factor | Ideal observer | Computational observer |
+|----|----|----|
+| Optics | Simplified PSF | Realistic wavefront aberrations |
+| Decision rule | Optimal (known templates) | Learned from noisy examples |
+| Eye position | Fixed | Fixational drift during stimulus |
+| Cone response | Excitations only | Full photocurrent model with gain control |
+
+. . .
+
+**Key idea:** Each added realism brings the model **closer to human performance**.
+
+If we can match human CSF with realistic factors → we understand what limits vision!
+
+## Computational Observers: Closing the Gap
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 4.5
+
+par(mar = c(4, 4, 3, 1))
+
+sf <- c(5, 10, 20, 30, 40, 50)
+human <- c(100, 50, 20, 10, 5, 2)
+ideal <- c(800, 500, 200, 80, 30, 10)
+realistic_optics <- c(600, 350, 130, 50, 18, 6)
+learned_rule <- c(400, 220, 80, 30, 12, 4)
+eye_movements <- c(250, 140, 55, 22, 9, 3)
+photocurrent <- c(120, 60, 25, 12, 6, 2.5)
+
+plot(sf, human, type = "b", pch = 19, lwd = 3, col = "black", log = "y",
+     xlab = "Spatial frequency (c/deg)", ylab = "Contrast sensitivity",
+     main = "Adding realism closes the gap (schematic)", ylim = c(1, 1000))
+lines(sf, ideal, type = "b", pch = 17, lwd = 2, col = "gray60")
+lines(sf, realistic_optics, type = "b", pch = 15, lwd = 2, col = "red3")
+lines(sf, learned_rule, type = "b", pch = 16, lwd = 2, col = "blue")
+lines(sf, eye_movements, type = "b", pch = 18, lwd = 2, col = "green4")
+lines(sf, photocurrent, type = "b", pch = 8, lwd = 2, col = "purple")
+
+legend("topright",
+       c("Human", "Ideal", "+ Realistic optics", "+ Learned decision rule",
+         "+ Fixational eye movements", "+ Photocurrent model"),
+       pch = c(19, 17, 15, 16, 18, 8),
+       col = c("black", "gray60", "red3", "blue", "green4", "purple"),
+       lwd = 2, cex = 0.75, bg = "white")
+```
+
+## What Each Factor Does
+
+| Factor added | What it models | Effect on sensitivity |
+|----|----|----|
+| **Realistic optics** | Wavefront aberrations (Thibos et al., 2002) | Small reduction |
+| **Learned decision rule** | Template matching trained on noisy examples | Moderate reduction |
+| **Fixational eye movements** | Drift during stimulus — adds blur | Further reduction |
+| **Photocurrent model** | Gain control + additional noise in cones | Brings close to human |
+
+. . .
+
+::: callout-tip
+By the time we account for realistic optics, learned decisions, eye movements, and photocurrent dynamics, the computational observer **matches human performance** at high spatial frequencies!
+
+This tells us these factors — not mysterious "neural inefficiency" — explain the gap.
+:::
+
+## Image Reconstruction: The Setup
+
+Beyond threshold tasks, can we use Bayesian inference to **reconstruct what we're looking at**?
+
+**What we have:** Cone excitations **y** (noisy measurements)
+
+**What we want:** The original image **x** (pixel values)
+
+. . .
+
+**The forward model:**
+
+$$\bar{\mathbf{y}} = \mathbf{R}\mathbf{x}$$
+
+| Symbol | Meaning                                     |
+|--------|---------------------------------------------|
+| **x**  | Image pixel values (what we want to find)   |
+| **R**  | Matrix that maps pixels → cone excitations  |
+| **ȳ**  | Mean cone excitations                       |
+| **y**  | Actual cone excitations (ȳ + Poisson noise) |
+
+The matrix **R** encodes optics, cone positions, and spectral sensitivities.
+
+## Image Reconstruction: The Method
+
+**Given:** Noisy cone excitations **y**
+
+**Find:** Most likely image **x**
+
+. . .
+
+**Use Bayes' rule:**
+
+$$p(\mathbf{x}|\mathbf{y}) \propto p(\mathbf{y}|\mathbf{x}) \cdot p(\mathbf{x})$$
+
+| Component              | What we use                                      |
+|------------------------|--------------------------------------------------|
+| **Likelihood** p(y\|x) | Poisson noise model: y \~ Poisson(Rx)            |
+| **Prior** p(x)         | Gaussian prior encoding natural image statistics |
+| **Estimate** x̂         | Find x that maximizes the posterior              |
+
+. . .
+
+**Key insight:** The prior "fills in" information lost by sparse cone sampling!
+
+## Image Reconstruction: Results at Different Eccentricities
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 4
+
+par(mfrow = c(1, 4), mar = c(2, 1, 3, 1))
+
+# Simulate reconstruction quality at different eccentricities
+set.seed(42)
+
+# Original image (simple pattern)
+n <- 30
+original <- matrix(0, n, n)
+# Add some structure
+for (i in 1:n) {
+  for (j in 1:n) {
+    original[i, j] <- 0.5 + 0.3 * sin(i/3) * cos(j/3) + 0.1 * sin(i/2 + j/2)
+  }
+}
+
+image(original, col = gray.colors(50), axes = FALSE, main = "Original image x")
+box()
+
+# 1 degree - good reconstruction
+recon_1deg <- original + matrix(rnorm(n*n, 0, 0.05), n, n)
+image(recon_1deg, col = gray.colors(50), axes = FALSE, main = "1° (fovea)")
+box()
+
+# 10 degrees - some blur
+recon_10deg <- original
+for (i in 2:(n-1)) {
+  for (j in 2:(n-1)) {
+    recon_10deg[i,j] <- mean(original[(i-1):(i+1), (j-1):(j+1)])
+  }
+}
+recon_10deg <- recon_10deg + matrix(rnorm(n*n, 0, 0.1), n, n)
+image(recon_10deg, col = gray.colors(50), axes = FALSE, main = "10° (mid-periphery)")
+box()
+
+# 18 degrees - very blurry
+recon_18deg <- original
+for (k in 1:3) {
+  for (i in 2:(n-1)) {
+    for (j in 2:(n-1)) {
+      recon_18deg[i,j] <- mean(recon_18deg[(i-1):(i+1), (j-1):(j+1)])
+    }
+  }
+}
+recon_18deg <- recon_18deg + matrix(rnorm(n*n, 0, 0.15), n, n)
+image(recon_18deg, col = gray.colors(50), axes = FALSE, main = "18° (far periphery)")
+box()
+```
+
+| Eccentricity | Cone density | PSF blur | Reconstruction quality           |
+|--------------|--------------|----------|----------------------------------|
+| 1° (fovea)   | High         | Sharp    | Excellent                        |
+| 10°          | Medium       | Medium   | Good (prior helps)               |
+| 18°          | Low          | Blurry   | Recognizable (prior helps more!) |
+
+## Why Does Reconstruction Work in the Periphery?
+
+**The problem:** Fewer cones + blurrier optics → less information
+
+**The solution:** The prior compensates!
+
+. . .
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 3
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+# Likelihood column
+rect(0.02, 0.3, 0.30, 0.9, col = "lightyellow", border = "orange3")
+text(0.16, 0.75, "Likelihood\n(from cones)", cex = 1.1, font = 2)
+text(0.16, 0.5, "Ambiguous:\nmany images\nfit the data", cex = 0.95)
+
+# Plus sign
+text(0.35, 0.6, "+", cex = 3, font = 2)
+
+# Prior column
+rect(0.40, 0.3, 0.68, 0.9, col = "lightblue", border = "navy")
+text(0.54, 0.75, "Prior\n(natural images)", cex = 1.1, font = 2)
+text(0.54, 0.5, "Constrains:\nsmooth, correlated\npixels likely", cex = 0.95)
+
+# Equals sign
+text(0.73, 0.6, "=", cex = 3, font = 2)
+
+# Posterior column
+rect(0.78, 0.3, 1.0, 0.9, col = "lightgreen", border = "darkgreen")
+text(0.89, 0.75, "Posterior\n(reconstruction)", cex = 1.1, font = 2)
+text(0.89, 0.5, "Best guess:\nplausible image\ngiven data", cex = 0.95)
+```
+
+**Even with massive information loss, the brain can "guess" reasonable images** because unlikely scenes (random noise, jagged edges) are downweighted by the prior!
+
+## Why Reconstruction Matters
+
+**The prior compensates for information loss:**
+
+| Eccentricity | Cone density | PSF    | Reconstruction                   |
+|--------------|--------------|--------|----------------------------------|
+| 1° (fovea)   | High         | Sharp  | Excellent                        |
+| 10°          | Medium       | Medium | Good (prior helps)               |
+| 18°          | Low          | Blurry | Recognizable (prior helps more!) |
+
+. . .
+
+**Key insight:** Even with massive information loss in periphery, the brain can still "guess" reasonable images because:
+
+1.  Natural images have structure (prior)
+2.  Unlikely scenes are downweighted
+3.  Ambiguity is resolved by experience
+
+# Section 1.6: Summary
+
+## The Forward Calculation (Part 1)
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+# Pipeline
+rect(0.0, 0.4, 0.18, 0.8, col = "lightblue", border = "navy")
+text(0.09, 0.6, "Scene\n(7D light field)", cex = 0.9, font = 2)
+
+arrows(0.20, 0.6, 0.24, 0.6, lwd = 2)
+
+rect(0.26, 0.4, 0.44, 0.8, col = "lightyellow", border = "orange3")
+text(0.35, 0.6, "Optics\n(blur, PSF)", cex = 0.9, font = 2)
+
+arrows(0.46, 0.6, 0.50, 0.6, lwd = 2)
+
+rect(0.52, 0.4, 0.70, 0.8, col = "lightpink", border = "red3")
+text(0.61, 0.6, "Cone Mosaic\n(3 types, noise)", cex = 0.9, font = 2)
+
+arrows(0.72, 0.6, 0.76, 0.6, lwd = 2)
+
+rect(0.78, 0.4, 0.98, 0.8, col = "lightgray", border = "gray30")
+text(0.88, 0.6, "Cone Signals\n(L, M, S + noise)", cex = 0.9, font = 2)
+
+text(0.5, 0.15, "Linear algebra + Poisson noise + Computational models (ISETBio)", cex = 1, font = 3)
+```
+
+**Key math:** n = C · e (matrix multiplication), Poisson noise, convolution
+
+**Key insight:** Massive information loss at every stage!
+
+## The Inverse Problem (Part 2)
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+# Inverse pipeline
+rect(0.0, 0.4, 0.22, 0.8, col = "lightgray", border = "gray30")
+text(0.11, 0.6, "Cone Signals\n(ambiguous!)", cex = 0.9, font = 2)
+
+arrows(0.24, 0.6, 0.28, 0.6, lwd = 2)
+
+rect(0.30, 0.4, 0.52, 0.8, col = "lightyellow", border = "orange3")
+text(0.41, 0.65, "Likelihood", cex = 0.9, font = 2)
+text(0.41, 0.5, "p(y|x)", cex = 1.1, font = 3)
+
+text(0.56, 0.6, "×", cex = 2, font = 2)
+
+rect(0.60, 0.4, 0.78, 0.8, col = "lightblue", border = "navy")
+text(0.69, 0.65, "Prior", cex = 0.9, font = 2)
+text(0.69, 0.5, "p(x)", cex = 1.1, font = 3)
+
+arrows(0.80, 0.6, 0.84, 0.6, lwd = 2)
+
+rect(0.86, 0.4, 1.0, 0.8, col = "lightgreen", border = "darkgreen")
+text(0.93, 0.6, "Percept\np(x|y)", cex = 0.9, font = 2)
+
+text(0.5, 0.15, "Bayesian inference = Helmholtz's Unconscious Inference", cex = 1, font = 3)
+```
+
+**Key math:** p(x\|y) ∝ p(y\|x) · p(x)
+
+**Key insight:** Prior knowledge resolves ambiguity!
+
+## Key Takeaways
+
+**1. Vision is a forward + inverse problem:**
+
+-   Forward: Scene → Optics → Cones → Signals (physics, linear algebra)
+-   Inverse: Signals → Perception (Bayesian inference)
+
+. . .
+
+**2. Information is lost at every stage:**
+
+-   ∞ wavelengths → 3 cone types (metamerism)
+-   Continuous → discrete (sampling)
+-   Exact → noisy (Poisson)
+
+. . .
+
+**3. The brain solves ambiguity using priors:**
+
+-   Prior = learned statistics of the natural world
+-   Perception = "best guess" given evidence + experience
+
+. . .
+
+**4. Computational models are essential:**
+
+-   Math principles guide, but reality is complex
+-   ISETBio: optics + mosaic + noise + eccentricity
+
+## Final Thought
+
+> "When you come to a fork in the road, take it." — Yogi Berra
+
+. . .
+
+**Multiple approaches to vision science:**
+
+| Approach        | Focus                          |
+|-----------------|--------------------------------|
+| Mathematical    | Forward models, linear algebra |
+| Behavioral      | Thresholds, matching, scaling  |
+| Neurobiological | Anatomy, physiology            |
+| Engineering     | Build systems that see         |
+
+**All valid. All complementary. The field is large enough for everyone!**

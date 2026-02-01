@@ -19,6 +19,7 @@ A learning resource for mathematical psychology, covering textbook chapters, res
 
 | Section | Type | Date |
 |---------|------|------|
+| [Ch.1 Visual Encoding (Part 2)](lectures/handbook_ch01_visual_encoding_part2.html) | Lecture | 2026-02-01 |
 | [Ch.1 Visual Encoding (Part 1)](lectures/handbook_ch01_visual_encoding_part1.html) | Lecture | 2026-01-31 |
 | [Ch.1 Initial Visual Encoding](demos/handbook_ch01_visual_encoding.html) | Demo | 2026-01-31 |
 | [Ch.0 Preface](demos/handbook_ch00_preface.html) | Demo | 2026-01-22 |
