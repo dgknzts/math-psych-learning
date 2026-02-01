@@ -1,0 +1,1056 @@
+---
+title: "Fechnerian Scaling: Dissimilarity Cumulation"
+subtitle: "Handbook Ch.3 - Dzhafarov & Colonius"
+date: 2026-02-01
+format: html
+execute:
+  echo: true
+---
+
+```{r setup}
+#| echo: false
+#| message: false
+library(ggplot2)
+```
+
+## Introduction: Fechner's Revolutionary Idea (1860)
+
+In 1860, Gustav Theodor Fechner published *Elemente der Psychophysik* - marking the birth of scientific psychology grounded in mathematics and experiments.
+
+::: {.callout-important title="Fechner's Core Insight"}
+**How do we measure subjective experience?**
+
+Fechner's answer: Measure the **subjective distance** between stimuli by **summing up** all the tiny "just noticeable differences" (JNDs) between them.
+
+If you can barely tell apart stimulus A from B, and barely tell B from C, then the subjective distance from A to C is **two JNDs**.
+:::
+
+### A Concrete Example: Brightness
+
+Imagine comparing light intensities:
+
+```{r intro-brightness-example}
+#| fig-cap: "The basic idea: measuring subjective distance by counting JNDs"
+#| fig-width: 8
+#| fig-height: 4
+
+# Physical light intensities (arbitrary units)
+intensities <- c(100, 110, 121, 133, 146, 161)
+
+# Plot as a "staircase" of JNDs
+par(mar = c(5, 5, 4, 2))
+plot(1:6, intensities, type = "b", pch = 19, cex = 2,
+     xlab = "Subjective Scale (JND units)",
+     ylab = "Physical Intensity",
+     main = "Fechner's Idea: Equal Subjective Steps, Unequal Physical Steps",
+     col = "blue", lwd = 2)
+
+# Add JND labels
+for (i in 1:5) {
+  arrows(i, intensities[i], i+1, intensities[i],
+         length = 0.1, col = "red", lwd = 2)
+  text(i + 0.5, intensities[i] - 5,
+       sprintf("+%d", intensities[i+1] - intensities[i]),
+       col = "red", cex = 0.9)
+}
+
+# Add annotation
+text(3.5, 155, "Each step = 1 JND (subjectively equal)", col = "darkgreen", cex = 1.1)
+text(3.5, 148, "But physical increments grow larger!", col = "red", cex = 1.1)
+```
+
+::: {.callout-note title="Key Observation"}
+Notice that the **physical** increments get larger (+10, +11, +12, +13, +15...) but each step represents **one JND** - a constant subjective difference.
+
+This is Weber's Law in action: the JND is proportional to the stimulus magnitude.
+:::
+
+------------------------------------------------------------------------
+
+## 3.1.1 What is Fechnerian Scaling About?
+
+**Fechnerian scaling** = any method of computing distances in a stimulus space by **cumulating** (summing, integrating) dissimilarities between neighboring stimuli.
+
+### The Basic Components
+
+```{r what-is-it-components}
+#| fig-cap: "The three components of Fechnerian scaling"
+#| fig-width: 10
+#| fig-height: 4
+
+par(mfrow = c(1, 3), mar = c(4, 4, 4, 2))
+
+# 1. Stimulus Space
+set.seed(42)
+n_stimuli <- 8
+angles <- seq(0, 2*pi, length.out = n_stimuli + 1)[1:n_stimuli]
+x <- cos(angles)
+y <- sin(angles)
+
+plot(x, y, pch = 19, cex = 2, col = "blue",
+     xlim = c(-1.5, 1.5), ylim = c(-1.5, 1.5),
+     xlab = "", ylab = "", main = "1. Stimulus Space",
+     asp = 1)
+
+# Connect neighboring stimuli
+for (i in 1:n_stimuli) {
+  j <- ifelse(i == n_stimuli, 1, i + 1)
+  lines(c(x[i], x[j]), c(y[i], y[j]), col = "gray", lwd = 1.5)
+}
+
+text(0, 0, "Points =\nStimuli", cex = 0.9)
+mtext("e.g., colors, sounds, weights", side = 1, line = 2.5, cex = 0.8)
+
+# 2. Dissimilarity Function
+x_vals <- seq(0, 1, length.out = 100)
+dissim <- 0.3 * x_vals^0.5  # square root dissimilarity
+
+plot(x_vals, dissim, type = "l", lwd = 3, col = "red",
+     xlab = "Physical difference |x - y|",
+     ylab = "Dissimilarity D(x,y)",
+     main = "2. Dissimilarity Function")
+
+points(c(0.2, 0.5, 0.8), c(0.3*0.2^0.5, 0.3*0.5^0.5, 0.3*0.8^0.5),
+       pch = 19, cex = 1.5, col = "red")
+
+text(0.5, 0.05, "How 'different' do\nneighbors appear?", cex = 0.9)
+
+# 3. Cumulation (Integration)
+plot(NULL, xlim = c(0, 10), ylim = c(0, 3),
+     xlab = "Stimulus value x", ylab = "Cumulated distance",
+     main = "3. Cumulation (Sum/Integrate)")
+
+# Show discrete steps
+x_discrete <- 0:10
+y_discrete <- cumsum(c(0, rep(0.25, 10)))
+points(x_discrete, y_discrete, pch = 19, col = "darkgreen", cex = 1.2)
+for (i in 1:10) {
+  lines(c(x_discrete[i], x_discrete[i+1]),
+        c(y_discrete[i], y_discrete[i]),
+        col = "darkgreen", lwd = 2)
+  lines(c(x_discrete[i+1], x_discrete[i+1]),
+        c(y_discrete[i], y_discrete[i+1]),
+        col = "darkgreen", lwd = 2, lty = 2)
+}
+
+text(5, 2.8, "Sum small differences\nto get total distance", cex = 0.9)
+```
+
+### Summary Table
+
+| Component | What it is | Example |
+|------------------------|------------------------|------------------------|
+| **Stimulus Space** | Set of stimuli with structure from observer judgments | All visible colors |
+| **Dissimilarity D(x,y)** | How "different" two stimuli appear | Probability of discrimination |
+| **Cumulation** | Sum/integrate dissimilarities along a path | $D(a,b) = \sum D(x_i, x_{i+1})$ |
+
+::: {.callout-tip title="The Key Formula"}
+The **distance** from stimulus **a** to stimulus **b** is the **infimum** (minimum) of cumulated dissimilarities over all possible chains connecting them:
+
+$$G(a,b) = \inf_{\text{chains}} \sum_{i=1}^{n-1} D(x_i, x_{i+1})$$
+
+where $a = x_1, x_2, \ldots, x_n = b$ is a chain of stimuli.
+:::
+
+------------------------------------------------------------------------
+
+## 3.1.2 Unidimensional Fechnerian Scaling
+
+Now let's focus on the simplest case: stimuli that can be ordered on a single dimension (like brightness, loudness, or weight).
+
+### Setup: Stimuli as Real Numbers
+
+```{r unidim-setup}
+#| fig-cap: "Stimuli represented as values on a real number line"
+#| fig-width: 8
+#| fig-height: 3
+
+par(mar = c(4, 1, 3, 1))
+plot(NULL, xlim = c(0, 12), ylim = c(0, 2),
+     axes = FALSE, xlab = "", ylab = "",
+     main = "Stimulus Continuum [t, u)")
+
+# Draw the number line
+arrows(0.5, 1, 11.5, 1, length = 0.1, lwd = 2)
+
+# Mark threshold t and upper bound u
+points(1, 1, pch = "[", cex = 2, col = "red")
+points(10, 1, pch = "(", cex = 2, col = "red")
+
+text(1, 0.5, "t\n(threshold)", col = "red", cex = 0.9)
+text(10, 0.5, "u\n(upper limit)", col = "red", cex = 0.9)
+
+# Mark some example stimuli
+x_examples <- c(2, 4, 6, 8)
+points(x_examples, rep(1, 4), pch = 19, cex = 1.5, col = "blue")
+text(x_examples, rep(1.5, 4), c("x", "y", "z", "w"), col = "blue", cex = 1.2)
+
+# Annotation
+text(5.5, 0.2, "Stimuli are positive real numbers (e.g., light intensity, weight)", cex = 0.9)
+```
+
+**Notation:**
+
+-   Stimuli live on interval $[t, u)$ where $t$ = absolute threshold
+-   We write stimuli as $x, y \in [t, u)$
+
+------------------------------------------------------------------------
+
+### The Psychometric Function γ(x, y)
+
+The **psychometric function** tells us the probability that stimulus $y$ is judged "greater" than stimulus $x$:
+
+$$\gamma(x, y) = \Pr[\text{y is judged greater than x}]$$
+
+```{r psychometric-function}
+#| fig-cap: "The psychometric function γ(x,y) for a fixed x = x₀"
+#| fig-width: 8
+#| fig-height: 5
+
+# Define a psychometric function (logistic)
+gamma_func <- function(x0, y, slope = 2) {
+  # Probability that y is judged greater than x0
+  plogis(slope * (y - x0))
+}
+
+# Fix x0 = 5
+x0 <- 5
+y_vals <- seq(2, 8, length.out = 200)
+gamma_vals <- gamma_func(x0, y_vals)
+
+par(mar = c(5, 5, 4, 2))
+plot(y_vals, gamma_vals, type = "l", lwd = 3, col = "blue",
+     xlab = "Comparison stimulus y",
+     ylab = expression(gamma(x[0], y)),
+     main = expression("Psychometric Function: Probability y is judged greater than " * x[0]),
+     ylim = c(0, 1))
+
+# Mark the 50% point
+abline(h = 0.5, lty = 2, col = "gray")
+abline(v = x0, lty = 2, col = "red")
+
+points(x0, 0.5, pch = 19, cex = 2, col = "red")
+
+# Add labels
+text(x0 + 0.3, 0.55, expression(gamma(x[0], x[0]) == 0.5), col = "red", cex = 1.1)
+text(7, 0.2, expression("When y < " * x[0] * ": low probability"), cex = 0.9)
+text(3.5, 0.8, expression("When y > " * x[0] * ": high probability"), cex = 0.9)
+
+# Mark x0 on x-axis
+axis(1, at = x0, labels = expression(x[0]), col.axis = "red", col = "red")
+```
+
+::: {.callout-note title="The Symmetry Assumption"}
+We make a simplifying assumption:
+
+$$\gamma(y, x) = 1 - \gamma(x, y)$$
+
+This means: the probability that y \> x plus the probability that x \> y equals 1.
+
+**Consequence:** When comparing a stimulus to itself: $$\gamma(x, x) = 1 - \gamma(x, x) \implies \gamma(x, x) = \frac{1}{2}$$
+
+(50/50 chance when stimuli are identical)
+:::
+
+------------------------------------------------------------------------
+
+### The Slope at the Median: F(x)
+
+Here's the key insight: **how quickly does the psychometric function change at the 50% point?**
+
+```{r slope-at-median}
+#| fig-cap: "The slope F(x) at the median measures local discriminability"
+#| fig-width: 10
+#| fig-height: 5
+
+par(mfrow = c(1, 2), mar = c(5, 5, 4, 2))
+
+# Left panel: Show the tangent line at the median
+x0 <- 5
+y_vals <- seq(2, 8, length.out = 200)
+gamma_vals <- gamma_func(x0, y_vals, slope = 2)
+
+plot(y_vals, gamma_vals, type = "l", lwd = 3, col = "blue",
+     xlab = "Comparison stimulus y",
+     ylab = expression(gamma(x[0], y)),
+     main = "Slope at the Median",
+     ylim = c(0, 1))
+
+abline(h = 0.5, lty = 2, col = "gray")
+abline(v = x0, lty = 2, col = "gray")
+
+# The slope at y = x0 for logistic is slope/4
+F_x0 <- 2/4  # slope parameter / 4 for logistic at median
+
+# Draw tangent line
+tangent_y <- 0.5 + F_x0 * (y_vals - x0)
+lines(y_vals, tangent_y, col = "red", lwd = 2, lty = 2)
+
+# Mark the point
+points(x0, 0.5, pch = 19, cex = 2, col = "red")
+
+# Add slope annotation
+arrows(x0, 0.5, x0 + 1, 0.5, length = 0.1, col = "darkgreen", lwd = 2)
+arrows(x0 + 1, 0.5, x0 + 1, 0.5 + F_x0, length = 0.1, col = "darkgreen", lwd = 2)
+text(x0 + 1.3, 0.5 + F_x0/2, sprintf("F(x) = %.2f", F_x0), col = "darkgreen", cex = 1.1)
+
+legend("topleft", c("Psychometric function", "Tangent line"),
+       col = c("blue", "red"), lwd = c(3, 2), lty = c(1, 2))
+
+# Right panel: Compare steep vs shallow slopes
+plot(NULL, xlim = c(2, 8), ylim = c(0, 1),
+     xlab = "Comparison stimulus y",
+     ylab = expression(gamma(x[0], y)),
+     main = "Steep vs. Shallow Slope")
+
+# Steep slope (high discriminability)
+gamma_steep <- gamma_func(x0, y_vals, slope = 4)
+lines(y_vals, gamma_steep, col = "darkgreen", lwd = 3)
+
+# Shallow slope (low discriminability)
+gamma_shallow <- gamma_func(x0, y_vals, slope = 1)
+lines(y_vals, gamma_shallow, col = "orange", lwd = 3)
+
+abline(h = 0.5, lty = 2, col = "gray")
+abline(v = x0, lty = 2, col = "gray")
+
+legend("topleft",
+       c("High F(x): easy to discriminate", "Low F(x): hard to discriminate"),
+       col = c("darkgreen", "orange"), lwd = 3)
+```
+
+**The formula:**
+
+$$F(x) = \frac{\partial \gamma(x, y)}{\partial y}\bigg|_{y=x}$$
+
+### Understanding This Formula Step by Step
+
+This formula can look intimidating, so let's break it down piece by piece.
+
+**γ(x, y) is a function of TWO variables:**
+
+-   **x** = the reference stimulus (we hold this fixed)
+-   **y** = the comparison stimulus (this varies)
+
+**The notation** $\frac{\partial \gamma}{\partial y}$ means: "How fast does γ change when we change y, while keeping x fixed?"
+
+**The notation** $\big|_{y=x}$ means: "Evaluate this derivative at the specific point where y equals x"
+
+#### Concrete Example with the Logistic Function
+
+Let's work through this with a specific psychometric function (logistic):
+
+$$\gamma(x, y) = \frac{1}{1 + e^{-k(y - x)}}$$
+
+where $k$ controls the steepness.
+
+**Step 1: Fix x at some value x₀**
+
+For example, let x₀ = 5. Now γ becomes a function of y only:
+
+$$\gamma(5, y) = \frac{1}{1 + e^{-k(y - 5)}}$$
+
+**Step 2: Take the derivative with respect to y**
+
+Using the chain rule:
+
+$$\frac{\partial \gamma}{\partial y} = \frac{k \cdot e^{-k(y-x)}}{\left(1 + e^{-k(y-x)}\right)^2}$$
+
+**Step 3: Evaluate at y = x (the 50% point)**
+
+When $y = x$, the exponent $-k(y-x) = 0$, so $e^0 = 1$:
+
+$$F(x) = \frac{\partial \gamma}{\partial y}\bigg|_{y=x} = \frac{k \cdot 1}{(1 + 1)^2} = \frac{k}{4}$$
+
+So for a logistic psychometric function with steepness $k$, the discriminability at any point is simply $F(x) = k/4$.
+
+::: {.callout-note title="In Plain English"}
+$F(x)$ answers the question:
+
+> "If I'm at stimulus x, and I increase y by a tiny amount dy, how much does the probability of saying 'y is greater' change?"
+
+At the 50% point (where y = x), this rate of change tells us how **sensitive** discrimination is at that stimulus level.
+:::
+
+::: {.callout-warning title="Notation Clarification: F(x) is a DERIVATIVE, not an integral!"}
+In basic calculus, we often use lowercase f for a function and uppercase F for its antiderivative. **That convention does NOT apply here!**
+
+Here, F(x) is simply a **name** for the slope (derivative) of the psychometric function.
+
+| Symbol   | What it is            | Operation                 |
+|----------|-----------------------|---------------------------|
+| γ(x,y)   | Psychometric function | Raw data from experiments |
+| **F(x)** | Slope of γ at y = x   | **Derivative**: ∂γ/∂y     |
+| D(a,b)   | Subjective distance   | **Integral**: ∫F(x)dx     |
+
+So: **F comes FROM a derivative** (of γ), and **D comes FROM an integral** (of F).
+:::
+
+::: {.callout-tip title="What F(x) Tells Us"}
+-   **High F(x)**: The psychometric function is steep at the median → small changes in y are easily detected → **high discriminability**
+-   **Low F(x)**: The psychometric function is shallow → need larger changes to notice a difference → **low discriminability**
+:::
+
+------------------------------------------------------------------------
+
+### Local Dissimilarity: D(x, x + dx)
+
+How do we get from $F(x)$ to the dissimilarity $D(x, x+dx)$?
+
+**Key insight:** $F(x)$ is a **rate**, not an actual dissimilarity!
+
+Recall from calculus: if $f'(x)$ is a derivative (rate of change), then the actual change when moving from $x$ to $x + dx$ is:
+
+$$f(x + dx) - f(x) \approx f'(x) \cdot dx$$
+
+**The same logic applies here:**
+
+| Symbol          | What it is                      | Analogy         |
+|-----------------|---------------------------------|-----------------|
+| $F(x)$          | Rate of discriminability at $x$ | Speed (km/hour) |
+| $dx$            | Step size in stimulus           | Time (hours)    |
+| $F(x) \cdot dx$ | Actual dissimilarity            | Distance (km)   |
+
+Just as **Distance = Speed × Time**, we have:
+
+$$\text{Dissimilarity} = \text{Rate} \times \text{Step}$$
+
+**The formula:**
+
+$$D(x, x + dx) = c \cdot F(x) \cdot dx$$
+
+where $c$ is a positive **scaling constant** (not a stimulus!).
+
+::: {.callout-warning title="What is this constant c?"}
+The constant $c$ converts **probability units** (from F(x)) into **dissimilarity units**:
+
+-   $F(x)$ comes from the psychometric function γ, which measures probability (0 to 1)
+-   $D(x,y)$ measures subjective dissimilarity (different units)
+-   $c$ is the conversion factor, specific to each stimulus space (brightness, loudness, etc.)
+
+In practice, $c$ is often set to 1 for simplicity, since we usually only care about **relative** distances.
+:::
+
+**Example:** Under Weber's Law, $F(x) = K/x$, so:
+
+| At stimulus | F(x)        | Local dissimilarity for dx = 0.1 |
+|-------------|-------------|----------------------------------|
+| x = 2       | K/2 = 0.5   | D = 0.5 × 0.1 = 0.05             |
+| x = 4       | K/4 = 0.25  | D = 0.25 × 0.1 = 0.025           |
+| x = 8       | K/8 = 0.125 | D = 0.125 × 0.1 = 0.0125         |
+
+The same physical step (dx = 0.1) produces **smaller subjective differences** at higher stimulus levels!
+
+::: {.callout-note title="Why Does This Make Sense?"}
+-   If F(x) is large (steep psychometric function), even a small dx creates a noticeable difference
+-   If F(x) is small (shallow function), you need a larger dx to notice any difference
+-   The product F(x)·dx captures "how different" x and x+dx appear subjectively
+:::
+
+------------------------------------------------------------------------
+
+### The Summation Property: Building Total Distance
+
+For any three stimuli with $a \leq m \leq b$ (where $m$ is a **m**iddle point):
+
+$$D(a, b) = D(a, m) + D(m, b)$$
+
+This is the **additivity** property that makes Fechnerian scaling work!
+
+::: {.callout-warning title="Notation Alert"}
+Don't confuse:
+
+-   $c$ = scaling **constant** in $D(x, x+dx) = c \cdot F(x) \cdot dx$
+-   $m$ = intermediate stimulus **point** (we use $m$ for "middle" to avoid confusion)
+:::
+
+**On a number line:**
+
+$$a \xleftarrow{\quad D(a,m) \quad} m \xleftarrow{\quad D(m,b) \quad} b$$
+
+$$\underbrace{\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad}_{D(a,b) = D(a,m) + D(m,b)}$$
+
+**Example:** If $D(2, 5) = 0.4$ and $D(5, 8) = 0.3$, then $D(2, 8) = 0.4 + 0.3 = 0.7$
+
+This property allows us to build up total distance by summing many small pieces!
+
+------------------------------------------------------------------------
+
+### The Core Formula: Integration
+
+If we have infinitely many infinitesimal steps, the sum becomes an integral:
+
+$$D(a, b) = c \int_a^b F(x) \, dx$$
+
+This is **the subjective distance** from a to b!
+
+```{r integration-demo}
+#| fig-cap: "Computing subjective distance by integrating F(x)"
+#| fig-width: 10
+#| fig-height: 5
+
+par(mfrow = c(1, 2), mar = c(5, 5, 4, 2))
+
+# Left panel: F(x) = K/x (Weber's law)
+K <- 1
+x_vals <- seq(1, 10, length.out = 200)
+F_vals <- K / x_vals
+
+plot(x_vals, F_vals, type = "l", lwd = 3, col = "purple",
+     xlab = "Stimulus magnitude x",
+     ylab = "F(x)",
+     main = "Step 1: The Discriminability Function F(x)")
+
+# Shade the area from a to b
+a <- 2
+b <- 6
+x_shade <- seq(a, b, length.out = 100)
+F_shade <- K / x_shade
+polygon(c(a, x_shade, b), c(0, F_shade, 0),
+        col = rgb(0.5, 0, 0.5, 0.3), border = NA)
+
+# Mark a and b
+abline(v = a, lty = 2, col = "red")
+abline(v = b, lty = 2, col = "blue")
+text(a, 0.55, "a", col = "red", cex = 1.2)
+text(b, 0.55, "b", col = "blue", cex = 1.2)
+
+# Area annotation
+text(4, 0.15, expression(integral(F(x)*dx, a, b)), cex = 1.3)
+
+# Right panel: The resulting subjective scale
+# D(t, x) = K * log(x/t) for F(x) = K/x
+t <- 1  # threshold
+x_scale <- seq(t, 10, length.out = 200)
+D_vals <- K * log(x_scale / t)
+
+plot(x_scale, D_vals, type = "l", lwd = 3, col = "darkgreen",
+     xlab = "Physical stimulus x",
+     ylab = "Subjective magnitude D(t, x)",
+     main = "Step 2: The Subjective Scale (Fechner's Law)")
+
+# Mark a and b
+D_a <- K * log(a / t)
+D_b <- K * log(b / t)
+points(c(a, b), c(D_a, D_b), pch = 19, cex = 2, col = c("red", "blue"))
+
+# Show the subjective distance
+arrows(a + 0.1, D_a, b - 0.1, D_a, code = 3, length = 0.1, col = "purple", lwd = 2)
+text((a + b)/2, D_a - 0.15, sprintf("D(a,b) = %.2f", D_b - D_a), col = "purple", cex = 1.1)
+
+# Horizontal lines
+segments(0, D_a, a, D_a, lty = 2, col = "red")
+segments(0, D_b, b, D_b, lty = 2, col = "blue")
+
+legend("bottomright", c("D(t,x) = K·log(x/t)", "Fechner's Log Law!"),
+       col = c("darkgreen", NA), lwd = c(3, NA), bty = "n")
+```
+
+------------------------------------------------------------------------
+
+### Visualizing Weber's Law → Fechner's Law
+
+```{r weber-to-fechner}
+#| fig-cap: "How Weber's Law leads to Fechner's Logarithmic Law"
+#| fig-width: 10
+#| fig-height: 8
+
+par(mfrow = c(2, 2), mar = c(5, 5, 4, 2))
+
+# 1. Weber's Law: JND proportional to x
+x_vals <- seq(1, 10, length.out = 100)
+weber_fraction <- 0.1
+jnd <- weber_fraction * x_vals
+
+plot(x_vals, jnd, type = "l", lwd = 3, col = "blue",
+     xlab = "Stimulus magnitude x",
+     ylab = "JND (Δx)",
+     main = "1. Weber's Law: JND ∝ x")
+text(5, 0.3, expression(Delta*x == c^"*" %.% x), cex = 1.3)
+
+# 2. This means F(x) = K/x
+F_vals <- 1 / x_vals
+
+plot(x_vals, F_vals, type = "l", lwd = 3, col = "purple",
+     xlab = "Stimulus magnitude x",
+     ylab = "F(x)",
+     main = "2. Discriminability: F(x) = K/x")
+text(5, 0.6, expression(F(x) == frac(K, x)), cex = 1.3)
+
+# 3. Integration gives log
+D_vals <- log(x_vals)
+
+plot(x_vals, D_vals, type = "l", lwd = 3, col = "darkgreen",
+     xlab = "Physical magnitude x",
+     ylab = "Subjective magnitude D(1,x)",
+     main = "3. Integration → Logarithm")
+
+# Show that equal ratios give equal differences
+x1 <- 2
+x2 <- 4
+x3 <- 8
+
+points(c(x1, x2, x3), log(c(x1, x2, x3)), pch = 19, cex = 1.5, col = "red")
+segments(x1, log(x1), x2, log(x1), lty = 2, col = "red")
+segments(x2, log(x1), x2, log(x2), lty = 2, col = "red")
+segments(x2, log(x2), x3, log(x2), lty = 2, col = "red")
+segments(x3, log(x2), x3, log(x3), lty = 2, col = "red")
+
+text(6, 0.5, expression(D(t,x) == K %.% log(x/t)), cex = 1.2)
+
+# 4. Equal ratios = equal subjective differences
+ratios <- c(1, 2, 4, 8, 16)
+log_vals <- log(ratios)
+
+plot(1:5, log_vals, type = "b", pch = 19, cex = 2, col = "red",
+     xlab = "Subjective units (equal steps)",
+     ylab = "Physical magnitude (log scale)",
+     main = "4. Equal Ratios → Equal Subjective Steps",
+     yaxt = "n")
+axis(2, at = log_vals, labels = ratios)
+
+# Show the equal steps
+for (i in 1:4) {
+  arrows(i, log_vals[i], i+1, log_vals[i], length = 0.1, col = "blue", lwd = 2)
+  text(i + 0.5, log_vals[i] + 0.2, "×2", col = "blue", cex = 0.9)
+}
+
+text(3, 1, "Doubling = constant subjective step", cex = 1.1)
+```
+
+------------------------------------------------------------------------
+
+## 3.1.3 Historical Digression: Fechner's Law
+
+On the morning of October 22, 1850, Gustav Fechner had a breakthrough insight while lying in bed:
+
+::: {.callout-important title="Fechner's Key Insight"}
+**Arithmetic progression in sensation** corresponds to **geometric progression in stimulus**.
+
+In simple terms: If you double the physical stimulus, you add a constant amount to the subjective sensation. Double again, add the same constant again.
+
+This relationship **implies a logarithm**!
+:::
+
+### Notation Reference
+
+Before diving in, here's a table of all symbols we'll use:
+
+| Symbol     | Meaning                                        | Type      |
+|------------|------------------------------------------------|-----------|
+| $x, a, b$  | Physical stimulus values                       | Variables |
+| $t$        | Absolute threshold (smallest detectable)       | Constant  |
+| $\Delta x$ | Just Noticeable Difference (JND) at stimulus x | Variable  |
+| $c^*$      | Weber fraction (Δx/x)                          | Constant  |
+| $c$        | Subjective size of one JND                     | Constant  |
+| $K$        | Scaling constant in Fechner's law              | Constant  |
+| $D(a,b)$   | Subjective distance from stimulus a to b       | Function  |
+| $\psi(x)$  | Shorthand for D(t,x) - distance from threshold | Function  |
+
+::: {.callout-warning title="Don't Confuse These!"}
+-   $c^*$ = Weber fraction (a **ratio**: Δx/x ≈ 0.1 for weights)
+-   $c$ = subjective size of one JND (a psychological **constant**)
+-   $K$ = scaling constant in Fechner's law (for unit conversion)
+
+These are **three different constants**!
+:::
+
+------------------------------------------------------------------------
+
+### The Three Foundational Statements
+
+Fechner's Law rests on three related statements. The remarkable fact is: **any two of them imply the third!**
+
+#### Statement 1: Weber's Law
+
+$$\frac{\Delta x}{x} = c^*$$
+
+> **Reading this equation:** $\Delta x$ = JND (smallest noticeable change), $x$ = current stimulus, $c^*$ = Weber fraction (constant ≈ 0.1 for weights)
+
+**In words:** The JND is proportional to the stimulus magnitude.
+
+**Concrete example (weights):**
+
+| Stimulus x | Weber fraction c\* | JND (Δx) |
+|------------|--------------------|----------|
+| 100g       | 0.1                | 10g      |
+| 200g       | 0.1                | 20g      |
+| 500g       | 0.1                | 50g      |
+| 1000g      | 0.1                | 100g     |
+
+At 100g, you need 10g more to notice a difference. At 1000g, you need 100g more!
+
+::: {.callout-note title="Why 'Weber's Law'?"}
+Ernst Weber discovered this empirically around 1834 by having people compare weights. The ratio Δx/x ≈ 0.1 for weight discrimination.
+:::
+
+------------------------------------------------------------------------
+
+#### Statement 2: Fechner's Postulate
+
+$$D(x, x + \Delta x) = c$$
+
+> **Reading this equation:** $D(x, x+\Delta x)$ = subjective distance between $x$ and the next JND, $c$ = constant (the "felt size" of one JND)
+
+**In words:** All JNDs are subjectively equal - each "just noticeable" step feels the same size.
+
+**Example:** - The difference between 100g and 110g (one JND) feels the same as - The difference between 1000g and 1100g (also one JND)
+
+Even though the physical differences are 10g vs 100g, they **feel equally different**.
+
+::: {.callout-tip title="This is an assumption!"}
+Fechner **assumed** this was true. It seems reasonable: if you can "just barely" tell two things apart, that minimal perceived difference should be the same regardless of the starting point.
+
+But it's not directly measurable - it's a theoretical postulate.
+:::
+
+------------------------------------------------------------------------
+
+#### Statement 3: The W-Principle (Weber-Principle)
+
+$$D(a, b) \text{ depends only on the ratio } \frac{b}{a}$$
+
+> **Reading this equation:** $D(a,b)$ = subjective distance from stimulus $a$ to $b$; the ratio $b/a$ captures "how many times bigger is b than a"
+
+**In words:** The subjective difference between stimuli depends only on their **ratio**, not their absolute values.
+
+**Example:** - D(100g, 200g) = D(50g, 100g) = D(1000g, 2000g)
+
+All these pairs have ratio 2:1, so they all feel equally different!
+
+**Mathematical notation:** $$D(a, b) = F\left(\frac{b}{a}\right)$$
+
+> **Reading this equation:** $F(\cdot)$ is some unknown function; we feed it the ratio $b/a$ and it outputs the subjective distance
+
+for some function F that takes the ratio as input.
+
+::: {.callout-note title="Why 'W-principle'?"}
+The W stands for Weber. This principle generalizes Weber's Law from JNDs to arbitrary pairs of stimuli.
+:::
+
+------------------------------------------------------------------------
+
+### The Triangle: Any Two Imply the Third
+
+Here's the beautiful mathematical fact: these three statements form a closed triangle of implications.
+
+**Weber's Law + Fechner's Postulate → W-Principle:**
+
+If JND is proportional to x (Weber), and all JNDs feel the same (Fechner), then:
+
+\- Starting at $a$, we reach $a(1+c^*)$ in one JND
+
+\- Starting at $ka$, we reach $ka(1+c^*)$ in one JND
+
+\- Both jumps feel the same (Fechner's Postulate)
+
+\- Both jumps have the same **ratio**: $(1+c^*)$
+
+\- So subjective difference depends on ratio!
+
+**Weber's Law + W-Principle → Fechner's Postulate:**
+
+If D(a,b) depends only on b/a (W-principle), then: $$D(x, x+\Delta x) = F\left(\frac{x+\Delta x}{x}\right) = F\left(1 + \frac{\Delta x}{x}\right) = F(1+c^*)$$
+
+> **Step by step:** We write the ratio $\frac{x+\Delta x}{x} = 1 + \frac{\Delta x}{x}$. By Weber's Law, $\frac{\Delta x}{x} = c^*$, so the ratio is always $1+c^*$.
+
+Since $c^*$ is constant (Weber), this equals the same value $c$ for all x!
+
+**Fechner's Postulate + W-Principle → Weber's Law:**
+
+If all JNDs feel the same size $c$, and D depends only on ratio, then: $$c = D(x, x+\Delta x) = F\left(\frac{x+\Delta x}{x}\right) = F\left(1+\frac{\Delta x}{x}\right)$$
+
+For this to equal $c$ for all x, we need $\frac{\Delta x}{x}$ to be constant!
+
+::: {.callout-important title="The Triangle"}
+$$\text{Weber's Law} \leftrightarrow \text{Fechner's Postulate} \leftrightarrow \text{W-Principle}$$
+
+Any two corners imply the third. They are **logically equivalent** (given suitable regularity conditions).
+:::
+
+------------------------------------------------------------------------
+
+### Derivation 1: Via Functional Equations
+
+Let's derive Fechner's Law from the W-principle using algebra.
+
+**Step 1: Set up the notation**
+
+Define $\psi(x) = D(t, x)$ as the subjective magnitude (distance from threshold $t$).
+
+> **Notation:** $\psi$ (Greek letter "psi") is shorthand. Instead of writing $D(t, x)$ every time, we just write $\psi(x)$.
+
+By the W-principle: $$D(a, b) = \psi(b) - \psi(a) = F\left(\frac{b}{a}\right)$$
+
+> **Reading this:** The subjective distance from $a$ to $b$ equals $\psi(b) - \psi(a)$ (like coordinates on a number line), which equals some function of the ratio $b/a$.
+
+**Step 2: Use three stimuli**
+
+Consider three stimuli: $a \leq b \leq c$
+
+By the summation property of dissimilarity: $$D(a, c) = D(a, b) + D(b, c)$$
+
+> **Reading this:** Distance from $a$ to $c$ = distance from $a$ to $b$ + distance from $b$ to $c$ (like walking in two steps)
+
+Using the W-principle: $$F\left(\frac{c}{a}\right) = F\left(\frac{b}{a}\right) + F\left(\frac{c}{b}\right)$$
+
+> **Reading this:** We replaced each $D(\cdot,\cdot)$ with $F(\text{ratio})$. So $D(a,c) = F(c/a)$, etc.
+
+**Step 3: Substitute variables**
+
+Let $r = \frac{b}{a}$ and $s = \frac{c}{b}$. Then $\frac{c}{a} = r \cdot s$.
+
+The equation becomes: $$F(rs) = F(r) + F(s)$$
+
+> **The key equation!** This says: F of a product = sum of F values. What function has this property?
+
+for all $r, s \geq 1$.
+
+**Step 4: Recognize the functional equation**
+
+The equation $F(rs) = F(r) + F(s)$ is called **Cauchy's functional equation** (multiplicative form).
+
+::: {.callout-note title="What functions satisfy F(xy) = F(x) + F(y)?"}
+Think about it: what operation turns **multiplication** into **addition**?
+
+The **logarithm**!
+
+$$\log(xy) = \log(x) + \log(y)$$
+
+This is the **only** continuous solution (up to a constant).
+:::
+
+**Step 5: Conclude**
+
+Therefore: $$F(r) = K \cdot \log(r)$$
+
+> **Reading this:** $K$ is a positive scaling constant, $\log$ can be any base (natural, base 10, etc.)
+
+for some constant $K > 0$.
+
+Substituting back: $$D(a, b) = F\left(\frac{b}{a}\right) = K \cdot \log\left(\frac{b}{a}\right)$$
+
+> **Reading this:** Subjective distance from $a$ to $b$ = constant times log of the ratio
+
+This is **Fechner's difference formula** (Unterschiedsformel)!
+
+And for distance from threshold: $$\psi(x) = D(t, x) = K \cdot \log\left(\frac{x}{t}\right)$$
+
+> **Reading this:** Subjective magnitude = constant times log of (stimulus / threshold). When $x = t$, we get $\log(1) = 0$.
+
+This is **Fechner's measurement formula** (Massformel)!
+
+------------------------------------------------------------------------
+
+### Derivation 2: Via Integration (What We Learned in 3.1.2)
+
+This derivation uses calculus and connects to our earlier work.
+
+**Step 1: Start with Weber's Law**
+
+Weber's Law says $\frac{\Delta x}{x} = c^*$. But how does this give us $F(x) = K/x$?
+
+::: {.callout-note title="Why does Weber's Law imply F(x) = K/x?"}
+**Key insight:** Discriminability is **inversely proportional** to JND.
+
+| If JND is... | Then F(x) is... | Because...                       |
+|--------------|-----------------|----------------------------------|
+| Small        | High            | Easy to notice small differences |
+| Large        | Low             | Need big changes to notice       |
+
+**Step by step:**
+
+1.  **Weber's Law:** $\Delta x = c^* \cdot x$ (JND = Weber fraction × stimulus)
+
+2.  **Discriminability is inverse of JND:** $F(x) \propto \frac{1}{\Delta x}$
+
+3.  **Substitute:** $F(x) \propto \frac{1}{c^* \cdot x} = \frac{1}{c^*} \cdot \frac{1}{x}$
+
+4.  **Let** $K = 1/c^*$: $F(x) = \frac{K}{x}$
+:::
+
+So the discriminability function is: $$F(x) = \frac{K}{x}$$
+
+> **Reading this:** $F(x)$ = discriminability at stimulus level $x$. As $x$ gets bigger, $K/x$ gets smaller (harder to discriminate).
+
+**Step 2: Recall the local dissimilarity formula**
+
+From section 3.1.2, we learned: $$D(x, x+dx) = c \cdot F(x) \cdot dx = c \cdot \frac{K}{x} \cdot dx$$
+
+> **Reading this:** Local dissimilarity = constant × discriminability × step size. Substituting $F(x) = K/x$ gives us $cK/x \cdot dx$.
+
+**Step 3: Integrate to get total distance**
+
+$$D(a, b) = \int_a^b c \cdot \frac{K}{x} \, dx = cK \int_a^b \frac{1}{x} \, dx$$
+
+> **Reading this:** Sum up all tiny dissimilarities from $a$ to $b$. The constants $c$ and $K$ come outside the integral.
+
+**Step 4: Evaluate the integral**
+
+$$\int_a^b \frac{1}{x} \, dx = \left[\ln(x)\right]_a^b = \ln(b) - \ln(a) = \ln\left(\frac{b}{a}\right)$$
+
+> **Calculus fact:** The integral of $1/x$ is $\ln(x)$. We evaluate at bounds: $\ln(b) - \ln(a)$. Log rule: $\ln(b) - \ln(a) = \ln(b/a)$.
+
+**Step 5: Combine constants and conclude**
+
+Let $K' = cK$ (absorbing constants). Then: $$D(a, b) = K' \cdot \ln\left(\frac{b}{a}\right)$$
+
+> **Reading this:** $K' = cK$ combines two constants into one. The final form is identical to Derivation 1!
+
+Same result! (Using natural log instead of log base 10, but they differ only by a constant factor.)
+
+::: {.callout-tip title="The Two Derivations Compared"}
+| Aspect | Functional Equations | Integration |
+|------------------------|------------------------|------------------------|
+| Starting point | W-principle | Weber's Law + F(x) = K/x |
+| Key step | Solve F(xy) = F(x) + F(y) | Integrate 1/x |
+| Mathematical level | Algebra | Calculus |
+| Insight | Log is unique function with this property | ∫(1/x)dx = ln(x) |
+:::
+
+------------------------------------------------------------------------
+
+### Summary: The Complete Picture
+
+**Fechner's Law** states that subjective sensation is proportional to the logarithm of stimulus intensity:
+
+$$\psi(x) = K \cdot \log\left(\frac{x}{t}\right)$$
+
+> **Reading this:** $\psi(x)$ = subjective magnitude, $K$ = scaling constant, $x$ = physical stimulus, $t$ = threshold. At threshold ($x=t$), sensation $= 0$.
+
+| Formula Name | Expression | What it tells us |
+|------------------------|------------------------|------------------------|
+| Measurement formula (Massformel) | $\psi(x) = K \log(x/t)$ | Subjective magnitude from threshold |
+| Difference formula (Unterschiedsformel) | $D(a,b) = K \log(b/a)$ | Subjective difference between any two |
+| Discriminability | $F(x) = K/x$ | Local discriminability (slope) |
+
+::: {.callout-important title="The Chain of Reasoning"}
+$$\underbrace{\text{Weber's Law}}_{\Delta x/x = c^*} \Rightarrow \underbrace{F(x) = K/x}_{\text{discriminability}} \xrightarrow{\int} \underbrace{\psi(x) = K\log(x/t)}_{\text{Fechner's Law}}$$
+:::
+
+**Key insight:** Fechner showed that if Weber's Law holds and if JNDs are subjectively equal, then the subjective scale **must** be logarithmic. This was revolutionary: it provided a mathematical bridge from **physical measurement** to **psychological experience**!
+
+------------------------------------------------------------------------
+
+### Historical Note: The Controversy Around Fechner's Derivation
+
+Fechner's derivation was criticized as "mathematically flawed" by his contemporaries and later scholars. Let's understand what the criticism was and why it was based on a misreading.
+
+#### What Critics Claimed Fechner Did
+
+Critics thought Fechner derived his law by combining Fechner's Postulate with Weber's Law:
+
+| Step | What critics thought Fechner did | Formula |
+|-----------------|-------------------------------|------------------------|
+| 1 | Start with Fechner's Postulate | $\psi(x+\Delta x) - \psi(x) = c$ |
+| 2 | Use Weber's Law | $\frac{\Delta x}{x} = c^*$ |
+| 3 | Substitute to get | $\psi(x+\Delta x) - \psi(x) = \frac{c}{c^*} \cdot \frac{\Delta x}{x}$ |
+| 4 | Replace finite differences with differentials | $d\psi = \frac{c}{c^*} \cdot \frac{dx}{x}$ |
+| 5 | Integrate | $\psi(x) = \frac{c}{c^*} \cdot \log\left(\frac{x}{t}\right)$ |
+
+> **Reading Step 3:** From step 1, we have $c$ on the right. From step 2, we can write $c = \frac{c}{c^*} \cdot c^* = \frac{c}{c^*} \cdot \frac{\Delta x}{x}$.
+
+::: {.callout-warning title="The Criticism"}
+**"Step 4 is invalid!"** Critics argued you cannot just replace the finite difference $\Delta x$ with the infinitesimal $dx$. This "expediency principle" (*Hülfsprinzip*) was considered illegitimate.
+:::
+
+**Why did critics think this was wrong?**
+
+| Fechner's Postulate says | Differential equation says |
+|-----------------------------------|-------------------------------------|
+| $\psi(x+\Delta x) - \psi(x) = c$ | $d\psi = \frac{c}{c^*} \cdot \frac{dx}{x}$ |
+| For ONE specific $\Delta x$ (the JND) | For ANY infinitesimally small $dx$ |
+| $\Delta x$ is **finite, measurable** (e.g., 10g) | $dx$ is a **theoretical infinitesimal** |
+
+**Concrete example:** At $x = 100g$ with $c^* = 0.1$:
+
+-   The JND is $\Delta x = 10g$ (a real quantity you can measure)
+-   Fechner's Postulate says: "Going from 100g to 110g feels like $c$ units"
+-   But the differential equation claims this applies to ANY tiny step!
+
+> **The critic's objection:** "You measured something about 10g steps, but now you're claiming it applies to steps of 0.0001g? Where's the justification for this generalization?"
+
+The postulate is about **one specific finite step** (the JND), not about all possible step sizes. So "replacing $\Delta x$ with $dx$" seems like a leap of faith.
+
+#### The Apparent Contradiction
+
+If we accept the result $\psi(x) = K \cdot \log(x/t)$ and compute the JND difference:
+
+$$\psi(x + \Delta x) - \psi(x) = K \cdot \log\left(\frac{x + \Delta x}{x}\right) = K \cdot \log\left(1 + \frac{\Delta x}{x}\right)$$
+
+Using Weber's Law ($\frac{\Delta x}{x} = c^*$):
+
+$$\psi(x + \Delta x) - \psi(x) = K \cdot \log(1 + c^*)$$
+
+> **Reading this:** We substitute the Weber fraction $c^*$ for $\Delta x / x$.
+
+But Fechner's Postulate says this should equal $c$!
+
+**Is there a contradiction?** Let's check:
+
+$$c = K \cdot \log(1 + c^*)$$
+
+This **IS** a constant (since $K$ and $c^*$ are both constants)! So there's no contradiction.
+
+The only issue is that $K = \frac{c}{c^*}$ is only an **approximation**. The exact relationship is:
+
+$$K = \frac{c}{\log(1 + c^*)}$$
+
+For small $c^*$, we have $\log(1 + c^*) \approx c^*$, so $K \approx \frac{c}{c^*}$.
+
+::: {.callout-note title="Numerical Example"}
+If $c^* = 0.1$ (Weber fraction for weights): - Approximation: $K \approx c/0.1 = 10c$ - Exact: $K = c/\log(1.1) = c/0.0953 \approx 10.5c$
+
+The approximation is off by about 5% - not bad for "illegitimate" math!
+:::
+
+#### Fechner's Defense: He Used the W-Principle!
+
+Here's the key insight that clears up the confusion:
+
+::: {.callout-important title="Fechner Did NOT Use Weber's Law + Fechner's Postulate!"}
+In his actual derivations (Chapters 16 and 17 of *Elemente der Psychophysik*), Fechner started from the **W-principle** alone.
+
+Confusingly, Fechner called the W-principle "Weber's law" - but it's logically different from the empirical Weber's Law about JNDs!
+
+| What Fechner actually used     | What critics thought he used      |
+|--------------------------------|-----------------------------------|
+| W-principle: $D(a,b) = F(b/a)$ | Weber's Law + Fechner's Postulate |
+| One assumption → logarithm     | Two assumptions → contradiction?  |
+:::
+
+**The correct logical flow:**
+
+$$\text{W-principle} \xrightarrow{\text{Cauchy's equation}} \text{Fechner's Law} \xrightarrow{\text{+ Weber's Law}} \text{Fechner's Postulate (as theorem!)}$$
+
+Weber's Law and Fechner's Postulate become **consequences** of the derivation, not assumptions!
+
+#### The "Expediency Principle" (*Hülfsprinzip*)
+
+Critics especially attacked Fechner's *Hülfsprinzip* (expediency principle). But it's just elementary calculus:
+
+> If a function $f(x)$ is differentiable at $x = 0$, then $df(x)$ is proportional to $dx$.
+
+In modern terms: for a differentiable function, small changes in input produce proportionally small changes in output. This is the **definition of the derivative**!
+
+::: {.callout-tip title="Fechner's Famous Response (1877)"}
+In a book of rejoinders to his critics, Fechner wrote:
+
+> *"The tower of Babel was never finished because the workers could not reach an understanding on how they should build it; my psychophysical edifice will stand because the workers will never agree on how to tear it down."*
+
+150 years later, the debate continues - but Fechnerian scaling remains foundational to mathematical psychology!
+:::
+
+------------------------------------------------------------------------
+
+::: {.callout-tip title="The Big Picture"}
+**Fechner's revolution:** We can measure subjective experience by:
+
+1.  **Observe behavior:** Measure γ(x,y) through discrimination experiments
+2.  **Extract local discriminability:** Calculate F(x) = slope at median
+3.  **Integrate:** Sum up all the tiny differences to get total subjective distance
+
+This connects **observable behavior** to **subjective experience** through **mathematics**!
+:::
+
+------------------------------------------------------------------------
