@@ -10,6 +10,14 @@ Ashby, F. G., Colonius, H., & Dzhafarov, E. N. (2023). Preface. In F. G. Ashby, 
 
 ### Articles
 
+Cicchini, G. M., Chopin, A., & Burr, D. C. (2022). Crowding as optimal integration. *Journal of Vision*, 22(10), 3.
+
+Cicchini, G. M., D'Errico, G., & Burr, D. C. (2024). Color crowding considered as adaptive spatial integration. *Journal of Vision*, 24(13), 9.
+
+Ozkirli, A., Pascucci, D., & Herzog, M. H. (2025). Failure to replicate a superiority effect in crowding. *Nature Communications*, 16, 1637.
+
+Cicchini, G. M., D'Errico, G., & Burr, D. C. (2025). Reply to: Failure to replicate a superiority effect in crowding. *Nature Communications*, 16, 1638.
+
 Luce, R. D. (1959). On the possible psychophysical laws. *Psychological Review, 66*(2), 81-95.
 
 Luce, R. D. (1962). Comments on Rozeboom's criticism of "On the possible psychophysical laws." *Psychological Review, 69*(6), 548-551.

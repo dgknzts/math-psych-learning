@@ -19,4 +19,7 @@ Browse the materials at https://dgknzts.github.io/math-psych-learning/
 
 ### Articles
 
-*To be added as studied.*
+- Cicchini, G. M., Chopin, A., & Burr, D. C. (2022). Crowding as optimal integration. *Journal of Vision*, 22(10), 3.
+- Cicchini, G. M., D'Errico, G., & Burr, D. C. (2024). Color crowding considered as adaptive spatial integration. *Journal of Vision*, 24(13), 9.
+- Ozkirli, A., Pascucci, D., & Herzog, M. H. (2025). Failure to replicate a superiority effect in crowding. *Nature Communications*, 16, 1637.
+- Cicchini, G. M., D'Errico, G., & Burr, D. C. (2025). Reply to: Failure to replicate a superiority effect in crowding. *Nature Communications*, 16, 1638.

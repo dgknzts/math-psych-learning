@@ -1,0 +1,863 @@
+---
+title: "Ideal Observer Model Example: Crowding Superiority"
+subtitle: "Implementing Cicchini, Chopin, & Burr (2022) — Equations 1-19"
+date: 2026-02-09
+format: html
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Introduction
+
+Visual crowding — the inability to identify peripheral targets surrounded by nearby items — is traditionally viewed as a processing bottleneck. Cicchini, Chopin, & Burr (2022, *Nature Communications*) proposed a radical alternative: crowding is **optimal Bayesian integration**.
+
+::: {.callout-important title="The Core Claim"}
+The visual system doesn't blindly mix nearby items. It computes a **weighted average** of target and flanker information, where the weight depends on:
+
+1. **Reliability** of each source (noisy target → lean more on flankers)
+2. **Similarity** between items (different flankers → ignore them)
+
+When flankers match the target, this averaging **reduces noise** — crowding actually *helps*.
+:::
+
+The paper presents two models and two fitting functions:
+
+| Component | Equations | What it does |
+|-----------|----------|--------------|
+| **Ideal Observer (IO)** | Eq 1–11 | Always integrates, weight decreases smoothly with difference |
+| **Causal Inference (CI)** | Eq 12–17 | Adds a gate: integrate only if items likely share a common cause |
+| **Fitting functions** | Eq 18–19 | DoG for bias, Gaussian for scatter — used to fit empirical data |
+
+::: {.callout-tip title="What We'll Build"}
+By the end of this demo, you'll have working R functions for every equation in the paper, and you'll see how they produce the three key predictions: **DoG bias**, **U-shaped scatter**, and **RMSE minimum at d = 0**.
+:::
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(patchwork)
+
+theme_set(
+  theme_minimal(base_size = 14) +
+    theme(
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(face = "bold"),
+      plot.subtitle = element_text(color = "grey40")
+    )
+)
+```
+
+------------------------------------------------------------------------
+
+# Part I: Ideal Observer Model (Eq 1–11)
+
+## The Model Setup
+
+Consider a display with three items arranged radially in the periphery:
+
+- **Target (T):** The item the observer must report (e.g., its orientation)
+- **Flanker 1 (F₁) and Flanker 2 (F₂):** Neighboring items that may influence the report
+
+Each item's representation is noisy:
+
+- Target: perceived as $T + \epsilon_T$, where $\epsilon_T \sim \mathcal{N}(0, \sigma_T^2)$
+- Flankers: perceived as $F_i + \epsilon_{F_i}$, where $\epsilon_{F_i} \sim \mathcal{N}(0, \sigma_F^2)$
+
+::: {.callout-note title="What do σ_T and σ_F represent?"}
+In the experiment, **rounded ovals** are hard to judge ($\sigma \approx 13.2°$) and **elongated ovals** are easy ($\sigma \approx 10.0°$). These are measured empirically from single-target trials, not assumed.
+:::
+
+## Equation 1: RMSE Decomposition
+
+Total RMS error ($E$) can be decomposed into bias ($B$) and precision (scatter standard deviation: $S$), whose squares sum to give total squared error:
+
+$$E = \sqrt{B^2 + S^2} \tag{1}$$
+
+::: {.callout-important title="Key Equation"}
+This decomposition is the foundation of the paper's analysis. Crowding affects bias and scatter differently — you can't see the full picture by measuring only one.
+:::
+
+**Concrete example:** If bias = 3° and scatter = 4°, then RMSE = $\sqrt{9 + 16}$ = 5°.
+
+| Bias (B) | Scatter (S) | RMSE (E) |
+|----------|-------------|----------|
+| 0° | 10° | 10.0° |
+| 3° | 4° | 5.0° |
+| 5° | 5° | 7.1° |
+| 10° | 0° | 10.0° |
+
+## Equation 2: General Weighted Response
+
+The ideal response ($R$) is a weighted combination of target and flankers:
+
+$$R = w_1 F_1 + w_2 F_2 + (1 - w_1 - w_2) T \tag{2}$$
+
+The weights sum to 1, ensuring the response is a proper weighted average.
+
+## Equation 3: Equal-Weight Simplification
+
+Since the two flankers had the same aspect ratio, they should be weighted equally ($w_1 = w_2 = w$):
+
+$$R = w F_1 + w F_2 + (1 - 2w) T \tag{3}$$
+
+::: {.callout-note title="Why equal weights?"}
+Both flankers are at the same distance from the target and have the same shape (same σ). There's no reason to treat one differently from the other.
+:::
+
+**Parameter table:**
+
+| Symbol | Meaning | Range |
+|--------|---------|-------|
+| $w$ | Weight per flanker | 0 to ~0.33 |
+| $1 - 2w$ | Weight on target | ~0.33 to 1 |
+| $T$ | Target orientation | Degrees |
+| $F_1, F_2$ | Flanker orientations | Degrees |
+
+## Equations 4–7: Deriving the Bias
+
+**Equation 4** — Mean response:
+
+$$\mu_R = w(\mu_1 + \mu_2) + (1 - 2w)\mu_T \tag{4}$$
+
+**Equation 5** — Bias = mean response minus true target:
+
+$$B = \mu_R - x_T = w(\mu_1 + \mu_2 - 2\mu_T) \tag{5}$$
+
+**Equation 6** — Define $d$ as the average flanker–target difference:
+
+$$d = \frac{\mu_1 + \mu_2}{2} - \mu_T \tag{6}$$
+
+**Equation 7** — Bias in terms of $d$:
+
+$$B = 2wd \tag{7}$$
+
+::: {.callout-note title="Why is bias = 2wd?"}
+Each flanker pulls the response by $w \cdot d$ (weight times difference). Two flankers → $2wd$. More weight → more pull. Larger difference → more pull. But since $w$ decreases with $d$ (Eq 10), the product $2wd$ traces a **derivative-of-Gaussian** shape.
+:::
+
+**Concrete example:** If $w = 0.25$ and $d = 10°$, then bias = $2 \times 0.25 \times 10 = 5°$. The response is pulled 5° toward the flankers.
+
+```{r}
+#| label: bias-function
+compute_bias <- function(w, d) {
+  2 * w * d
+}
+```
+
+## Equation 8: Scatter
+
+Since $R$ is a weighted sum of independent random variables, its variance follows $\text{Var}(aX + bY) = a^2\text{Var}(X) + b^2\text{Var}(Y)$:
+
+$$S^2 = 2w^2 \sigma_F^2 + (1 - 2w)^2 \sigma_T^2 \tag{8}$$
+
+::: {.callout-note title="Why are the coefficients squared?"}
+Variance measures **squared** deviations. When you multiply a random variable by a constant $a$, the variance is multiplied by $a^2$, not $a$. This is why $w$ becomes $w^2$ and $(1-2w)$ becomes $(1-2w)^2$.
+:::
+
+**Concrete example:** If $w = 0.25$, $\sigma_T = 13°$, $\sigma_F = 10°$:
+
+- Flanker contribution: $2 \times 0.25^2 \times 100 = 12.5$
+- Target contribution: $(1 - 0.5)^2 \times 169 = 42.25$
+- Total: $S = \sqrt{12.5 + 42.25} = \sqrt{54.75} = 7.4°$
+
+Compare to no flankers ($w = 0$): $S = \sigma_T = 13°$. The flankers **reduced scatter from 13° to 7.4°**!
+
+```{r}
+#| label: scatter-function
+compute_scatter <- function(w, sigma_T, sigma_F) {
+  sqrt(2 * w^2 * sigma_F^2 + (1 - 2 * w)^2 * sigma_T^2)
+}
+```
+
+## Equations 9–10: Optimal Weight
+
+**Equation 9** — RMSE² expanded:
+
+$$E^2 = 4w^2 d^2 + 2w^2 \sigma_F^2 + (1 - 2w)^2 \sigma_T^2 \tag{9}$$
+
+```{r}
+#| label: total-error-sq
+total_error_sq <- function(w, d, sigma_T, sigma_F) {
+  4 * w^2 * d^2 + 2 * w^2 * sigma_F^2 + (1 - 4*w + 4*w^2) * sigma_T^2
+}
+```
+
+**Equation 10** — Minimizing $E^2$ by setting $dE^2/dw = 0$:
+
+$$w_{opt} = \frac{\sigma_T^2}{2\sigma_T^2 + \sigma_F^2 + 2d^2} \tag{10}$$
+
+::: {.callout-important title="Key Equation: Optimal Weight"}
+This is the heart of the model. The weight balances three factors:
+
+| Factor | Effect on $w$ | Intuition |
+|--------|--------------|-----------|
+| Large $\sigma_T$ (unreliable target) | $w$ increases | Lean more on flankers |
+| Large $\sigma_F$ (unreliable flankers) | $w$ decreases | Flankers aren't helpful |
+| Large $d$ (different flankers) | $w$ decreases | Flankers carry irrelevant info |
+:::
+
+**Concrete examples:**
+
+```{r}
+#| label: optimal-weight
+optimal_weight <- function(sigma_T, sigma_F, d) {
+  sigma_T^2 / (2 * sigma_T^2 + sigma_F^2 + 2 * d^2)
+}
+```
+
+```{r}
+#| label: weight-examples
+examples <- tribble(
+  ~sigma_T, ~sigma_F, ~d,
+  13.2,     10.0,     0,
+  13.2,     10.0,     15,
+  13.2,     10.0,     45,
+  10.0,     13.2,     0,
+  10.0,     10.0,     0
+)
+
+examples <- examples %>%
+  mutate(
+    w = optimal_weight(sigma_T, sigma_F, d),
+    target_weight = 1 - 2 * w,
+    description = case_when(
+      sigma_T == 13.2 & d == 0  ~ "Unreliable T, identical flankers",
+      sigma_T == 13.2 & d == 15 ~ "Unreliable T, moderate d",
+      sigma_T == 13.2 & d == 45 ~ "Unreliable T, very different",
+      sigma_T == 10.0 & sigma_F == 13.2 ~ "Reliable T, unreliable F",
+      sigma_T == 10.0 & sigma_F == 10.0 ~ "Equal reliability"
+    )
+  )
+
+knitr::kable(
+  examples %>% select(description, sigma_T, sigma_F, d, w, target_weight),
+  digits = 3,
+  col.names = c("Condition", "σ_T", "σ_F", "d", "w (per flanker)", "1-2w (target)")
+)
+```
+
+## Equation 11: Regression to the Mean
+
+The paper also found regression to the mean (responses pulled toward 45°). The full response equation adds a regression factor $\rho$ and a sub-optimality scaling $\alpha$:
+
+$$R = \alpha \rho (w F_1 + w F_2 + (1 - 2w) T) + (1 - \rho) \cdot 45 \tag{11}$$
+
+::: {.callout-warning title="When to use Eq 11 vs Eq 3"}
+Eq 11 is for **fitting real data** (with regression to the mean and sub-optimal behaviour). In our simulations below, we use the **pure model** (Eq 3 + 10) to show the core predictions without these corrections.
+:::
+
+## RMSE Function
+
+```{r}
+#| label: rmse-function
+compute_rmse <- function(bias, scatter) {
+  sqrt(bias^2 + scatter^2)
+}
+```
+
+------------------------------------------------------------------------
+
+## Simulation 1: Bias (Derivative-of-Gaussian)
+
+The bias should follow a **DoG pattern**: zero at $d = 0$, peaking at intermediate $d$, returning toward zero at large $d$.
+
+```{r}
+#| label: sim1-bias
+#| fig-width: 8
+#| fig-height: 5
+
+sigma_T <- 15
+sigma_F <- 10
+d_range <- seq(-90, 90, by = 1)
+
+sim1 <- tibble(
+  d = d_range,
+  w = optimal_weight(sigma_T, sigma_F, d_range),
+  bias = compute_bias(w, d_range)
+)
+
+ggplot(sim1, aes(x = d, y = bias)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_line(linewidth = 1.2, color = "#DC143C") +
+  labs(
+    title = "Simulation 1: Bias (Derivative-of-Gaussian Pattern)",
+    subtitle = bquote(sigma[T] == .(sigma_T) * "," ~ sigma[F] == .(sigma_F)),
+    x = "Target-Flanker Difference (d)",
+    y = "Bias (degrees)"
+  ) +
+  scale_x_continuous(breaks = seq(-90, 90, 30))
+```
+
+The S-shaped curve shows **assimilative bias**. At intermediate differences (~20–30°), responses are maximally pulled toward the flankers. At very large differences, the flankers are too dissimilar to integrate, so bias drops back toward zero.
+
+## Simulation 2: Scatter (U-Shape)
+
+Scatter should show a **U-shape**: minimum at $d = 0$ (identical flankers provide the most useful additional information).
+
+```{r}
+#| label: sim2-scatter
+#| fig-width: 8
+#| fig-height: 5
+
+sim2 <- tibble(
+  d = d_range,
+  w = optimal_weight(sigma_T, sigma_F, d_range),
+  scatter = compute_scatter(w, sigma_T, sigma_F)
+)
+
+ggplot(sim2, aes(x = d, y = scatter)) +
+  geom_hline(yintercept = sigma_T, linetype = "dotted", color = "grey50") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_line(linewidth = 1.2, color = "#2E8B57") +
+  labs(
+    title = "Simulation 2: Scatter (U-Shaped Precision Improvement)",
+    subtitle = bquote(sigma[T] == .(sigma_T) * "," ~ sigma[F] == .(sigma_F) ~
+                      "| Dotted line = no-crowding baseline"),
+    x = "Target-Flanker Difference (d)",
+    y = "Scatter (degrees)"
+  ) +
+  scale_x_continuous(breaks = seq(-90, 90, 30)) +
+  annotate("text", x = 0, y = min(sim2$scatter) - 0.3,
+           label = paste0("Min scatter: ", round(min(sim2$scatter), 1), "\u00b0"),
+           hjust = 0.5, vjust = 1, size = 3.5, color = "#2E8B57", fontface = "bold")
+```
+
+::: {.callout-tip title="The 'Crowding Superiority' Prediction"}
+When flankers are identical to the target ($d = 0$), scatter drops **below** the no-crowding baseline ($\sigma_T$). The visual system effectively uses the flankers as additional, independent measurements of the same thing.
+:::
+
+## Simulation 3: RMSE
+
+RMSE combines bias and scatter. Despite bias increasing at intermediate differences, the scatter reduction at $d = 0$ produces a minimum in total error.
+
+```{r}
+#| label: sim3-rmse
+#| fig-width: 8
+#| fig-height: 5
+
+sim3 <- tibble(
+  d = d_range,
+  w = optimal_weight(sigma_T, sigma_F, d_range),
+  bias = compute_bias(w, d_range),
+  scatter = compute_scatter(w, sigma_T, sigma_F),
+  rmse = compute_rmse(bias, scatter)
+)
+
+ggplot(sim3, aes(x = d, y = rmse)) +
+  geom_hline(yintercept = sigma_T, linetype = "dotted", color = "grey50") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_line(linewidth = 1.2, color = "#4169E1") +
+  labs(
+    title = "Simulation 3: Total Error (RMSE)",
+    subtitle = bquote(sigma[T] == .(sigma_T) * "," ~ sigma[F] == .(sigma_F) ~
+                      "| Dotted line = no-crowding baseline"),
+    x = "Target-Flanker Difference (d)",
+    y = "RMSE (degrees)"
+  ) +
+  scale_x_continuous(breaks = seq(-90, 90, 30)) +
+  annotate("text", x = 0, y = min(sim3$rmse) - 0.3,
+           label = paste0("Min RMSE: ", round(min(sim3$rmse), 1), "\u00b0"),
+           hjust = 0.5, vjust = 1, size = 3.5, color = "#4169E1", fontface = "bold")
+```
+
+Total error is lowest when $d = 0$. This is the **crowding superiority effect** — having identical flankers actually helps perception.
+
+## Simulation 4: Effect of Target Reliability
+
+A key prediction: the integration benefit should be **stronger** for unreliable targets. With a noisy target representation, there is more to gain from incorporating flanker information.
+
+```{r}
+#| label: sim4-reliability
+#| fig-width: 10
+#| fig-height: 8
+
+sigma_F_fixed <- 10
+
+reliability_sim <- expand_grid(
+  d = d_range,
+  sigma_T = c(8, 15, 25),
+  sigma_F = sigma_F_fixed
+) %>%
+  mutate(
+    reliability_desc = factor(
+      case_when(
+        sigma_T == 8  ~ "High reliability (easy)",
+        sigma_T == 15 ~ "Medium reliability",
+        sigma_T == 25 ~ "Low reliability (hard)"
+      ),
+      levels = c("High reliability (easy)",
+                 "Medium reliability",
+                 "Low reliability (hard)")
+    ),
+    w = optimal_weight(sigma_T, sigma_F, d),
+    bias = compute_bias(w, d),
+    scatter = compute_scatter(w, sigma_T, sigma_F),
+    rmse = compute_rmse(bias, scatter)
+  )
+
+plot_data <- reliability_sim %>%
+  pivot_longer(
+    cols = c(bias, scatter, rmse),
+    names_to = "metric",
+    values_to = "value"
+  ) %>%
+  mutate(
+    metric = factor(metric,
+      levels = c("bias", "scatter", "rmse"),
+      labels = c("Bias", "Scatter", "RMSE")
+    )
+  )
+
+ggplot(plot_data, aes(x = d, y = value, color = reliability_desc)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey70") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey70") +
+  geom_line(linewidth = 1) +
+  facet_wrap(~metric, scales = "free_y", ncol = 3) +
+  scale_color_manual(values = c("#2E8B57", "#4169E1", "#DC143C")) +
+  labs(
+    title = "Simulation 4: Effect of Target Reliability on Crowding",
+    subtitle = bquote(sigma[F] == .(sigma_F_fixed) ~ "(fixed) | Three levels of target noise"),
+    x = "Target-Flanker Difference (d)",
+    y = "Value (degrees)",
+    color = "Target Reliability"
+  ) +
+  scale_x_continuous(breaks = seq(-90, 90, 30)) +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold", size = 13)
+  )
+```
+
+- **Low reliability** (red, $\sigma_T = 25$): Largest bias, deepest scatter dip, biggest RMSE benefit
+- **High reliability** (green, $\sigma_T = 8$): Minimal bias, minimal scatter change, little RMSE benefit
+
+This matches the Bayesian interpretation: you lean on priors (flankers) more when your data (target) is noisy.
+
+## Weight Function
+
+```{r}
+#| label: weight-surface
+#| fig-width: 8
+#| fig-height: 5
+
+weight_data <- expand_grid(
+  d = seq(0, 90, by = 1),
+  sigma_T = c(8, 12, 15, 20, 25)
+) %>%
+  mutate(
+    w = optimal_weight(sigma_T, sigma_F = 10, d)
+  )
+
+ggplot(weight_data, aes(x = d, y = w, color = factor(sigma_T))) +
+  geom_line(linewidth = 1.2) +
+  scale_color_viridis_d(option = "C", end = 0.85, direction = -1) +
+  labs(
+    title = "Optimal Integration Weight (Eq. 10)",
+    subtitle = "How much should the observer rely on each flanker?",
+    x = "Target-Flanker Difference |d| (degrees)",
+    y = "Weight per flanker (w)",
+    color = expression(sigma[T])
+  ) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, NA)) +
+  theme(legend.position = "right")
+```
+
+- Higher $\sigma_T$ (noisier target) → more weight on flankers across all differences
+- Weight drops off with difference — dissimilar flankers are down-weighted
+- At $d = 0$: weight is purely determined by the noise ratio $\sigma_T^2 / (2\sigma_T^2 + \sigma_F^2)$
+
+## Combined Summary: Three Key Predictions
+
+```{r}
+#| label: summary-plot
+#| fig-width: 10
+#| fig-height: 4
+
+summary_data <- sim3 %>%
+  select(d, bias, scatter, rmse) %>%
+  pivot_longer(-d, names_to = "metric", values_to = "value") %>%
+  mutate(
+    metric = factor(metric,
+      levels = c("bias", "scatter", "rmse"),
+      labels = c("Bias (DoG)", "Scatter (U-shape)", "RMSE (minimum at d=0)")
+    )
+  )
+
+colors <- c("Bias (DoG)" = "#DC143C",
+            "Scatter (U-shape)" = "#2E8B57",
+            "RMSE (minimum at d=0)" = "#4169E1")
+
+ggplot(summary_data, aes(x = d, y = value, color = metric)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey70") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_line(linewidth = 1.2) +
+  facet_wrap(~metric, scales = "free_y") +
+  scale_color_manual(values = colors) +
+  labs(
+    title = "Ideal Observer Model: Three Key Predictions",
+    subtitle = bquote(sigma[T] == .(sigma_T) * "," ~ sigma[F] == .(sigma_F)),
+    x = "Target-Flanker Difference (d)",
+    y = "Degrees"
+  ) +
+  scale_x_continuous(breaks = seq(-90, 90, 45)) +
+  theme(legend.position = "none",
+        strip.text = element_text(face = "bold", size = 11))
+```
+
+::: {.callout-tip title="Part I Summary"}
+| Equation | Function | What it computes |
+|----------|----------|-----------------|
+| Eq 7 | `compute_bias(w, d)` | Bias = 2wd |
+| Eq 8 | `compute_scatter(w, σ_T, σ_F)` | Scatter from weighted variance |
+| Eq 1 | `compute_rmse(bias, scatter)` | Total error = √(B² + S²) |
+| Eq 10 | `optimal_weight(σ_T, σ_F, d)` | Weight that minimizes RMSE |
+:::
+
+------------------------------------------------------------------------
+
+# Part II: Causal Inference Model (Eq 12–17)
+
+The basic ideal observer **always** integrates — weight $w$ decreases smoothly with $d$, but never reaches zero. There is no mechanism to decide *whether* to integrate. The Causal Inference (CI) model adds a **gating step**: integrate only when target and flankers likely share a common cause.
+
+## Equation 12: Maximum Likelihood Weight
+
+When two sources are known to come from the same cause, the optimal weight for source $A$ is:
+
+$$w^{max}_A = \frac{\sigma_B^2}{\sigma_A^2 + \sigma_B^2} \tag{12}$$
+
+::: {.callout-note title="How does this differ from Eq 10?"}
+Eq 10 weights one flanker among three items (target + 2 flankers) and includes a $d^2$ term. Eq 12 is the classic **two-source** MLE weight — no $d^2$ because the common cause assumption guarantees $d = 0$.
+:::
+
+```{r}
+#| label: mle-weight
+mle_weight <- function(sigma_A, sigma_B) {
+  sigma_B^2 / (sigma_A^2 + sigma_B^2)
+}
+```
+
+**Concrete example:** If $\sigma_T = 13°$ and $\sigma_F = 10°$, then $w_{max} = 100 / (169 + 100) = 0.372$. The more reliable flanker gets 37% weight.
+
+## Equations 13–14: Common Cause Probability
+
+**Equation 13** — Full Bayesian with prior $P(S) = \mathcal{N}(\mu_P, \sigma_P^2)$:
+
+$$P(A, B \mid C = 1) \propto \exp\!\left(-\frac{1}{2} \cdot \frac{(\mu_A - \mu_B)^2 \sigma_P^2 + (\mu_A - \mu_P)^2 \sigma_B^2 + (\mu_B - \mu_P)^2 \sigma_A^2}{\sigma_A^2 \sigma_B^2 + \sigma_A^2 \sigma_P^2 + \sigma_B^2 \sigma_P^2}\right) \tag{13}$$
+
+The three numerator terms penalize different mismatches:
+
+| Term | Meaning |
+|------|---------|
+| $(\mu_A - \mu_B)^2 \sigma_P^2$ | A and B differ from **each other** |
+| $(\mu_A - \mu_P)^2 \sigma_B^2$ | A differs from the **prior** |
+| $(\mu_B - \mu_P)^2 \sigma_A^2$ | B differs from the **prior** |
+
+**Equation 14** — Simplified with flat prior ($\sigma_P^2 \to \infty$):
+
+$$P(A, B \mid C = 1) \propto \exp\!\left(-\frac{(\mu_A - \mu_B)^2}{2(\sigma_A^2 + \sigma_B^2)}\right) \tag{14}$$
+
+::: {.callout-note title="Why does a flat prior simplify things?"}
+When $\sigma_P^2 \to \infty$, it dominates in both numerator and denominator. The first term $(\mu_A - \mu_B)^2 \sigma_P^2$ dominates the numerator; $\sigma_P^2(\sigma_A^2 + \sigma_B^2)$ dominates the denominator. They cancel, leaving only: how different are A and B from each other, relative to their combined noise?
+:::
+
+```{r}
+#| label: common-cause-prob
+prob_common_cause <- function(d, sigma_A, sigma_B) {
+  exp(-d^2 / (2 * (sigma_A^2 + sigma_B^2)))
+}
+```
+
+**Concrete example:** If $\sigma_T = 13.2°$, $\sigma_F = 10°$, and $d = 0$: P = $\exp(0) = 1$. If $d = 20°$: P = $\exp(-400 / (2 \times 274.24)) = \exp(-0.73) = 0.48$. At $d = 45°$: P = $\exp(-2025/548.48) = \exp(-3.69) = 0.025$.
+
+### Visualization: The Causal Inference Gate
+
+```{r}
+#| label: ci-gate
+#| fig-width: 8
+#| fig-height: 5
+
+d_ci <- seq(-90, 90, by = 1)
+sigma_T_ci <- 13.2
+sigma_F_ci <- 10.0
+
+ci_gate <- tibble(
+  d = d_ci,
+  p_cc = prob_common_cause(d_ci, sigma_T_ci, sigma_F_ci)
+)
+
+ggplot(ci_gate, aes(x = d, y = p_cc)) +
+  geom_hline(yintercept = 0, linetype = "dotted", color = "grey50") +
+  geom_hline(yintercept = 1, linetype = "dotted", color = "grey50") +
+  geom_line(linewidth = 1.3, color = "#E65100") +
+  labs(
+    title = "P(common cause | d) \u2014 The Causal Inference Gate (Eq. 14)",
+    subtitle = bquote(sigma[T] == .(sigma_T_ci) * "," ~ sigma[F] == .(sigma_F_ci)),
+    x = "Target-Flanker Difference (d)",
+    y = "P(common cause)"
+  ) +
+  scale_x_continuous(breaks = seq(-90, 90, 30)) +
+  scale_y_continuous(limits = c(-0.05, 1.15), breaks = seq(0, 1, 0.25))
+```
+
+When $d = 0$ (identical items): $P \approx 1$ → integrate fully. When $d$ is large: $P \approx 0$ → do not integrate.
+
+## Equation 15: CI Model Bias
+
+In Cicchini et al.'s experiment, the two sources are the **flanker compound** ($\sigma_C^2 = \sigma_F^2/2$) and the **target**. Combining Eqs 12 and 14:
+
+$$B = \frac{\sigma_T^2}{\sigma_C^2 + \sigma_T^2} \cdot \exp\!\left(-\frac{d^2}{2(\sigma_C^2 + \sigma_T^2)}\right) \cdot d \tag{15}$$
+
+```{r}
+#| label: ci-bias-function
+ci_bias <- function(d, sigma_T, sigma_F) {
+  sigma_C2 <- sigma_F^2 / 2
+  w_max <- sigma_T^2 / (sigma_C2 + sigma_T^2)
+  p_cc <- exp(-d^2 / (2 * (sigma_C2 + sigma_T^2)))
+  w_max * p_cc * d
+}
+```
+
+## Equation 16: CI Bias with Free Parameters
+
+For fitting real data, two free parameters ($\beta$ for amplitude, $\gamma$ for breadth) plus regression factor $\rho = 0.67$:
+
+$$B = \beta \rho \cdot \frac{\sigma_T^2}{\sigma_C^2 + \sigma_T^2} \cdot \exp\!\left(-\frac{d^2}{2\gamma^2(\sigma_C^2 + \sigma_T^2)}\right) \cdot d \tag{16}$$
+
+```{r}
+#| label: ci-bias-full
+ci_bias_full <- function(d, sigma_T, sigma_F, beta, rho, gamma) {
+  sigma_C2 <- sigma_F^2 / 2
+  w_ratio <- sigma_T^2 / (sigma_C2 + sigma_T^2)
+  p_cc <- exp(-d^2 / (2 * gamma^2 * (sigma_C2 + sigma_T^2)))
+  beta * rho * w_ratio * p_cc * d
+}
+```
+
+## Equation 17: Product of Two Gaussians
+
+The product of two Gaussians with different means has a peak at:
+
+$$\frac{1}{2\pi \sigma_A \sigma_B} \exp\!\left(-\frac{(\mu_A - \mu_B)^2}{2(\sigma_A^2 + \sigma_B^2)}\right) \tag{17}$$
+
+This embeds the same Gaussian dependency on $|\mu_A - \mu_B|$ as Eq 14 — the same gating behaviour emerges whether you compute the common-cause probability (Bayesian) or the distribution overlap (product).
+
+## IO vs CI Model Comparison
+
+```{r}
+#| label: io-vs-ci
+#| fig-width: 12
+#| fig-height: 5
+
+d_comp <- seq(-45, 45, by = 0.5)
+
+comparison <- tibble(
+  d = rep(d_comp, 2),
+  model = rep(c("Ideal Observer (Eq. 10)", "Causal Inference (Eq. 15)"), each = length(d_comp)),
+  bias = c(
+    compute_bias(optimal_weight(sigma_T_ci, sigma_F_ci, d_comp), d_comp),
+    ci_bias(d_comp, sigma_T_ci, sigma_F_ci)
+  ),
+  weight = c(
+    optimal_weight(sigma_T_ci, sigma_F_ci, d_comp),
+    {
+      sigma_C2 <- sigma_F_ci^2 / 2
+      w_max <- sigma_T_ci^2 / (sigma_C2 + sigma_T_ci^2)
+      p_cc <- exp(-d_comp^2 / (2 * (sigma_C2 + sigma_T_ci^2)))
+      w_max * p_cc
+    }
+  )
+)
+
+p_bias <- ggplot(comparison, aes(x = d, y = bias, color = model)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey60") +
+  geom_line(linewidth = 1.2) +
+  scale_color_manual(values = c("Ideal Observer (Eq. 10)" = "#1565C0",
+                                "Causal Inference (Eq. 15)" = "#E65100")) +
+  labs(title = "Bias Comparison",
+       x = "Target-Flanker Difference (d)", y = "Bias") +
+  theme(legend.position = "none")
+
+p_weight <- ggplot(comparison, aes(x = d, y = weight, color = model)) +
+  geom_line(linewidth = 1.2) +
+  scale_color_manual(values = c("Ideal Observer (Eq. 10)" = "#1565C0",
+                                "Causal Inference (Eq. 15)" = "#E65100")) +
+  labs(title = "Weight Comparison",
+       x = "Target-Flanker Difference (d)", y = "Weight (w)") +
+  theme(legend.position = "bottom", legend.title = element_blank())
+
+p_bias + p_weight +
+  plot_annotation(
+    title = "Ideal Observer vs Causal Inference Model",
+    subtitle = bquote(sigma[T] == .(sigma_T_ci) * "," ~ sigma[F] == .(sigma_F_ci))
+  )
+```
+
+**Key differences:**
+
+- **IO model** (blue): Weight is always $> 0$ — it decays smoothly but never reaches zero
+- **CI model** (orange): Weight is gated to zero at large $d$ via the Gaussian gate
+- **At $d = 0$**: Both models predict similar behaviour — maximum integration weight and zero bias
+
+::: {.callout-tip title="Part II Summary"}
+| Equation | Function | What it computes |
+|----------|----------|-----------------|
+| Eq 12 | `mle_weight(σ_A, σ_B)` | MLE weight for common-cause fusion |
+| Eq 14 | `prob_common_cause(d, σ_A, σ_B)` | Gate: should we integrate? |
+| Eq 15 | `ci_bias(d, σ_T, σ_F)` | CI model bias (weight × gate × d) |
+| Eq 16 | `ci_bias_full(...)` | CI bias with free parameters for fitting |
+:::
+
+------------------------------------------------------------------------
+
+# Part III: Model Fitting Functions (Eq 18–19)
+
+Cicchini et al. fit their empirical data using a derivative-of-Gaussian for bias and a Gaussian for scatter.
+
+## Equation 18: Derivative-of-Gaussian Fit for Bias
+
+Bias was fitted by a DoG — a Gaussian of width $s$ multiplied by a straight line of slope $a$:
+
+$$B = a \cdot (\theta - m) \cdot \exp\!\left(-\frac{(\theta - m)^2}{s^2}\right) + b \tag{18}$$
+
+| Parameter | Meaning |
+|-----------|---------|
+| $a$ | Weight/amplitude (slope of linear component) |
+| $m$ | Centre of the DoG |
+| $s$ | Width of the Gaussian window |
+| $b$ | Vertical offset |
+
+```{r}
+#| label: dog-fit-function
+dog_fit <- function(theta, a, m, s, b) {
+  a * (theta - m) * exp(-(theta - m)^2 / s^2) + b
+}
+```
+
+## Equation 19: Gaussian Fit for Scatter
+
+$$S = a \cdot \exp\!\left(-\frac{(\theta - m)^2}{s^2}\right) + b \tag{19}$$
+
+| Parameter | Meaning |
+|-----------|---------|
+| $a$ | Amplitude of the Gaussian dip (negative for U-shape) |
+| $m$ | Centre |
+| $s$ | Width (**yoked** to Eq 18) |
+| $b$ | Baseline scatter at large differences |
+
+::: {.callout-note title="Why yoke the width parameter?"}
+Since bias and scatter likely originate from the same integration process, the width $s$ is shared between Eq 18 and 19. This reduces free parameters and ensures both curves reflect the same integration window.
+:::
+
+```{r}
+#| label: gaussian-scatter-function
+gaussian_scatter_fit <- function(theta, a, m, s, b) {
+  a * exp(-(theta - m)^2 / s^2) + b
+}
+```
+
+## Fitting Demonstration
+
+We generate synthetic data from the IO model, add noise, and show how the DoG and Gaussian functions capture the underlying patterns.
+
+```{r}
+#| label: fitting-demo
+#| fig-width: 12
+#| fig-height: 5
+
+set.seed(42)
+d_fit <- seq(-45, 45, by = 5)
+sigma_T_fit <- 13.2
+sigma_F_fit <- 10.0
+
+w_fit <- optimal_weight(sigma_T_fit, sigma_F_fit, d_fit)
+true_bias <- compute_bias(w_fit, d_fit)
+true_scatter <- compute_scatter(w_fit, sigma_T_fit, sigma_F_fit)
+
+observed_bias <- true_bias + rnorm(length(d_fit), 0, 0.5)
+observed_scatter <- true_scatter + rnorm(length(d_fit), 0, 0.3)
+
+df_obs <- data.frame(d = d_fit, bias = observed_bias, scatter = observed_scatter)
+
+nls_bias <- nls(bias ~ a * (d - m) * exp(-(d - m)^2 / s^2) + b,
+                data = df_obs, start = list(a = 0.3, m = 0, s = 20, b = 0))
+
+nls_scatter <- nls(scatter ~ a * exp(-(d - m)^2 / s^2) + b,
+                   data = df_obs, start = list(a = -4, m = 0, s = 20, b = 13))
+
+theta_smooth <- seq(-45, 45, by = 0.5)
+coef_b <- coef(nls_bias)
+coef_s <- coef(nls_scatter)
+fit_bias <- dog_fit(theta_smooth, coef_b["a"], coef_b["m"], coef_b["s"], coef_b["b"])
+fit_scatter <- gaussian_scatter_fit(theta_smooth, coef_s["a"], coef_s["m"],
+                                    coef_s["s"], coef_s["b"])
+
+p_fit_bias <- ggplot() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey60") +
+  geom_point(aes(x = d_fit, y = observed_bias), size = 2.5, color = "#DC143C") +
+  geom_line(aes(x = theta_smooth, y = fit_bias), linewidth = 1.2,
+            color = "#DC143C", alpha = 0.6) +
+  labs(title = "Bias: DoG Fit (Eq. 18)",
+       x = "Target-Flanker Difference (d)", y = "Bias (degrees)") +
+  scale_x_continuous(breaks = seq(-45, 45, 15))
+
+p_fit_scatter <- ggplot() +
+  geom_hline(yintercept = sigma_T_fit, linetype = "dotted", color = "grey50") +
+  geom_point(aes(x = d_fit, y = observed_scatter), size = 2.5, color = "#2E8B57") +
+  geom_line(aes(x = theta_smooth, y = fit_scatter), linewidth = 1.2,
+            color = "#2E8B57", alpha = 0.6) +
+  labs(title = "Scatter: Gaussian Fit (Eq. 19)",
+       x = "Target-Flanker Difference (d)", y = "Scatter (degrees)") +
+  scale_x_continuous(breaks = seq(-45, 45, 15))
+
+p_fit_bias + p_fit_scatter +
+  plot_annotation(
+    title = "Model Fitting Functions (Eq. 18\u201319)",
+    subtitle = "Synthetic data from IO model + noise, fitted with DoG and Gaussian"
+  )
+```
+
+The DoG captures the S-shaped bias pattern, while the inverted Gaussian captures the U-shaped scatter dip.
+
+::: {.callout-tip title="Part III Summary"}
+| Equation | Function | What it fits |
+|----------|----------|-------------|
+| Eq 18 | `dog_fit(θ, a, m, s, b)` | Bias data (DoG) |
+| Eq 19 | `gaussian_scatter_fit(θ, a, m, s, b)` | Scatter data (inverted Gaussian) |
+:::
+
+------------------------------------------------------------------------
+
+# Summary
+
+## All Functions at a Glance
+
+| Equation | R Function | Purpose |
+|----------|-----------|---------|
+| Eq 1 | `compute_rmse(bias, scatter)` | Total error decomposition |
+| Eq 7 | `compute_bias(w, d)` | Predicted bias |
+| Eq 8 | `compute_scatter(w, σ_T, σ_F)` | Predicted scatter |
+| Eq 9 | `total_error_sq(w, d, σ_T, σ_F)` | RMSE² (for optimization) |
+| Eq 10 | `optimal_weight(σ_T, σ_F, d)` | Optimal flanker weight |
+| Eq 12 | `mle_weight(σ_A, σ_B)` | MLE weight (common cause) |
+| Eq 14 | `prob_common_cause(d, σ_A, σ_B)` | Causal inference gate |
+| Eq 15 | `ci_bias(d, σ_T, σ_F)` | CI model bias |
+| Eq 16 | `ci_bias_full(...)` | CI bias with free parameters |
+| Eq 18 | `dog_fit(θ, a, m, s, b)` | DoG fitting function |
+| Eq 19 | `gaussian_scatter_fit(θ, a, m, s, b)` | Gaussian fitting function |
+
+## Key Parameter Effects
+
+| Parameter | Increase → | Bias effect | Scatter effect |
+|-----------|-----------|-------------|----------------|
+| $\sigma_T$ | Noisier target | Larger DoG amplitude | Deeper U-shape dip |
+| $\sigma_F$ | Noisier flankers | Smaller DoG | Shallower dip |
+| $d$ | More different flankers | Rise then fall (DoG) | Rise (U-shape) |
+
+::: {.callout-important title="The Three Predictions"}
+1. **Bias** follows a derivative-of-Gaussian: zero at d = 0, peaks at intermediate d, returns to zero
+2. **Scatter** follows a U-shape: minimum at d = 0 (below unflanked baseline!)
+3. **RMSE** has minimum at d = 0: identical flankers improve total accuracy
+:::

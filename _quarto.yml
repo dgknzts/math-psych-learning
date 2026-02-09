@@ -4,6 +4,7 @@ project:
   render:
     - "*.qmd"
     - "!MEMORY.md"
+    - "!temp_superiority_in_visual_crowding/"
 
 website:
   title: "Mathematical Psychology Learning Hub"
